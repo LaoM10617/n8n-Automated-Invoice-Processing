@@ -33,3 +33,10 @@
 接收接口兼容 PDF/JPEG/PNG；原生文本与 OCR 后续汇入共同提取/校验，保留原始值、规范化值和异常。
 最小后端采用 FastAPI + SQLite + 原件目录。接收登记、来源幂等、哈希复用及原件读取已实现；OCR/提取/业务查重/审核尚未接入。
 详细契约、样本检查和被替代方案见 decision_2026-10-06_intake_ocr.md；实际验证见 handoff.md。
+
+2026-10-06：第三步上传联调完成
+Compose 现含 n8n 与 python-api 两个容器；n8n 通过 http://python-api:8000 调用接收接口。
+后端原件/SQLite 使用宿主机 data/ap 持久化，n8n 仍保留原命名卷。
+新工作流 01_AP_Intake_Upload_v1 已独立导入并在本地发布，原模板未改动。
+文本和 OCR PDF 的接收、原件读回、重复投递及冲突分流已真实验证；OCR/提取仍待接入。
+见 step_03_upload_runbook.md 与 step_03_upload_verification.json。

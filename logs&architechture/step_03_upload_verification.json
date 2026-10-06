@@ -1,0 +1,45 @@
+{
+  "workflow_id": "APIntakeUploadV1",
+  "form_url": "http://127.0.0.1:5678/form/ap-intake-upload-v1",
+  "checked_at": "2026-10-06T16:44:10.338505+00:00",
+  "cases": [
+    {
+      "case": "text replay",
+      "message": "Original stored. Invoice ID: 528eac97-c831-4b19-9329-e0347a8536f8. Receipt ID: fd998f8e-1666-48cf-abd9-4b2487f30ae4. Repeated delivery: yes. Identical content already stored: yes. OCR required by input inspection: not established; text quality has not been assessed. Status: received. OCR, extraction and review have not run.",
+      "invoice_id": "528eac97-c831-4b19-9329-e0347a8536f8",
+      "receipt_id": "fd998f8e-1666-48cf-abd9-4b2487f30ae4",
+      "original_byte_match": true,
+      "ocr_required": false
+    },
+    {
+      "case": "ocr intake",
+      "message": "Original stored. Invoice ID: 0922529a-940a-4cf9-8764-39264b2ae656. Receipt ID: 358f27ed-7438-4370-894c-9c23a5e05b0e. Repeated delivery: no. Identical content already stored: no. OCR required by input inspection: yes. Status: received. OCR, extraction and review have not run.",
+      "invoice_id": "0922529a-940a-4cf9-8764-39264b2ae656",
+      "receipt_id": "358f27ed-7438-4370-894c-9c23a5e05b0e",
+      "original_byte_match": true,
+      "ocr_required": true
+    },
+    {
+      "case": "ocr replay",
+      "message": "Original stored. Invoice ID: 0922529a-940a-4cf9-8764-39264b2ae656. Receipt ID: 358f27ed-7438-4370-894c-9c23a5e05b0e. Repeated delivery: yes. Identical content already stored: yes. OCR required by input inspection: yes. Status: received. OCR, extraction and review have not run.",
+      "invoice_id": "0922529a-940a-4cf9-8764-39264b2ae656",
+      "receipt_id": "358f27ed-7438-4370-894c-9c23a5e05b0e",
+      "original_byte_match": true,
+      "ocr_required": true
+    },
+    {
+      "case": "new receipt identical content",
+      "message": "Original stored. Invoice ID: 528eac97-c831-4b19-9329-e0347a8536f8. Receipt ID: 43204ef4-8749-4a0a-a45b-f0f9f072cc64. Repeated delivery: no. Identical content already stored: yes. OCR required by input inspection: not established; text quality has not been assessed. Status: received. OCR, extraction and review have not run.",
+      "invoice_id": "528eac97-c831-4b19-9329-e0347a8536f8",
+      "receipt_id": "43204ef4-8749-4a0a-a45b-f0f9f072cc64",
+      "original_byte_match": true,
+      "ocr_required": false
+    },
+    {
+      "case": "source key conflict",
+      "message": "Upload was not accepted (HTTP 409). This Upload ID belongs to different file bytes. Use a new ID for a new document."
+    }
+  ],
+  "restart_persistence_verified": true,
+  "original_template_unchanged": true
+}

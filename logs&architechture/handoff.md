@@ -2,6 +2,20 @@
 
 Date: 2026-10-06
 
+## Latest implementation — Step 3 n8n upload (2026-10-06)
+
+Step 3 is now verified through the running n8n instance. Current setup supersedes the earlier single-container checkpoint below.
+
+- Added `backend/Dockerfile` and `.dockerignore`; Compose adds `python-api` with a healthcheck, loopback port 8000 and host persistence at `data/ap`. Existing n8n service/volume retained. Both containers are running; Python was restarted and stored records/originals remained readable.
+- Created `n8n_workflows/01_AP_intake_upload_v1.json`, a derived upload slice from the original template. Original file matches Git HEAD unchanged; original instance workflow `aQNIbEjnPAcluLxf` was not replaced.
+- Imported and published new instance workflow `APIntakeUploadV1` / `01_AP_Intake_Upload_v1`. Local form: http://127.0.0.1:5678/form/ap-intake-upload-v1 . Export file remains inactive for safe import elsewhere.
+- Actual chain: Form Trigger → Normalize Upload → multipart HTTP intake → Format Intake Result → Respond to Webhook. Stable user-entered Upload ID provides replay control; single-file binary data is preserved.
+- Verified: initial text PDF intake; text replay; OCR PDF intake and replay; new-source identical content; same-source different bytes rejected with 409. Downloaded originals match input bytes. Restart persistence passed. Details: `step_03_upload_verification.json`.
+- Verification levels: JSON parse and connection targets checked; target-instance import and local publication done; actual n8n HTTP form executions passed. No external credentials required. Browser UI interaction was not separately automated.
+- Scope remains intake only: processing returns 501, review_status=not_created, no OCR/validation/review/notification/email workflow execution. A successful OCR-file upload is not OCR accuracy validation.
+- Instructions and failure semantics: `step_03_upload_runbook.md`. Next is Step 4: expected OCR fields/source mapping, OCR adapter and real `/process` implementation.
+- No Git commit was created for this implementation; changes remain available for review.
+
 ## Local Git and Docker checkpoint (2026-10-06)
 
 Initialized a local Git repository at the project root. No remote or GitHub repository created; no new README added. Initial commit message requested by the user:

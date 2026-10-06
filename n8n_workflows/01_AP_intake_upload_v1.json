@@ -1,0 +1,205 @@
+{
+  "id": "APIntakeUploadV1",
+  "name": "01_AP_Intake_Upload_v1",
+  "nodes": [
+    {
+      "id": "d33120fd-6a7a-48be-b42e-96dd6a3b472a",
+      "name": "Upload Invoice",
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        240
+      ],
+      "parameters": {
+        "path": "ap-intake-upload-v1",
+        "formTitle": "AP Invoice Intake",
+        "formDescription": "Upload one PDF, JPEG or PNG (maximum 20 MiB). This step stores the original only. OCR and review are not connected yet. Use a new Upload ID for a new submission; reuse it only to retry the same file.",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Upload ID",
+              "fieldType": "text",
+              "requiredField": true,
+              "placeholder": "e.g. ap-upload-001"
+            },
+            {
+              "fieldLabel": "Invoice File",
+              "fieldType": "file",
+              "multipleFiles": false,
+              "acceptFileTypes": ".pdf,.jpg,.jpeg,.png",
+              "requiredField": true
+            }
+          ]
+        },
+        "responseMode": "responseNode",
+        "options": {
+          "buttonLabel": "Store invoice",
+          "appendAttribution": false
+        }
+      },
+      "webhookId": "61c50e63-1f5b-4367-9eb1-4c2526e7e78c"
+    },
+    {
+      "id": "a13e06cb-5d88-48a8-85d4-eb07baf2c669",
+      "name": "Normalize Upload",
+      "type": "n8n-nodes-base.code",
+      "position": [
+        280,
+        240
+      ],
+      "parameters": {
+        "jsCode": "const item = $input.first();\nconst keys = Object.keys(item.binary || {});\nif (keys.length !== 1) throw new Error('Upload exactly one file.');\nconst sourceId = String(item.json['Upload ID'] || '').trim();\nif (!sourceId || sourceId.length > 200) throw new Error('Upload ID must contain 1 to 200 characters.');\nreturn [{json: {direction: 'AP', source_type: 'upload', source_namespace: 'n8n-ap-upload-v1', source_id: sourceId, attachment_id: '0'}, binary: {data: item.binary[keys[0]]}}];"
+      },
+      "typeVersion": 2
+    },
+    {
+      "id": "efa75d18-c25e-417c-8831-6f3b880ecf51",
+      "name": "Store Original and Register Intake",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        560,
+        240
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "http://python-api:8000/api/ap/intakes",
+        "sendBody": true,
+        "contentType": "multipart-form-data",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "parameterType": "formBinaryData",
+              "name": "file",
+              "inputDataFieldName": "data"
+            },
+            {
+              "name": "source_type",
+              "value": "={{ $json.source_type }}"
+            },
+            {
+              "name": "source_namespace",
+              "value": "={{ $json.source_namespace }}"
+            },
+            {
+              "name": "source_id",
+              "value": "={{ $json.source_id }}"
+            },
+            {
+              "name": "attachment_id",
+              "value": "={{ $json.attachment_id }}"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 30000,
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "neverError": true,
+              "responseFormat": "json"
+            }
+          }
+        }
+      },
+      "typeVersion": 4.2
+    },
+    {
+      "id": "1021ab90-d2c1-4900-9f09-8eadca1c0aa1",
+      "name": "Format Intake Result",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        840,
+        240
+      ],
+      "parameters": {
+        "jsCode": "const r = $input.first().json;\nconst b = r.body || {};\nconst ok = (r.statusCode === 200 || r.statusCode === 201) && Boolean(b.invoice_id && b.receipt_id);\nconst text = ok\n ? `Original stored. Invoice ID: ${b.invoice_id}. Receipt ID: ${b.receipt_id}. Repeated delivery: ${b.delivery_duplicate ? 'yes' : 'no'}. Identical content already stored: ${b.content_duplicate ? 'yes' : 'no'}. OCR required by input inspection: ${b.inspection.ocr_required ? 'yes' : 'not established; text quality has not been assessed'}. Status: received. OCR, extraction and review have not run.`\n : `Upload was not accepted (HTTP ${r.statusCode}). ${r.statusCode === 409 ? 'This Upload ID belongs to different file bytes. Use a new ID for a new document.' : 'Check the file and backend response in this execution.'}`;\nreturn [{json: {formSubmittedText: text, intake_success: ok, backend_status: r.statusCode, ...b}}];"
+      }
+    },
+    {
+      "id": "7a87a7cf-0299-466d-b250-86982bef4ba4",
+      "name": "Show Intake Result",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        1120,
+        240
+      ],
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { formSubmittedText: $json.formSubmittedText } }}",
+        "options": {}
+      }
+    },
+    {
+      "id": "d7979075-8fc9-4751-9c8b-f04e6df535ff",
+      "name": "Scope and Template Provenance",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        0,
+        -100
+      ],
+      "parameters": {
+        "width": 1180,
+        "height": 250,
+        "content": "## Phase 01 / Step 3 — real upload intake only\nDerived from Email invoice archiving & data extraction.json (2-Utility-SaveInvoices_template). Original preserved. Reuses and rewrites the short Code and HTTP Request node patterns. Gmail, Drive/SFTP, Sheets, AI extraction and deletion branches are omitted from this upload slice.\n\n**Real:** file transfer, persistent original, receipt registration, delivery/content deduplication. **Not connected:** OCR, structured extraction, business validation, review tasks and notifications.\nInternal API: http://python-api:8000. One file per submission. Upload ID is the stable retry key; use a different ID for a new receipt. No credentials required for this loopback-only demo."
+      }
+    }
+  ],
+  "connections": {
+    "Upload Invoice": {
+      "main": [
+        [
+          {
+            "node": "Normalize Upload",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalize Upload": {
+      "main": [
+        [
+          {
+            "node": "Store Original and Register Intake",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Store Original and Register Intake": {
+      "main": [
+        [
+          {
+            "node": "Format Intake Result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format Intake Result": {
+      "main": [
+        [
+          {
+            "node": "Show Intake Result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Europe/Berlin",
+    "saveDataSuccessExecution": "all",
+    "saveDataErrorExecution": "all"
+  },
+  "active": false,
+  "pinData": {}
+}
