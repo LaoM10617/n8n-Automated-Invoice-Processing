@@ -1,0 +1,56 @@
+{
+  "checked_at": "2026-10-06T18:36:32.378320+00:00",
+  "pipeline_version": "step4-v5",
+  "workflow_id": "APIntakeProcessV2",
+  "cases": [
+    {
+      "case": "text",
+      "http_status": 200,
+      "response": {
+        "formSubmittedText": "Original stored. Invoice ID: 528eac97-c831-4b19-9329-e0347a8536f8. Receipt ID: 5edfa8db-8530-4553-a2ee-c50f4acd5ff3. Processing completed; manual review required. Business duplicate check: candidate. Issues: BUSINESS_DUPLICATE_CANDIDATE. Review task and notifications are not implemented yet."
+      }
+    },
+    {
+      "case": "retry",
+      "http_status": 200,
+      "response": {
+        "formSubmittedText": "Original stored. Invoice ID: 528eac97-c831-4b19-9329-e0347a8536f8. Receipt ID: 5edfa8db-8530-4553-a2ee-c50f4acd5ff3. Processing completed; manual review required. Business duplicate check: candidate. Issues: BUSINESS_DUPLICATE_CANDIDATE. Review task and notifications are not implemented yet."
+      }
+    },
+    {
+      "case": "conflict",
+      "http_status": 200,
+      "response": {
+        "formSubmittedText": "Upload not accepted (HTTP 409). No processing was started. Check the Upload ID and file."
+      }
+    },
+    {
+      "case": "ocr",
+      "http_status": 200,
+      "response": {
+        "formSubmittedText": "Original stored. Invoice ID: 23299883-eeb1-48a3-80c8-f521e57227e9. Receipt ID: 433cb273-3d70-4904-8200-76194249b456. Processing completed; manual review required. Business duplicate check: candidate. Issues: BUSINESS_DUPLICATE_CANDIDATE. Review task and notifications are not implemented yet."
+      }
+    },
+    {
+      "case": "mismatch",
+      "http_status": 200,
+      "response": {
+        "formSubmittedText": "Original stored. Invoice ID: fa48d0e9-1aa4-4221-9b70-65e5ee4e2604. Receipt ID: 1d991904-3732-416f-8b0f-739bfe9093dd. Processing completed; manual review required. Business duplicate check: candidate. Issues: TOTAL_MISMATCH, BUSINESS_DUPLICATE_CANDIDATE. Review task and notifications are not implemented yet."
+      }
+    }
+  ],
+  "restart_verification": {
+    "processing_status": "processed",
+    "same_attempt_on_retry": true,
+    "original_hash_matches": true,
+    "health": {
+      "status": "ok",
+      "capabilities": {
+        "intake": true,
+        "extraction": true,
+        "ocr": true,
+        "review": false
+      }
+    }
+  }
+}

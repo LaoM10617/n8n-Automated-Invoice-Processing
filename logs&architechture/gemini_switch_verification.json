@@ -1,0 +1,30 @@
+{
+  "model": "gemini-3.5-flash-lite",
+  "generation_requests": 1,
+  "http_status": 200,
+  "result": {
+    "processing_status": "processed",
+    "extracted_fields": {
+      "supplier_name": "Amberleaf Supplies Ltd",
+      "supplier_address": "12 Amberleaf Park, Willowmere",
+      "supplier_tax_id": null,
+      "invoice_number": "INV-A-202610-001",
+      "invoice_date": "2026-10-01",
+      "due_date": "2026-10-15",
+      "currency": "EUR",
+      "net_amount": "100.00",
+      "tax_amount": "19.00",
+      "total_amount": "119.00",
+      "discount_amount": null,
+      "shipping_amount": null,
+      "has_adjustments": false
+    },
+    "validation_issues": [
+      {
+        "code": "BUSINESS_DUPLICATE_CANDIDATE",
+        "field": "invoice_number",
+        "message": "Potential duplicate; preserve both records for manual review."
+      }
+    ]
+  }
+}

@@ -1,0 +1,206 @@
+{
+  "checked_at": "2026-10-06T19:17:39.211961+00:00",
+  "model": "gemini-3.5-flash-lite",
+  "generation_calls": 3,
+  "minimum_spacing_seconds": 65,
+  "scope": "Single-run development comparison of combined reading+layout changes using the same model and extraction prompt; not a repeated or held-out benchmark. No separate buyer output fields exist.",
+  "checks": [
+    {
+      "case": "ocr11_old_gemini",
+      "matched": 8,
+      "total": 10,
+      "comparisons": [
+        {
+          "field": "supplier_name",
+          "expected": "Richardson-Davis",
+          "actual": "Richardson-Davis",
+          "match": true
+        },
+        {
+          "field": "supplier_address",
+          "expected": "6479 Smith Causeway East Camerontown, AS 38212 US",
+          "actual": "6479 Smith Causeway New Matthewberg, FL 83353 US",
+          "match": false
+        },
+        {
+          "field": "invoice_number",
+          "expected": "INV70628258",
+          "actual": "INV70628258",
+          "match": true
+        },
+        {
+          "field": "invoice_date",
+          "expected": "2003-12-11",
+          "actual": "2003-12-11",
+          "match": true
+        },
+        {
+          "field": "due_date",
+          "expected": "2009-07-04",
+          "actual": "2009-07-04",
+          "match": true
+        },
+        {
+          "field": "currency",
+          "expected": "EUR",
+          "actual": "EUR",
+          "match": true
+        },
+        {
+          "field": "net_amount",
+          "expected": "739.69",
+          "actual": null,
+          "match": false
+        },
+        {
+          "field": "tax_amount",
+          "expected": "23.70",
+          "actual": "23.70",
+          "match": true
+        },
+        {
+          "field": "total_amount",
+          "expected": "747.34",
+          "actual": "747.34",
+          "match": true
+        },
+        {
+          "field": "discount_amount",
+          "expected": "27.81",
+          "actual": "27.81",
+          "match": true
+        }
+      ]
+    },
+    {
+      "case": "ocr11_new_gemini",
+      "matched": 9,
+      "total": 10,
+      "comparisons": [
+        {
+          "field": "supplier_name",
+          "expected": "Richardson-Davis",
+          "actual": "Richardson-Davis",
+          "match": true
+        },
+        {
+          "field": "supplier_address",
+          "expected": "6479 Smith Causeway East Camerontown, AS 38212 US",
+          "actual": "6479 Smith East Camerontown, AS 38212 US",
+          "match": false
+        },
+        {
+          "field": "invoice_number",
+          "expected": "INV70628258",
+          "actual": "INV70628258",
+          "match": true
+        },
+        {
+          "field": "invoice_date",
+          "expected": "2003-12-11",
+          "actual": "2003-12-11",
+          "match": true
+        },
+        {
+          "field": "due_date",
+          "expected": "2009-07-04",
+          "actual": "2009-07-04",
+          "match": true
+        },
+        {
+          "field": "currency",
+          "expected": "EUR",
+          "actual": "EUR",
+          "match": true
+        },
+        {
+          "field": "net_amount",
+          "expected": "739.69",
+          "actual": "739.69",
+          "match": true
+        },
+        {
+          "field": "tax_amount",
+          "expected": "23.70",
+          "actual": "23.70",
+          "match": true
+        },
+        {
+          "field": "total_amount",
+          "expected": "747.34",
+          "actual": "747.34",
+          "match": true
+        },
+        {
+          "field": "discount_amount",
+          "expected": "27.81",
+          "actual": "27.81",
+          "match": true
+        }
+      ]
+    },
+    {
+      "case": "alternate_A_new_gemini",
+      "matched": 9,
+      "total": 9,
+      "comparisons": [
+        {
+          "field": "supplier_name",
+          "expected": "Amberleaf Supplies Ltd",
+          "actual": "Amberleaf Supplies Ltd",
+          "match": true
+        },
+        {
+          "field": "supplier_address",
+          "expected": "12 Amberleaf Park Willowmere",
+          "actual": "12 Amberleaf Park\nWillowmere",
+          "match": true
+        },
+        {
+          "field": "invoice_number",
+          "expected": "INV-A-202610-001",
+          "actual": "INV-A-202610-001",
+          "match": true
+        },
+        {
+          "field": "invoice_date",
+          "expected": "2026-10-01",
+          "actual": "2026-10-01",
+          "match": true
+        },
+        {
+          "field": "due_date",
+          "expected": "2026-10-15",
+          "actual": "2026-10-15",
+          "match": true
+        },
+        {
+          "field": "currency",
+          "expected": "EUR",
+          "actual": "EUR",
+          "match": true
+        },
+        {
+          "field": "net_amount",
+          "expected": "100.00",
+          "actual": "100.00",
+          "match": true
+        },
+        {
+          "field": "tax_amount",
+          "expected": "19.00",
+          "actual": "19.00",
+          "match": true
+        },
+        {
+          "field": "total_amount",
+          "expected": "119.00",
+          "actual": "119.00",
+          "match": true
+        }
+      ]
+    }
+  ],
+  "known_issue": "OCR11 supplier address omits Causeway because it is in a separate layout block; current evidence gating does not detect this omission.",
+  "phase": "Step 4 implemented, targeted layout validation complete with an open quality issue. Step 5 not implemented."
+}

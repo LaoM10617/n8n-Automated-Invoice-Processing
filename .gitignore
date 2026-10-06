@@ -12,3 +12,6 @@ test_data/FATURA/invoices_dataset_final/
 !.env.example
 *.sqlite3
 *.sqlite3-*
+/OPENAI_API_KEY.txt
+/gemini_api_key.txt
+/grok.txt

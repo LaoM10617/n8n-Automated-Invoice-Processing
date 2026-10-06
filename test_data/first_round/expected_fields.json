@@ -1,0 +1,300 @@
+{
+  "scope": "Evaluation only. Never imported by backend extraction. Null means visibly missing or ambiguous. Issue codes are required subsets, not exhaustive lists. Money comparisons use Decimal; invoice-number whitespace normalization must be reported separately. This is a first-round development set, not an unseen-template benchmark.",
+  "cases": [
+    {
+      "file": "text_pdf/01_invoice_A.pdf",
+      "source": "../ap_invoices/manifest.json",
+      "expected_fields": {
+        "supplier_name": "Amberleaf Supplies Ltd",
+        "invoice_number": "INV-A-202610-001",
+        "invoice_date": "2026-10-01",
+        "due_date": "2026-10-15",
+        "currency": "EUR",
+        "net_amount": "100.0",
+        "tax_amount": "19.0",
+        "total_amount": "119.0"
+      },
+      "expected_issue_codes": [],
+      "review_method": "Fixed generation record and previously verified visible invoice fields",
+      "sha256": "e2572aa88fdae19e2984a2e2005d399e142f8444680929b975cab8acfb59b432"
+    },
+    {
+      "file": "text_pdf/02_invoice_B.pdf",
+      "source": "../ap_invoices/manifest.json",
+      "expected_fields": {
+        "supplier_name": "Violetcloud Services Ltd",
+        "invoice_number": "INV-B-202610-002",
+        "invoice_date": "2026-10-03",
+        "due_date": "2026-10-24",
+        "currency": "EUR",
+        "net_amount": "250.0",
+        "tax_amount": "47.5",
+        "total_amount": "297.5"
+      },
+      "expected_issue_codes": [],
+      "review_method": "Fixed generation record and previously verified visible invoice fields",
+      "sha256": "2395eb6875d8f2322edbf8d1d4322cbc032f4e8ca50bbe518793d95c8fdb0481"
+    },
+    {
+      "file": "text_pdf/03_invoice_A_exact_copy.pdf",
+      "source": "../ap_invoices/manifest.json",
+      "expected_fields": {
+        "supplier_name": "Amberleaf Supplies Ltd",
+        "invoice_number": "INV-A-202610-001",
+        "invoice_date": "2026-10-01",
+        "due_date": "2026-10-15",
+        "currency": "EUR",
+        "net_amount": "100.0",
+        "tax_amount": "19.0",
+        "total_amount": "119.0"
+      },
+      "expected_issue_codes": [],
+      "review_method": "Fixed generation record and previously verified visible invoice fields",
+      "sha256": "e2572aa88fdae19e2984a2e2005d399e142f8444680929b975cab8acfb59b432"
+    },
+    {
+      "file": "text_pdf/04_invoice_A_business_duplicate.pdf",
+      "source": "../ap_invoices/manifest.json",
+      "expected_fields": {
+        "supplier_name": "Amberleaf Supplies Ltd",
+        "invoice_number": "INV-A-202610-001",
+        "invoice_date": "2026-10-01",
+        "due_date": "2026-10-15",
+        "currency": "EUR",
+        "net_amount": "100.0",
+        "tax_amount": "19.0",
+        "total_amount": "119.0"
+      },
+      "expected_issue_codes": [],
+      "review_method": "Fixed generation record and previously verified visible invoice fields",
+      "sha256": "22ee9eda8098da9a542af6410e323fb12251a913deaeb32fa9a2098e98a4f030"
+    },
+    {
+      "file": "text_pdf/05_invoice_C_amount_mismatch.pdf",
+      "source": "../ap_invoices/manifest.json",
+      "expected_fields": {
+        "supplier_name": "Amberleaf Supplies Ltd",
+        "invoice_number": "INV-C-202610-003",
+        "invoice_date": "2026-10-05",
+        "due_date": "2026-10-26",
+        "currency": "EUR",
+        "net_amount": "100.0",
+        "tax_amount": "19.0",
+        "total_amount": "129.0"
+      },
+      "expected_issue_codes": [
+        "TOTAL_MISMATCH"
+      ],
+      "review_method": "Fixed generation record and previously verified visible invoice fields",
+      "sha256": "14ba8fa8637c7e8f5231a9e8da3ecd42d8e0639ba597db9b1bbba62230edea62"
+    },
+    {
+      "file": "ocr/invoice_ocr (4).pdf",
+      "source": "Raster version of text_pdf/01_invoice_A.pdf",
+      "expected_fields": {
+        "supplier_name": "Amberleaf Supplies Ltd",
+        "invoice_number": "INV-A-202610-001",
+        "invoice_date": "2026-10-01",
+        "due_date": "2026-10-15",
+        "currency": "EUR",
+        "net_amount": "100.0",
+        "tax_amount": "19.0",
+        "total_amount": "119.0"
+      },
+      "expected_issue_codes": [],
+      "review_method": "Visible raster invoice compared with the text invoice; OCR 4 and 6 have identical pixels but different PDF bytes",
+      "sha256": "796ba9f2b96d99e7dfd88df2f4adf3bd71196ac1dde8c3fc8afd87a4b209becf"
+    },
+    {
+      "file": "ocr/invoice_ocr (5).pdf",
+      "source": "Raster version of text_pdf/02_invoice_B.pdf",
+      "expected_fields": {
+        "supplier_name": "Violetcloud Services Ltd",
+        "invoice_number": "INV-B-202610-002",
+        "invoice_date": "2026-10-03",
+        "due_date": "2026-10-24",
+        "currency": "EUR",
+        "net_amount": "250.0",
+        "tax_amount": "47.5",
+        "total_amount": "297.5"
+      },
+      "expected_issue_codes": [],
+      "review_method": "Visible raster invoice compared with the text invoice; OCR 4 and 6 have identical pixels but different PDF bytes",
+      "sha256": "aeac1f2b608838a522c05f809521531a3015309194e5bbd6bf00f4bd2b9aacc0"
+    },
+    {
+      "file": "ocr/invoice_ocr (6).pdf",
+      "source": "Raster version of text_pdf/03_invoice_A_exact_copy.pdf",
+      "expected_fields": {
+        "supplier_name": "Amberleaf Supplies Ltd",
+        "invoice_number": "INV-A-202610-001",
+        "invoice_date": "2026-10-01",
+        "due_date": "2026-10-15",
+        "currency": "EUR",
+        "net_amount": "100.0",
+        "tax_amount": "19.0",
+        "total_amount": "119.0"
+      },
+      "expected_issue_codes": [],
+      "review_method": "Visible raster invoice compared with the text invoice; OCR 4 and 6 have identical pixels but different PDF bytes",
+      "sha256": "7ad8b87872af17fdc8fa840579ce4ac4e9bcb6bb4a20cb68d202b882df563216"
+    },
+    {
+      "file": "ocr/invoice_ocr (7).pdf",
+      "source": "Raster version of text_pdf/04_invoice_A_business_duplicate.pdf",
+      "expected_fields": {
+        "supplier_name": "Amberleaf Supplies Ltd",
+        "invoice_number": "INV-A-202610-001",
+        "invoice_date": "2026-10-01",
+        "due_date": "2026-10-15",
+        "currency": "EUR",
+        "net_amount": "100.0",
+        "tax_amount": "19.0",
+        "total_amount": "119.0"
+      },
+      "expected_issue_codes": [],
+      "review_method": "Visible raster invoice compared with the text invoice; OCR 4 and 6 have identical pixels but different PDF bytes",
+      "sha256": "f23777b361ffca6f758895ddeb0356d9e9824b5dda7b14a9fed59354d764ac22"
+    },
+    {
+      "file": "ocr/invoice_ocr (8).pdf",
+      "source": "Raster version of text_pdf/05_invoice_C_amount_mismatch.pdf",
+      "expected_fields": {
+        "supplier_name": "Amberleaf Supplies Ltd",
+        "invoice_number": "INV-C-202610-003",
+        "invoice_date": "2026-10-05",
+        "due_date": "2026-10-26",
+        "currency": "EUR",
+        "net_amount": "100.0",
+        "tax_amount": "19.0",
+        "total_amount": "129.0"
+      },
+      "expected_issue_codes": [
+        "TOTAL_MISMATCH"
+      ],
+      "review_method": "Visible raster invoice compared with the text invoice; OCR 4 and 6 have identical pixels but different PDF bytes",
+      "sha256": "5035387d80a058693145ee0079d8ca577d66216303f2b9d67f8f25e5bccffc1a"
+    },
+    {
+      "file": "ocr/invoice_ocr (1).pdf",
+      "source": "FATURA/Template13_Instance61",
+      "expected_fields": {
+        "supplier_name": "Fernandez PLC",
+        "invoice_number": null,
+        "invoice_date": "2009-01-29",
+        "due_date": "2020-12-09",
+        "currency": "EUR",
+        "net_amount": null,
+        "tax_amount": null,
+        "total_amount": "291.08"
+      },
+      "expected_issue_codes": [
+        "MISSING_FIELD",
+        "TOTAL_CHECK_INCOMPLETE"
+      ],
+      "review_method": "Visual review of original embedded page image; FATURA source identified by date and invoice number/total, not assumed exact-byte match",
+      "sha256": "71b84b260da89014868b9172af56471872dc0d5dce7859454ef30263ab3f4979"
+    },
+    {
+      "file": "ocr/invoice_ocr (2).pdf",
+      "source": "FATURA/Template14_Instance36",
+      "expected_fields": {
+        "supplier_name": "Faulkner LLC",
+        "invoice_number": "3Y1M1d-846",
+        "invoice_date": "2008-03-13",
+        "due_date": "2008-09-04",
+        "currency": "USD",
+        "net_amount": null,
+        "tax_amount": null,
+        "total_amount": "539.52"
+      },
+      "expected_issue_codes": [
+        "TOTAL_EQUATION_REVIEW"
+      ],
+      "review_method": "Visual review of original embedded page image; FATURA source identified by date and invoice number/total, not assumed exact-byte match",
+      "sha256": "07d26cd2941330855d9b90082e31228841b5dc13965d0841cdc1a883a337696e"
+    },
+    {
+      "file": "ocr/invoice_ocr (3).pdf",
+      "source": "FATURA/Template15_Instance4",
+      "expected_fields": {
+        "supplier_name": null,
+        "invoice_number": "INV46899207",
+        "invoice_date": "2002-01-18",
+        "due_date": "2019-08-02",
+        "currency": null,
+        "net_amount": "605.58",
+        "tax_amount": null,
+        "total_amount": null
+      },
+      "expected_issue_codes": [
+        "MISSING_FIELD",
+        "CURRENCY_UNRESOLVED",
+        "TOTAL_EQUATION_REVIEW"
+      ],
+      "review_method": "Visual review of original embedded page image; FATURA source identified by date and invoice number/total, not assumed exact-byte match",
+      "sha256": "2de16e773c5d46f046496667d475113de3d741ce2fcad7e53e00e90244bc188e"
+    },
+    {
+      "file": "ocr/invoice_ocr (9).pdf",
+      "source": "FATURA/Template16_Instance188",
+      "expected_fields": {
+        "supplier_name": "Woods-Gibbs",
+        "invoice_number": "INV88219994",
+        "invoice_date": "2004-07-26",
+        "due_date": null,
+        "currency": null,
+        "net_amount": "632.92",
+        "tax_amount": null,
+        "total_amount": "659.41"
+      },
+      "expected_issue_codes": [
+        "MISSING_FIELD",
+        "CURRENCY_UNRESOLVED",
+        "TOTAL_CHECK_INCOMPLETE"
+      ],
+      "review_method": "Visual review of original embedded page image; FATURA source identified by date and invoice number/total, not assumed exact-byte match",
+      "sha256": "3b4f4a2438d1f2ba3311e1d7069c8154884e497f6967ccdbcbf86a97f67939b5"
+    },
+    {
+      "file": "ocr/invoice_ocr (10).pdf",
+      "source": "FATURA/Template1_Instance2",
+      "expected_fields": {
+        "supplier_name": null,
+        "invoice_number": null,
+        "invoice_date": "2016-12-13",
+        "due_date": "2001-07-19",
+        "currency": "EUR",
+        "net_amount": "106.84",
+        "tax_amount": "3.47",
+        "total_amount": "107.48"
+      },
+      "expected_issue_codes": [
+        "MISSING_FIELD",
+        "DUE_BEFORE_INVOICE",
+        "TOTAL_EQUATION_REVIEW"
+      ],
+      "review_method": "Visual review of original embedded page image; FATURA source identified by date and invoice number/total, not assumed exact-byte match",
+      "sha256": "360632aa2dc2269293a53ad47c4aefe3404c2c6db40c511da804326aaa4f31aa"
+    },
+    {
+      "file": "ocr/invoice_ocr (11).pdf",
+      "source": "FATURA/Template12_Instance70",
+      "expected_fields": {
+        "supplier_name": "Richardson-Davis",
+        "invoice_number": "INV70628258",
+        "invoice_date": "2003-12-11",
+        "due_date": "2009-07-04",
+        "currency": "EUR",
+        "net_amount": "739.69",
+        "tax_amount": "23.70",
+        "total_amount": "747.34"
+      },
+      "expected_issue_codes": [
+        "TOTAL_EQUATION_REVIEW"
+      ],
+      "review_method": "Visual review of original embedded page image; FATURA source identified by date and invoice number/total, not assumed exact-byte match",
+      "sha256": "c06af902df0418f3502a36fb9d82b1043c1cef092b8eb2872d5193cc99eaaac9"
+    }
+  ]
+}

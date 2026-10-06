@@ -1,3 +1,9 @@
+> 最新进度（2026-10-06）：**第五步／第8节已完成**。真实待审核任务、只读原件/字段/异常/重复候选页面、n8n v3及重启持久化已验证。49项测试通过，本轮模型调用0。当前停在pending；下一步为**第六步／第9节：Mailpit审核通知与单张happy path**。详见 `log_2026-10-06_step05_review.md`。下文较早状态为历史记录。
+
+2026-10-06 最新模型决策：主模型切为 Gemini gemini-3.5-flash-lite；OCR 仍为本地 Tesseract/Poppler。模型切换入口为根目录 .env，默认 60 秒调用间隔，不自动回退 OpenAI。单次 Gemini 样本验证通过；此前整批评估仅属 OpenAI。见 decision_2026-10-06_gemini_switch.md。
+
+2026-10-06 第四步当前状态：Python 已接入 Poppler/Tesseract OCR、OpenAI gpt-4.1-mini 结构化提取、原文证据校验、Decimal 校验及业务重复候选。n8n v2 实际调用后端并显示结果。审核任务/通知仍未实现。最新决策见 decision_2026-10-06_step04_processing.md；以下旧状态按历史理解。
+
 1. n8n骨架→业务之间的流程连接：
 	邮件触发、附件转交、调用处理服务、条件分流、发送审核通知、接受审核结果、触发导出
 2. python应用&数据库→文档数据处理及储存：

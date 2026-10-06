@@ -1,0 +1,113 @@
+{
+  "scope": "26 diagnostic literal spans selected from 3 development documents. Tuned development comparison, not held-out accuracy, semantic field assignment, or full-page CER/WER. No LLM calls.",
+  "cases": [
+    {
+      "file": "ocr/invoice_ocr (4).pdf",
+      "spans": [
+        "Amberleaf Supplies Ltd",
+        "Paperkite Operations Ltd",
+        "INV-A-202610-001",
+        "2026-10-01",
+        "2026-10-15",
+        "100.00",
+        "19.00",
+        "119.00"
+      ],
+      "local_seconds": 0.73,
+      "paddle_seconds": 6.571,
+      "local_strategy": "embedded_original",
+      "local_scale": 1,
+      "scores": {
+        "old_rendered_tesseract": {
+          "matched": 7,
+          "total": 8,
+          "missing": [
+            "INV-A-202610-001"
+          ]
+        },
+        "local_optimized_tesseract": {
+          "matched": 8,
+          "total": 8,
+          "missing": []
+        },
+        "paddle_mobile": {
+          "matched": 8,
+          "total": 8,
+          "missing": []
+        }
+      }
+    },
+    {
+      "file": "ocr/invoice_ocr (7).pdf",
+      "spans": [
+        "Amberleaf Supplies Ltd",
+        "Paperkite Operations Ltd",
+        "INV-A-202610-001",
+        "2026-10-01",
+        "2026-10-15",
+        "100.00",
+        "19.00",
+        "119.00"
+      ],
+      "local_seconds": 0.661,
+      "paddle_seconds": 5.672,
+      "local_strategy": "embedded_original",
+      "local_scale": 1,
+      "scores": {
+        "old_rendered_tesseract": {
+          "matched": 8,
+          "total": 8,
+          "missing": []
+        },
+        "local_optimized_tesseract": {
+          "matched": 8,
+          "total": 8,
+          "missing": []
+        },
+        "paddle_mobile": {
+          "matched": 8,
+          "total": 8,
+          "missing": []
+        }
+      }
+    },
+    {
+      "file": "ocr/invoice_ocr (11).pdf",
+      "spans": [
+        "Richardson-Davis",
+        "Michele Smith",
+        "INV70628258",
+        "11-Dec-2003",
+        "04-Jul-2009",
+        "739.69",
+        "23.70",
+        "747.34",
+        "293.22",
+        "638391"
+      ],
+      "local_seconds": 1.568,
+      "paddle_seconds": 9.986,
+      "local_strategy": "embedded_original",
+      "local_scale": 2,
+      "scores": {
+        "old_rendered_tesseract": {
+          "matched": 9,
+          "total": 10,
+          "missing": [
+            "739.69"
+          ]
+        },
+        "local_optimized_tesseract": {
+          "matched": 10,
+          "total": 10,
+          "missing": []
+        },
+        "paddle_mobile": {
+          "matched": 10,
+          "total": 10,
+          "missing": []
+        }
+      }
+    }
+  ]
+}

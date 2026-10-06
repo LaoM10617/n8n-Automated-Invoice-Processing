@@ -1,0 +1,116 @@
+{
+  "checked_at": "2026-10-06T19:13:58.162543+00:00",
+  "model": "gemini-3.5-flash-lite",
+  "input_pipeline": "step4-v5",
+  "input_quality": "text-quality-v1",
+  "raw_extraction": {
+    "fields": {
+      "supplier_name": "Richardson-Davis",
+      "supplier_address": "6479 Smith Causeway New Matthewberg, FL 83353 US",
+      "supplier_tax_id": null,
+      "invoice_number": "INV70628258",
+      "invoice_date": "11-Dec-2003",
+      "due_date": "04-Jul-2009",
+      "currency": "EUR",
+      "net_amount": "FIRA8",
+      "tax_amount": "23.70",
+      "total_amount": "747.34",
+      "discount_amount": "27.81",
+      "shipping_amount": null,
+      "has_adjustments": true
+    },
+    "evidence": [
+      {
+        "field": "supplier_name",
+        "page": 1,
+        "quote": "Richardson-Davis"
+      },
+      {
+        "field": "supplier_address",
+        "page": 1,
+        "quote": "6479 Smith Causeway New Matthewberg, FL 83353 US"
+      },
+      {
+        "field": "invoice_number",
+        "page": 1,
+        "quote": "INV70628258"
+      },
+      {
+        "field": "invoice_date",
+        "page": 1,
+        "quote": "11-Dec-2003"
+      },
+      {
+        "field": "due_date",
+        "page": 1,
+        "quote": "04-Jul-2009"
+      },
+      {
+        "field": "currency",
+        "page": 1,
+        "quote": "EUR"
+      },
+      {
+        "field": "net_amount",
+        "page": 1,
+        "quote": "FIRA8"
+      },
+      {
+        "field": "tax_amount",
+        "page": 1,
+        "quote": "23.70"
+      },
+      {
+        "field": "total_amount",
+        "page": 1,
+        "quote": "747.34"
+      },
+      {
+        "field": "discount_amount",
+        "page": 1,
+        "quote": "27.81"
+      }
+    ],
+    "uncertainties": [
+      "Subtotal/net amount reads FIRA8 EUR which appears to be OCR noise for a numerical amount"
+    ]
+  },
+  "fields": {
+    "supplier_name": "Richardson-Davis",
+    "supplier_address": "6479 Smith Causeway New Matthewberg, FL 83353 US",
+    "supplier_tax_id": null,
+    "invoice_number": "INV70628258",
+    "invoice_date": "2003-12-11",
+    "due_date": "2009-07-04",
+    "currency": "EUR",
+    "net_amount": null,
+    "tax_amount": "23.70",
+    "total_amount": "747.34",
+    "discount_amount": "27.81",
+    "shipping_amount": null,
+    "has_adjustments": true
+  },
+  "issues": [
+    {
+      "code": "AMOUNT_AMBIGUOUS_OR_INVALID",
+      "field": "net_amount",
+      "message": "Amount cannot be normalized safely."
+    },
+    {
+      "code": "TOTAL_CHECK_INCOMPLETE",
+      "field": "total_amount",
+      "message": "Net, tax, total and supported currency are needed to check arithmetic."
+    },
+    {
+      "code": "TOTAL_EQUATION_REVIEW",
+      "field": "total_amount",
+      "message": "Discounts, shipping or other adjustments require an explicit totals equation."
+    }
+  ],
+  "arithmetic": {
+    "total_equation": "not_evaluated",
+    "tolerance": null,
+    "computed_total": null,
+    "difference": null
+  }
+}

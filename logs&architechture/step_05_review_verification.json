@@ -1,0 +1,60 @@
+{
+  "date": "2026-10-06",
+  "n8n_workflow": "APIntakeReviewV3",
+  "n8n_upload_and_replay": [
+    {
+      "status": 200,
+      "body": "{\"formSubmittedText\":\"Invoice stored. Review task ready (pending). Invoice ID: 1771e496-d925-4832-a504-fbcb96eba30e. Open review: http://127.0.0.1:8000/reviews/1771e496-d925-4832-a504-fbcb96eba30e . The page is read-only. No approval or notification has been sent.\",\"review_url\":\"http://127.0.0.1:8000/reviews/1771e496-d925-4832-a504-fbcb96eba30e\"}"
+    },
+    {
+      "status": 200,
+      "body": "{\"formSubmittedText\":\"Invoice stored. Review task ready (pending). Invoice ID: 1771e496-d925-4832-a504-fbcb96eba30e. Open review: http://127.0.0.1:8000/reviews/1771e496-d925-4832-a504-fbcb96eba30e . The page is read-only. No approval or notification has been sent.\",\"review_url\":\"http://127.0.0.1:8000/reviews/1771e496-d925-4832-a504-fbcb96eba30e\"}"
+    }
+  ],
+  "processing_attempt_unchanged": 82,
+  "review_id_after_container_recreate": "ed3992fb-d12b-48bb-82c2-f4ae4a162e8e",
+  "original_bytes_match": true,
+  "model_calls": 0,
+  "browser_original_and_fields_visible": true,
+  "source_conflict": {
+    "formSubmittedText": "Upload not accepted (HTTP 409). No processing or review task creation was started.",
+    "review_url": null
+  },
+  "additional_tasks": [
+    {
+      "invoice_id": "41608a73-1043-48ec-9482-bd84bc6fc2ee",
+      "direction": "AP",
+      "review_id": "2fb3d0be-830f-4844-8ab3-084a8fc7cce8",
+      "review_status": "pending",
+      "review_url": "http://127.0.0.1:8000/reviews/41608a73-1043-48ec-9482-bd84bc6fc2ee",
+      "created_at": "2026-10-06T19:29:53.661Z",
+      "created_attempt_id": 81,
+      "is_mock": false
+    },
+    {
+      "invoice_id": "fa48d0e9-1aa4-4221-9b70-65e5ee4e2604",
+      "direction": "AP",
+      "review_id": "7b10de7e-0798-4c92-8d86-0bcad1c8b41a",
+      "review_status": "pending",
+      "review_url": "http://127.0.0.1:8000/reviews/fa48d0e9-1aa4-4221-9b70-65e5ee4e2604",
+      "created_at": "2026-10-06T19:29:54.295Z",
+      "created_attempt_id": 68,
+      "is_mock": false
+    }
+  ],
+  "health": {
+    "status": "ok",
+    "capabilities": {
+      "intake": true,
+      "extraction": true,
+      "ocr": true,
+      "review": true,
+      "review_decisions": false
+    }
+  },
+  "tests": {
+    "passed": 49,
+    "warnings": 2
+  },
+  "browser_C_total_mismatch_visible": true
+}

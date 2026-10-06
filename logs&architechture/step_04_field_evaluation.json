@@ -1,0 +1,954 @@
+{
+  "checked_at": "2026-10-06T18:36:25.798340+00:00",
+  "scope": "First-round development fixtures only, not unseen-template accuracy. Strict field comparison; nulls counted explicitly.",
+  "completed_documents": 16,
+  "total_documents": 16,
+  "matched_fields": 123,
+  "compared_fields": 128,
+  "cases": [
+    {
+      "file": "text_pdf/01_invoice_A.pdf",
+      "invoice_id": "528eac97-c831-4b19-9329-e0347a8536f8",
+      "process_http_status": 200,
+      "processing_status": "processed",
+      "processing_error": null,
+      "business_duplicate_status": "candidate",
+      "comparisons": [
+        {
+          "field": "supplier_name",
+          "expected": "Amberleaf Supplies Ltd",
+          "actual": "Amberleaf Supplies Ltd",
+          "match": true
+        },
+        {
+          "field": "invoice_number",
+          "expected": "INV-A-202610-001",
+          "actual": "INV-A-202610-001",
+          "match": true
+        },
+        {
+          "field": "invoice_date",
+          "expected": "2026-10-01",
+          "actual": "2026-10-01",
+          "match": true
+        },
+        {
+          "field": "due_date",
+          "expected": "2026-10-15",
+          "actual": "2026-10-15",
+          "match": true
+        },
+        {
+          "field": "currency",
+          "expected": "EUR",
+          "actual": "EUR",
+          "match": true
+        },
+        {
+          "field": "net_amount",
+          "expected": "100.0",
+          "actual": "100.00",
+          "match": true
+        },
+        {
+          "field": "tax_amount",
+          "expected": "19.0",
+          "actual": "19.00",
+          "match": true
+        },
+        {
+          "field": "total_amount",
+          "expected": "119.0",
+          "actual": "119.00",
+          "match": true
+        }
+      ],
+      "missing_expected_issue_codes": []
+    },
+    {
+      "file": "text_pdf/02_invoice_B.pdf",
+      "invoice_id": "19c3cd1d-f041-4450-a341-625b74ffaaf7",
+      "process_http_status": 200,
+      "processing_status": "processed",
+      "processing_error": null,
+      "business_duplicate_status": "candidate",
+      "comparisons": [
+        {
+          "field": "supplier_name",
+          "expected": "Violetcloud Services Ltd",
+          "actual": "Violetcloud Services Ltd",
+          "match": true
+        },
+        {
+          "field": "invoice_number",
+          "expected": "INV-B-202610-002",
+          "actual": "INV-B-202610-002",
+          "match": true
+        },
+        {
+          "field": "invoice_date",
+          "expected": "2026-10-03",
+          "actual": "2026-10-03",
+          "match": true
+        },
+        {
+          "field": "due_date",
+          "expected": "2026-10-24",
+          "actual": "2026-10-24",
+          "match": true
+        },
+        {
+          "field": "currency",
+          "expected": "EUR",
+          "actual": "EUR",
+          "match": true
+        },
+        {
+          "field": "net_amount",
+          "expected": "250.0",
+          "actual": "250.00",
+          "match": true
+        },
+        {
+          "field": "tax_amount",
+          "expected": "47.5",
+          "actual": "47.50",
+          "match": true
+        },
+        {
+          "field": "total_amount",
+          "expected": "297.5",
+          "actual": "297.50",
+          "match": true
+        }
+      ],
+      "missing_expected_issue_codes": []
+    },
+    {
+      "file": "text_pdf/03_invoice_A_exact_copy.pdf",
+      "invoice_id": "528eac97-c831-4b19-9329-e0347a8536f8",
+      "process_http_status": 200,
+      "processing_status": "processed",
+      "processing_error": null,
+      "business_duplicate_status": "candidate",
+      "comparisons": [
+        {
+          "field": "supplier_name",
+          "expected": "Amberleaf Supplies Ltd",
+          "actual": "Amberleaf Supplies Ltd",
+          "match": true
+        },
+        {
+          "field": "invoice_number",
+          "expected": "INV-A-202610-001",
+          "actual": "INV-A-202610-001",
+          "match": true
+        },
+        {
+          "field": "invoice_date",
+          "expected": "2026-10-01",
+          "actual": "2026-10-01",
+          "match": true
+        },
+        {
+          "field": "due_date",
+          "expected": "2026-10-15",
+          "actual": "2026-10-15",
+          "match": true
+        },
+        {
+          "field": "currency",
+          "expected": "EUR",
+          "actual": "EUR",
+          "match": true
+        },
+        {
+          "field": "net_amount",
+          "expected": "100.0",
+          "actual": "100.00",
+          "match": true
+        },
+        {
+          "field": "tax_amount",
+          "expected": "19.0",
+          "actual": "19.00",
+          "match": true
+        },
+        {
+          "field": "total_amount",
+          "expected": "119.0",
+          "actual": "119.00",
+          "match": true
+        }
+      ],
+      "missing_expected_issue_codes": []
+    },
+    {
+      "file": "text_pdf/04_invoice_A_business_duplicate.pdf",
+      "invoice_id": "1771e496-d925-4832-a504-fbcb96eba30e",
+      "process_http_status": 200,
+      "processing_status": "processed",
+      "processing_error": null,
+      "business_duplicate_status": "candidate",
+      "comparisons": [
+        {
+          "field": "supplier_name",
+          "expected": "Amberleaf Supplies Ltd",
+          "actual": "Amberleaf Supplies Ltd",
+          "match": true
+        },
+        {
+          "field": "invoice_number",
+          "expected": "INV-A-202610-001",
+          "actual": "INV-A-202610-001",
+          "match": true
+        },
+        {
+          "field": "invoice_date",
+          "expected": "2026-10-01",
+          "actual": "2026-10-01",
+          "match": true
+        },
+        {
+          "field": "due_date",
+          "expected": "2026-10-15",
+          "actual": "2026-10-15",
+          "match": true
+        },
+        {
+          "field": "currency",
+          "expected": "EUR",
+          "actual": "EUR",
+          "match": true
+        },
+        {
+          "field": "net_amount",
+          "expected": "100.0",
+          "actual": "100.00",
+          "match": true
+        },
+        {
+          "field": "tax_amount",
+          "expected": "19.0",
+          "actual": "19.00",
+          "match": true
+        },
+        {
+          "field": "total_amount",
+          "expected": "119.0",
+          "actual": "119.00",
+          "match": true
+        }
+      ],
+      "missing_expected_issue_codes": []
+    },
+    {
+      "file": "text_pdf/05_invoice_C_amount_mismatch.pdf",
+      "invoice_id": "fa48d0e9-1aa4-4221-9b70-65e5ee4e2604",
+      "process_http_status": 200,
+      "processing_status": "processed",
+      "processing_error": null,
+      "business_duplicate_status": "candidate",
+      "comparisons": [
+        {
+          "field": "supplier_name",
+          "expected": "Amberleaf Supplies Ltd",
+          "actual": "Amberleaf Supplies Ltd",
+          "match": true
+        },
+        {
+          "field": "invoice_number",
+          "expected": "INV-C-202610-003",
+          "actual": "INV-C-202610-003",
+          "match": true
+        },
+        {
+          "field": "invoice_date",
+          "expected": "2026-10-05",
+          "actual": "2026-10-05",
+          "match": true
+        },
+        {
+          "field": "due_date",
+          "expected": "2026-10-26",
+          "actual": "2026-10-26",
+          "match": true
+        },
+        {
+          "field": "currency",
+          "expected": "EUR",
+          "actual": "EUR",
+          "match": true
+        },
+        {
+          "field": "net_amount",
+          "expected": "100.0",
+          "actual": "100.00",
+          "match": true
+        },
+        {
+          "field": "tax_amount",
+          "expected": "19.0",
+          "actual": "19.00",
+          "match": true
+        },
+        {
+          "field": "total_amount",
+          "expected": "129.0",
+          "actual": "129.00",
+          "match": true
+        }
+      ],
+      "missing_expected_issue_codes": []
+    },
+    {
+      "file": "ocr/invoice_ocr (4).pdf",
+      "invoice_id": "23299883-eeb1-48a3-80c8-f521e57227e9",
+      "process_http_status": 200,
+      "processing_status": "processed",
+      "processing_error": null,
+      "business_duplicate_status": "candidate",
+      "comparisons": [
+        {
+          "field": "supplier_name",
+          "expected": "Amberleaf Supplies Ltd",
+          "actual": "Amberleaf Supplies Ltd",
+          "match": true
+        },
+        {
+          "field": "invoice_number",
+          "expected": "INV-A-202610-001",
+          "actual": "INV-A-2026 10-001",
+          "match": false
+        },
+        {
+          "field": "invoice_date",
+          "expected": "2026-10-01",
+          "actual": "2026-10-01",
+          "match": true
+        },
+        {
+          "field": "due_date",
+          "expected": "2026-10-15",
+          "actual": "2026-10-15",
+          "match": true
+        },
+        {
+          "field": "currency",
+          "expected": "EUR",
+          "actual": "EUR",
+          "match": true
+        },
+        {
+          "field": "net_amount",
+          "expected": "100.0",
+          "actual": "100.00",
+          "match": true
+        },
+        {
+          "field": "tax_amount",
+          "expected": "19.0",
+          "actual": "19.00",
+          "match": true
+        },
+        {
+          "field": "total_amount",
+          "expected": "119.0",
+          "actual": "119.00",
+          "match": true
+        }
+      ],
+      "missing_expected_issue_codes": []
+    },
+    {
+      "file": "ocr/invoice_ocr (5).pdf",
+      "invoice_id": "6c14f2cb-01f6-4b8b-a49f-c8ebbba148b1",
+      "process_http_status": 200,
+      "processing_status": "processed",
+      "processing_error": null,
+      "business_duplicate_status": "candidate",
+      "comparisons": [
+        {
+          "field": "supplier_name",
+          "expected": "Violetcloud Services Ltd",
+          "actual": "Violetcloud Services Ltd",
+          "match": true
+        },
+        {
+          "field": "invoice_number",
+          "expected": "INV-B-202610-002",
+          "actual": "INV-B-2026 10-002",
+          "match": false
+        },
+        {
+          "field": "invoice_date",
+          "expected": "2026-10-03",
+          "actual": "2026-10-03",
+          "match": true
+        },
+        {
+          "field": "due_date",
+          "expected": "2026-10-24",
+          "actual": "2026-10-24",
+          "match": true
+        },
+        {
+          "field": "currency",
+          "expected": "EUR",
+          "actual": "EUR",
+          "match": true
+        },
+        {
+          "field": "net_amount",
+          "expected": "250.0",
+          "actual": "250.00",
+          "match": true
+        },
+        {
+          "field": "tax_amount",
+          "expected": "47.5",
+          "actual": "47.50",
+          "match": true
+        },
+        {
+          "field": "total_amount",
+          "expected": "297.5",
+          "actual": "297.50",
+          "match": true
+        }
+      ],
+      "missing_expected_issue_codes": []
+    },
+    {
+      "file": "ocr/invoice_ocr (6).pdf",
+      "invoice_id": "aeee9cae-e330-417c-9f3d-88d77776037a",
+      "process_http_status": 200,
+      "processing_status": "processed",
+      "processing_error": null,
+      "business_duplicate_status": "candidate",
+      "comparisons": [
+        {
+          "field": "supplier_name",
+          "expected": "Amberleaf Supplies Ltd",
+          "actual": "Amberleaf Supplies Ltd",
+          "match": true
+        },
+        {
+          "field": "invoice_number",
+          "expected": "INV-A-202610-001",
+          "actual": "INV-A-2026 10-001",
+          "match": false
+        },
+        {
+          "field": "invoice_date",
+          "expected": "2026-10-01",
+          "actual": "2026-10-01",
+          "match": true
+        },
+        {
+          "field": "due_date",
+          "expected": "2026-10-15",
+          "actual": "2026-10-15",
+          "match": true
+        },
+        {
+          "field": "currency",
+          "expected": "EUR",
+          "actual": "EUR",
+          "match": true
+        },
+        {
+          "field": "net_amount",
+          "expected": "100.0",
+          "actual": "100.00",
+          "match": true
+        },
+        {
+          "field": "tax_amount",
+          "expected": "19.0",
+          "actual": "19.00",
+          "match": true
+        },
+        {
+          "field": "total_amount",
+          "expected": "119.0",
+          "actual": "119.00",
+          "match": true
+        }
+      ],
+      "missing_expected_issue_codes": []
+    },
+    {
+      "file": "ocr/invoice_ocr (7).pdf",
+      "invoice_id": "5e9d79ec-ad71-4d18-b517-ce44581a4e86",
+      "process_http_status": 200,
+      "processing_status": "processed",
+      "processing_error": null,
+      "business_duplicate_status": "candidate",
+      "comparisons": [
+        {
+          "field": "supplier_name",
+          "expected": "Amberleaf Supplies Ltd",
+          "actual": "Amberleaf Supplies Ltd",
+          "match": true
+        },
+        {
+          "field": "invoice_number",
+          "expected": "INV-A-202610-001",
+          "actual": "INV-A-202610-001",
+          "match": true
+        },
+        {
+          "field": "invoice_date",
+          "expected": "2026-10-01",
+          "actual": "2026-10-01",
+          "match": true
+        },
+        {
+          "field": "due_date",
+          "expected": "2026-10-15",
+          "actual": "2026-10-15",
+          "match": true
+        },
+        {
+          "field": "currency",
+          "expected": "EUR",
+          "actual": "EUR",
+          "match": true
+        },
+        {
+          "field": "net_amount",
+          "expected": "100.0",
+          "actual": "100.00",
+          "match": true
+        },
+        {
+          "field": "tax_amount",
+          "expected": "19.0",
+          "actual": "19.00",
+          "match": true
+        },
+        {
+          "field": "total_amount",
+          "expected": "119.0",
+          "actual": "119.00",
+          "match": true
+        }
+      ],
+      "missing_expected_issue_codes": []
+    },
+    {
+      "file": "ocr/invoice_ocr (8).pdf",
+      "invoice_id": "590b699e-1626-41eb-a4cf-4edebd263e75",
+      "process_http_status": 200,
+      "processing_status": "processed",
+      "processing_error": null,
+      "business_duplicate_status": "candidate",
+      "comparisons": [
+        {
+          "field": "supplier_name",
+          "expected": "Amberleaf Supplies Ltd",
+          "actual": "Amberleaf Supplies Ltd",
+          "match": true
+        },
+        {
+          "field": "invoice_number",
+          "expected": "INV-C-202610-003",
+          "actual": "INV-C-202610-003",
+          "match": true
+        },
+        {
+          "field": "invoice_date",
+          "expected": "2026-10-05",
+          "actual": "2026-10-05",
+          "match": true
+        },
+        {
+          "field": "due_date",
+          "expected": "2026-10-26",
+          "actual": "2026-10-26",
+          "match": true
+        },
+        {
+          "field": "currency",
+          "expected": "EUR",
+          "actual": "EUR",
+          "match": true
+        },
+        {
+          "field": "net_amount",
+          "expected": "100.0",
+          "actual": "100.00",
+          "match": true
+        },
+        {
+          "field": "tax_amount",
+          "expected": "19.0",
+          "actual": "19.00",
+          "match": true
+        },
+        {
+          "field": "total_amount",
+          "expected": "129.0",
+          "actual": "129.00",
+          "match": true
+        }
+      ],
+      "missing_expected_issue_codes": []
+    },
+    {
+      "file": "ocr/invoice_ocr (1).pdf",
+      "invoice_id": "0922529a-940a-4cf9-8764-39264b2ae656",
+      "process_http_status": 200,
+      "processing_status": "processed",
+      "processing_error": null,
+      "business_duplicate_status": "not_evaluable",
+      "comparisons": [
+        {
+          "field": "supplier_name",
+          "expected": "Fernandez PLC",
+          "actual": "Fernandez PLC",
+          "match": true
+        },
+        {
+          "field": "invoice_number",
+          "expected": null,
+          "actual": null,
+          "match": true
+        },
+        {
+          "field": "invoice_date",
+          "expected": "2009-01-29",
+          "actual": "2009-01-29",
+          "match": true
+        },
+        {
+          "field": "due_date",
+          "expected": "2020-12-09",
+          "actual": "2020-12-09",
+          "match": true
+        },
+        {
+          "field": "currency",
+          "expected": "EUR",
+          "actual": "EUR",
+          "match": true
+        },
+        {
+          "field": "net_amount",
+          "expected": null,
+          "actual": null,
+          "match": true
+        },
+        {
+          "field": "tax_amount",
+          "expected": null,
+          "actual": null,
+          "match": true
+        },
+        {
+          "field": "total_amount",
+          "expected": "291.08",
+          "actual": "291.08",
+          "match": true
+        }
+      ],
+      "missing_expected_issue_codes": []
+    },
+    {
+      "file": "ocr/invoice_ocr (2).pdf",
+      "invoice_id": "9ece27a7-0b1f-49df-b44f-0bc1c4be94bd",
+      "process_http_status": 200,
+      "processing_status": "processed",
+      "processing_error": null,
+      "business_duplicate_status": "no_candidates",
+      "comparisons": [
+        {
+          "field": "supplier_name",
+          "expected": "Faulkner LLC",
+          "actual": "Faulkner LLC",
+          "match": true
+        },
+        {
+          "field": "invoice_number",
+          "expected": "3Y1M1d-846",
+          "actual": "3Y1M1d-846",
+          "match": true
+        },
+        {
+          "field": "invoice_date",
+          "expected": "2008-03-13",
+          "actual": "2008-03-13",
+          "match": true
+        },
+        {
+          "field": "due_date",
+          "expected": "2008-09-04",
+          "actual": "2008-09-04",
+          "match": true
+        },
+        {
+          "field": "currency",
+          "expected": "USD",
+          "actual": "USD",
+          "match": true
+        },
+        {
+          "field": "net_amount",
+          "expected": null,
+          "actual": null,
+          "match": true
+        },
+        {
+          "field": "tax_amount",
+          "expected": null,
+          "actual": null,
+          "match": true
+        },
+        {
+          "field": "total_amount",
+          "expected": "539.52",
+          "actual": "539.52",
+          "match": true
+        }
+      ],
+      "missing_expected_issue_codes": []
+    },
+    {
+      "file": "ocr/invoice_ocr (3).pdf",
+      "invoice_id": "d284b695-5b9e-4e6e-b40d-39c57c80b4e1",
+      "process_http_status": 200,
+      "processing_status": "processed",
+      "processing_error": null,
+      "business_duplicate_status": "not_evaluable",
+      "comparisons": [
+        {
+          "field": "supplier_name",
+          "expected": null,
+          "actual": null,
+          "match": true
+        },
+        {
+          "field": "invoice_number",
+          "expected": "INV46899207",
+          "actual": "INV46899207",
+          "match": true
+        },
+        {
+          "field": "invoice_date",
+          "expected": "2002-01-18",
+          "actual": "2002-01-18",
+          "match": true
+        },
+        {
+          "field": "due_date",
+          "expected": "2019-08-02",
+          "actual": "2019-08-02",
+          "match": true
+        },
+        {
+          "field": "currency",
+          "expected": null,
+          "actual": null,
+          "match": true
+        },
+        {
+          "field": "net_amount",
+          "expected": "605.58",
+          "actual": "605.58",
+          "match": true
+        },
+        {
+          "field": "tax_amount",
+          "expected": null,
+          "actual": null,
+          "match": true
+        },
+        {
+          "field": "total_amount",
+          "expected": null,
+          "actual": null,
+          "match": true
+        }
+      ],
+      "missing_expected_issue_codes": []
+    },
+    {
+      "file": "ocr/invoice_ocr (9).pdf",
+      "invoice_id": "860b7adb-e80f-4bf2-b835-bd9426723b49",
+      "process_http_status": 200,
+      "processing_status": "processed",
+      "processing_error": null,
+      "business_duplicate_status": "no_candidates",
+      "comparisons": [
+        {
+          "field": "supplier_name",
+          "expected": "Woods-Gibbs",
+          "actual": "Woods-Gibbs",
+          "match": true
+        },
+        {
+          "field": "invoice_number",
+          "expected": "INV88219994",
+          "actual": "INV88219994",
+          "match": true
+        },
+        {
+          "field": "invoice_date",
+          "expected": "2004-07-26",
+          "actual": "2004-07-26",
+          "match": true
+        },
+        {
+          "field": "due_date",
+          "expected": null,
+          "actual": null,
+          "match": true
+        },
+        {
+          "field": "currency",
+          "expected": null,
+          "actual": null,
+          "match": true
+        },
+        {
+          "field": "net_amount",
+          "expected": "632.92",
+          "actual": "632.92",
+          "match": true
+        },
+        {
+          "field": "tax_amount",
+          "expected": null,
+          "actual": null,
+          "match": true
+        },
+        {
+          "field": "total_amount",
+          "expected": "659.41",
+          "actual": "659.41",
+          "match": true
+        }
+      ],
+      "missing_expected_issue_codes": []
+    },
+    {
+      "file": "ocr/invoice_ocr (10).pdf",
+      "invoice_id": "2d87b92b-8a29-4236-9b1b-5dec6f9a7fe8",
+      "process_http_status": 200,
+      "processing_status": "processed",
+      "processing_error": null,
+      "business_duplicate_status": "not_evaluable",
+      "comparisons": [
+        {
+          "field": "supplier_name",
+          "expected": null,
+          "actual": null,
+          "match": true
+        },
+        {
+          "field": "invoice_number",
+          "expected": null,
+          "actual": null,
+          "match": true
+        },
+        {
+          "field": "invoice_date",
+          "expected": "2016-12-13",
+          "actual": "2016-12-13",
+          "match": true
+        },
+        {
+          "field": "due_date",
+          "expected": "2001-07-19",
+          "actual": "2001-07-19",
+          "match": true
+        },
+        {
+          "field": "currency",
+          "expected": "EUR",
+          "actual": "EUR",
+          "match": true
+        },
+        {
+          "field": "net_amount",
+          "expected": "106.84",
+          "actual": "106.84",
+          "match": true
+        },
+        {
+          "field": "tax_amount",
+          "expected": "3.47",
+          "actual": "3.47",
+          "match": true
+        },
+        {
+          "field": "total_amount",
+          "expected": "107.48",
+          "actual": "107.48",
+          "match": true
+        }
+      ],
+      "missing_expected_issue_codes": []
+    },
+    {
+      "file": "ocr/invoice_ocr (11).pdf",
+      "invoice_id": "41608a73-1043-48ec-9482-bd84bc6fc2ee",
+      "process_http_status": 200,
+      "processing_status": "processed",
+      "processing_error": null,
+      "business_duplicate_status": "not_evaluable",
+      "comparisons": [
+        {
+          "field": "supplier_name",
+          "expected": "Richardson-Davis",
+          "actual": null,
+          "match": false
+        },
+        {
+          "field": "invoice_number",
+          "expected": "INV70628258",
+          "actual": "INV70628258",
+          "match": true
+        },
+        {
+          "field": "invoice_date",
+          "expected": "2003-12-11",
+          "actual": "2003-12-11",
+          "match": true
+        },
+        {
+          "field": "due_date",
+          "expected": "2009-07-04",
+          "actual": "2009-07-04",
+          "match": true
+        },
+        {
+          "field": "currency",
+          "expected": "EUR",
+          "actual": "EUR",
+          "match": true
+        },
+        {
+          "field": "net_amount",
+          "expected": "739.69",
+          "actual": null,
+          "match": false
+        },
+        {
+          "field": "tax_amount",
+          "expected": "23.70",
+          "actual": "23.70",
+          "match": true
+        },
+        {
+          "field": "total_amount",
+          "expected": "747.34",
+          "actual": "747.34",
+          "match": true
+        }
+      ],
+      "missing_expected_issue_codes": []
+    }
+  ]
+}

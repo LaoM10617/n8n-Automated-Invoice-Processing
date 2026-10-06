@@ -32,7 +32,6 @@ def test_first_round_files(client, path):
     assert item['inspection']['ocr_required'] == (path.parent.name == 'ocr')
     assert client.get(item['original_ref']).content == path.read_bytes()
     assert item['review_url'] is None
-    assert client.post(f"/api/ap/invoices/{item['invoice_id']}/process").status_code == 501
 
 
 def test_replay_new_receipt_and_conflict(client):

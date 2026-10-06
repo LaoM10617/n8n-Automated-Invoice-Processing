@@ -1,0 +1,379 @@
+{
+  "id": "APIntakeReviewV3",
+  "name": "01_AP_Intake_Review_v3",
+  "nodes": [
+    {
+      "id": "d33120fd-6a7a-48be-b42e-96dd6a3b472a",
+      "name": "Upload Invoice",
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        240
+      ],
+      "parameters": {
+        "path": "ap-intake-review-v3",
+        "formTitle": "AP Invoice Intake and Review",
+        "formDescription": "Upload one invoice to store, extract and create a read-only review task. Keep the same Upload ID for a retry. Review notifications are not sent yet.",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Upload ID",
+              "fieldType": "text",
+              "requiredField": true,
+              "placeholder": "e.g. ap-upload-001"
+            },
+            {
+              "fieldLabel": "Invoice File",
+              "fieldType": "file",
+              "multipleFiles": false,
+              "acceptFileTypes": ".pdf,.jpg,.jpeg,.png",
+              "requiredField": true
+            }
+          ]
+        },
+        "responseMode": "responseNode",
+        "options": {
+          "buttonLabel": "Store invoice",
+          "appendAttribution": false
+        }
+      },
+      "webhookId": "faed72c5-70ae-44d7-954e-d7c1e59175f7"
+    },
+    {
+      "id": "a13e06cb-5d88-48a8-85d4-eb07baf2c669",
+      "name": "Normalize Upload",
+      "type": "n8n-nodes-base.code",
+      "position": [
+        280,
+        240
+      ],
+      "parameters": {
+        "jsCode": "const item = $input.first();\nconst keys = Object.keys(item.binary || {});\nif (keys.length !== 1) throw new Error('Upload exactly one file.');\nconst sourceId = String(item.json['Upload ID'] || '').trim();\nif (!sourceId || sourceId.length > 200) throw new Error('Upload ID must contain 1 to 200 characters.');\nreturn [{json: {direction: 'AP', source_type: 'upload', source_namespace: 'n8n-ap-upload-v1', source_id: sourceId, attachment_id: '0'}, binary: {data: item.binary[keys[0]]}}];"
+      },
+      "typeVersion": 2
+    },
+    {
+      "id": "efa75d18-c25e-417c-8831-6f3b880ecf51",
+      "name": "Store Original and Register Intake",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        560,
+        240
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "http://python-api:8000/api/ap/intakes",
+        "sendBody": true,
+        "contentType": "multipart-form-data",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "parameterType": "formBinaryData",
+              "name": "file",
+              "inputDataFieldName": "data"
+            },
+            {
+              "name": "source_type",
+              "value": "={{ $json.source_type }}"
+            },
+            {
+              "name": "source_namespace",
+              "value": "={{ $json.source_namespace }}"
+            },
+            {
+              "name": "source_id",
+              "value": "={{ $json.source_id }}"
+            },
+            {
+              "name": "attachment_id",
+              "value": "={{ $json.attachment_id }}"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 30000,
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "neverError": true,
+              "responseFormat": "json"
+            }
+          }
+        }
+      },
+      "typeVersion": 4.2
+    },
+    {
+      "id": "1021ab90-d2c1-4900-9f09-8eadca1c0aa1",
+      "name": "Format Intake Result",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1840,
+        240
+      ],
+      "parameters": {
+        "jsCode": "const intake = $('Store Original and Register Intake').first().json;\nconst current = $input.first().json;\nconst saved = intake.body || {};\nconst result = current.body || {};\nconst ok = [200,201].includes(intake.statusCode) && Boolean(saved.invoice_id);\nconst ready = [200,201].includes(current.statusCode) && result.review_status === 'pending' && Boolean(result.review_url);\nlet message;\nif (!ok) message = `Upload not accepted (HTTP ${intake.statusCode}). No processing or review task creation was started.`;\nelse if (ready) message = `Invoice stored. Review task ready (pending). Invoice ID: ${saved.invoice_id}. Open review: ${result.review_url} . The page is read-only. No approval or notification has been sent.`;\nelse message = `Invoice stored. Review task creation did not complete in this run (HTTP ${current.statusCode}). Retry with the same Upload ID after resolving the error. Existing records are retained.`;\nreturn [{json:{formSubmittedText:message,review_url:ready ? result.review_url : null,review_success:ready,intake:saved,result}}];"
+      }
+    },
+    {
+      "id": "7a87a7cf-0299-466d-b250-86982bef4ba4",
+      "name": "Show Intake Result",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        2100,
+        240
+      ],
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { formSubmittedText: $json.formSubmittedText, review_url: $json.review_url } }}",
+        "options": {}
+      }
+    },
+    {
+      "id": "d7979075-8fc9-4751-9c8b-f04e6df535ff",
+      "name": "Scope and Template Provenance",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        0,
+        -100
+      ],
+      "parameters": {
+        "width": 1720,
+        "height": 250,
+        "content": "## Step 5: persistent read-only review\nDerived from the preserved v2 upload/processing workflow and original email template.\nSuccessful processing creates an invoice-idempotent pending review task. Processing/intake failures bypass task creation. The returned public URL opens original, fields, issues and duplicate candidates from the database.\nNo approval/rejection, notifications, export or payment is implemented. Keys remain in the Python environment; model selection follows backend configuration. Original and older exports are preserved. This export is inactive; publication evidence is in the handoff."
+      }
+    },
+    {
+      "id": "c1380588-5eae-4a18-9645-f00781d91cf9",
+      "name": "Intake Accepted",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        800,
+        240
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "1f6e4792-18b4-4b04-b8a8-fcea517e4597",
+              "leftValue": "={{ Boolean($json.body && $json.body.invoice_id && ($json.statusCode === 200 || $json.statusCode === 201)) }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "4b535f55-cd1b-49e8-9146-1cb0aeb7a92b",
+      "name": "Extract Validate and Check Duplicates",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        1060,
+        140
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "={{ 'http://python-api:8000/api/ap/invoices/' + $json.body.invoice_id + '/process' }}",
+        "options": {
+          "timeout": 180000,
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "neverError": true,
+              "responseFormat": "json"
+            }
+          }
+        }
+      },
+      "typeVersion": 4.2
+    },
+    {
+      "id": "a9bf00b5-f810-4ce6-baf6-4f87344db789",
+      "name": "Processing Completed",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        1320,
+        140
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "1f6e4792-18b4-4b04-b8a8-fcea517e4597",
+              "leftValue": "={{ Boolean($json.statusCode === 200 && $json.body && $json.body.processing_status === 'processed') }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "6b8a71b7-718a-462b-a767-b274261953df",
+      "name": "Create Review Task",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        1580,
+        40
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "={{ 'http://python-api:8000/api/ap/invoices/' + $json.body.invoice_id + '/review-task' }}",
+        "options": {
+          "timeout": 30000,
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "neverError": true,
+              "responseFormat": "json"
+            }
+          }
+        }
+      },
+      "typeVersion": 4.2
+    }
+  ],
+  "connections": {
+    "Upload Invoice": {
+      "main": [
+        [
+          {
+            "node": "Normalize Upload",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalize Upload": {
+      "main": [
+        [
+          {
+            "node": "Store Original and Register Intake",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Store Original and Register Intake": {
+      "main": [
+        [
+          {
+            "node": "Intake Accepted",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Intake Accepted": {
+      "main": [
+        [
+          {
+            "node": "Extract Validate and Check Duplicates",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Format Intake Result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Validate and Check Duplicates": {
+      "main": [
+        [
+          {
+            "node": "Processing Completed",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format Intake Result": {
+      "main": [
+        [
+          {
+            "node": "Show Intake Result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Processing Completed": {
+      "main": [
+        [
+          {
+            "node": "Create Review Task",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Format Intake Result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Review Task": {
+      "main": [
+        [
+          {
+            "node": "Format Intake Result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Europe/Berlin",
+    "saveDataSuccessExecution": "all",
+    "saveDataErrorExecution": "all"
+  },
+  "active": false,
+  "pinData": {}
+}

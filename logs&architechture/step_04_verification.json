@@ -1,0 +1,304 @@
+{
+  "actual_document_processing": [
+    {
+      "file": "ocr\\invoice_ocr (1).pdf",
+      "invoice_id": "0922529a-940a-4cf9-8764-39264b2ae656",
+      "http_status": 503,
+      "processing_status": "failed",
+      "error": {
+        "code": "MODEL_NOT_CONFIGURED",
+        "message": "Configure AP_LLM_BASE_URL, AP_LLM_MODEL and AP_LLM_API_KEY."
+      },
+      "pages": [
+        {
+          "page": 1,
+          "method": "tesseract",
+          "characters": 625,
+          "ocr_confidence": 94.61
+        }
+      ]
+    },
+    {
+      "file": "ocr\\invoice_ocr (10).pdf",
+      "invoice_id": "2d87b92b-8a29-4236-9b1b-5dec6f9a7fe8",
+      "http_status": 503,
+      "processing_status": "failed",
+      "error": {
+        "code": "MODEL_NOT_CONFIGURED",
+        "message": "Configure AP_LLM_BASE_URL, AP_LLM_MODEL and AP_LLM_API_KEY."
+      },
+      "pages": [
+        {
+          "page": 1,
+          "method": "tesseract",
+          "characters": 743,
+          "ocr_confidence": 93.48
+        }
+      ]
+    },
+    {
+      "file": "ocr\\invoice_ocr (11).pdf",
+      "invoice_id": "41608a73-1043-48ec-9482-bd84bc6fc2ee",
+      "http_status": 503,
+      "processing_status": "failed",
+      "error": {
+        "code": "MODEL_NOT_CONFIGURED",
+        "message": "Configure AP_LLM_BASE_URL, AP_LLM_MODEL and AP_LLM_API_KEY."
+      },
+      "pages": [
+        {
+          "page": 1,
+          "method": "tesseract",
+          "characters": 2760,
+          "ocr_confidence": 90.29
+        }
+      ]
+    },
+    {
+      "file": "ocr\\invoice_ocr (2).pdf",
+      "invoice_id": "9ece27a7-0b1f-49df-b44f-0bc1c4be94bd",
+      "http_status": 503,
+      "processing_status": "failed",
+      "error": {
+        "code": "MODEL_NOT_CONFIGURED",
+        "message": "Configure AP_LLM_BASE_URL, AP_LLM_MODEL and AP_LLM_API_KEY."
+      },
+      "pages": [
+        {
+          "page": 1,
+          "method": "tesseract",
+          "characters": 714,
+          "ocr_confidence": 94.96
+        }
+      ]
+    },
+    {
+      "file": "ocr\\invoice_ocr (3).pdf",
+      "invoice_id": "d284b695-5b9e-4e6e-b40d-39c57c80b4e1",
+      "http_status": 503,
+      "processing_status": "failed",
+      "error": {
+        "code": "MODEL_NOT_CONFIGURED",
+        "message": "Configure AP_LLM_BASE_URL, AP_LLM_MODEL and AP_LLM_API_KEY."
+      },
+      "pages": [
+        {
+          "page": 1,
+          "method": "tesseract",
+          "characters": 582,
+          "ocr_confidence": 87.86
+        }
+      ]
+    },
+    {
+      "file": "ocr\\invoice_ocr (4).pdf",
+      "invoice_id": "23299883-eeb1-48a3-80c8-f521e57227e9",
+      "http_status": 503,
+      "processing_status": "failed",
+      "error": {
+        "code": "MODEL_NOT_CONFIGURED",
+        "message": "Configure AP_LLM_BASE_URL, AP_LLM_MODEL and AP_LLM_API_KEY."
+      },
+      "pages": [
+        {
+          "page": 1,
+          "method": "tesseract",
+          "characters": 515,
+          "ocr_confidence": 93.04
+        }
+      ]
+    },
+    {
+      "file": "ocr\\invoice_ocr (5).pdf",
+      "invoice_id": "6c14f2cb-01f6-4b8b-a49f-c8ebbba148b1",
+      "http_status": 503,
+      "processing_status": "failed",
+      "error": {
+        "code": "MODEL_NOT_CONFIGURED",
+        "message": "Configure AP_LLM_BASE_URL, AP_LLM_MODEL and AP_LLM_API_KEY."
+      },
+      "pages": [
+        {
+          "page": 1,
+          "method": "tesseract",
+          "characters": 558,
+          "ocr_confidence": 94.35
+        }
+      ]
+    },
+    {
+      "file": "ocr\\invoice_ocr (6).pdf",
+      "invoice_id": "aeee9cae-e330-417c-9f3d-88d77776037a",
+      "http_status": 503,
+      "processing_status": "failed",
+      "error": {
+        "code": "MODEL_NOT_CONFIGURED",
+        "message": "Configure AP_LLM_BASE_URL, AP_LLM_MODEL and AP_LLM_API_KEY."
+      },
+      "pages": [
+        {
+          "page": 1,
+          "method": "tesseract",
+          "characters": 515,
+          "ocr_confidence": 93.04
+        }
+      ]
+    },
+    {
+      "file": "ocr\\invoice_ocr (7).pdf",
+      "invoice_id": "5e9d79ec-ad71-4d18-b517-ce44581a4e86",
+      "http_status": 503,
+      "processing_status": "failed",
+      "error": {
+        "code": "MODEL_NOT_CONFIGURED",
+        "message": "Configure AP_LLM_BASE_URL, AP_LLM_MODEL and AP_LLM_API_KEY."
+      },
+      "pages": [
+        {
+          "page": 1,
+          "method": "tesseract",
+          "characters": 457,
+          "ocr_confidence": 94.43
+        }
+      ]
+    },
+    {
+      "file": "ocr\\invoice_ocr (8).pdf",
+      "invoice_id": "590b699e-1626-41eb-a4cf-4edebd263e75",
+      "http_status": 503,
+      "processing_status": "failed",
+      "error": {
+        "code": "MODEL_NOT_CONFIGURED",
+        "message": "Configure AP_LLM_BASE_URL, AP_LLM_MODEL and AP_LLM_API_KEY."
+      },
+      "pages": [
+        {
+          "page": 1,
+          "method": "tesseract",
+          "characters": 514,
+          "ocr_confidence": 95.11
+        }
+      ]
+    },
+    {
+      "file": "ocr\\invoice_ocr (9).pdf",
+      "invoice_id": "860b7adb-e80f-4bf2-b835-bd9426723b49",
+      "http_status": 503,
+      "processing_status": "failed",
+      "error": {
+        "code": "MODEL_NOT_CONFIGURED",
+        "message": "Configure AP_LLM_BASE_URL, AP_LLM_MODEL and AP_LLM_API_KEY."
+      },
+      "pages": [
+        {
+          "page": 1,
+          "method": "tesseract",
+          "characters": 484,
+          "ocr_confidence": 94.18
+        }
+      ]
+    },
+    {
+      "file": "text_pdf\\01_invoice_A.pdf",
+      "invoice_id": "528eac97-c831-4b19-9329-e0347a8536f8",
+      "http_status": 503,
+      "processing_status": "failed",
+      "error": {
+        "code": "MODEL_NOT_CONFIGURED",
+        "message": "Configure AP_LLM_BASE_URL, AP_LLM_MODEL and AP_LLM_API_KEY."
+      },
+      "pages": [
+        {
+          "page": 1,
+          "method": "native_text",
+          "characters": 1665,
+          "ocr_confidence": null
+        }
+      ]
+    },
+    {
+      "file": "text_pdf\\02_invoice_B.pdf",
+      "invoice_id": "19c3cd1d-f041-4450-a341-625b74ffaaf7",
+      "http_status": 503,
+      "processing_status": "failed",
+      "error": {
+        "code": "MODEL_NOT_CONFIGURED",
+        "message": "Configure AP_LLM_BASE_URL, AP_LLM_MODEL and AP_LLM_API_KEY."
+      },
+      "pages": [
+        {
+          "page": 1,
+          "method": "native_text",
+          "characters": 1806,
+          "ocr_confidence": null
+        }
+      ]
+    },
+    {
+      "file": "text_pdf\\03_invoice_A_exact_copy.pdf",
+      "invoice_id": "528eac97-c831-4b19-9329-e0347a8536f8",
+      "http_status": 503,
+      "processing_status": "failed",
+      "error": {
+        "code": "MODEL_NOT_CONFIGURED",
+        "message": "Configure AP_LLM_BASE_URL, AP_LLM_MODEL and AP_LLM_API_KEY."
+      },
+      "pages": [
+        {
+          "page": 1,
+          "method": "native_text",
+          "characters": 1665,
+          "ocr_confidence": null
+        }
+      ]
+    },
+    {
+      "file": "text_pdf\\04_invoice_A_business_duplicate.pdf",
+      "invoice_id": "1771e496-d925-4832-a504-fbcb96eba30e",
+      "http_status": 503,
+      "processing_status": "failed",
+      "error": {
+        "code": "MODEL_NOT_CONFIGURED",
+        "message": "Configure AP_LLM_BASE_URL, AP_LLM_MODEL and AP_LLM_API_KEY."
+      },
+      "pages": [
+        {
+          "page": 1,
+          "method": "native_text",
+          "characters": 1882,
+          "ocr_confidence": null
+        }
+      ]
+    },
+    {
+      "file": "text_pdf\\05_invoice_C_amount_mismatch.pdf",
+      "invoice_id": "fa48d0e9-1aa4-4221-9b70-65e5ee4e2604",
+      "http_status": 503,
+      "processing_status": "failed",
+      "error": {
+        "code": "MODEL_NOT_CONFIGURED",
+        "message": "Configure AP_LLM_BASE_URL, AP_LLM_MODEL and AP_LLM_API_KEY."
+      },
+      "pages": [
+        {
+          "page": 1,
+          "method": "native_text",
+          "characters": 1661,
+          "ocr_confidence": null
+        }
+      ]
+    }
+  ],
+  "note": "Model-unconfigured failures are not completed extraction. OCR text remains stored in processing attempts.",
+  "hybrid_pdf": {
+    "invoice_id": "0961d9e0-781d-4c9f-8afd-3839aae2c7dc",
+    "page_methods": [
+      "native_text",
+      "tesseract"
+    ]
+  },
+  "n8n_missing_model_branch": {
+    "verified": true,
+    "response": "Original stored. Invoice ID: 528eac97-c831-4b19-9329-e0347a8536f8. Receipt ID: 8e53eb58-65f7-4b33-9e0c-22f3ca81a88e. Processing did not complete (HTTP 503, MODEL_NOT_CONFIGURED). No approval or review task was created. Retry with the same Upload ID after resolving the error."
+  }
+}

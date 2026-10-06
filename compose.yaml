@@ -6,6 +6,11 @@ services:
       - "127.0.0.1:8000:8000"
     environment:
       AP_DATA_DIR: /data/ap
+      AP_PUBLIC_BASE_URL: ${AP_PUBLIC_BASE_URL:-http://127.0.0.1:8000}
+      AP_LLM_BASE_URL: ${AP_LLM_BASE_URL:-}
+      AP_LLM_MODEL: ${AP_LLM_MODEL:-}
+      AP_LLM_API_KEY: ${AP_LLM_API_KEY:-}
+      AP_LLM_MIN_INTERVAL_SECONDS: ${AP_LLM_MIN_INTERVAL_SECONDS:-60}
     volumes:
       - ./data/ap:/data/ap
     healthcheck:

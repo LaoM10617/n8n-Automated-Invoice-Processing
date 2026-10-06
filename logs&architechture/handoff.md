@@ -2,6 +2,43 @@
 
 Date: 2026-10-06
 
+## Latest implementation — Step 5 review (2026-10-06)
+
+Persistent review tasks and read-only review pages are deployed. n8n APIntakeReviewV3 is imported, published and tested at /form/ap-intake-review-v3. Replays reuse the task; source conflicts stop at intake. Poppler page previews replace an iframe that rendered blank in the browser. 49 tests pass; real container recreation preserves the task and original. No model calls or Git commit this turn. Next: Step 6 local Mailpit notification, with notification status separate from task creation. Approval/rejection/editing/export remain unimplemented. See log_2026-10-06_step05_review.md and step_05_review_verification.json.
+
+## Latest verification — Gemini field ownership (2026-10-06)
+
+Three real Gemini calls, at least 65 seconds apart, no retries/OpenAI/bulk run. Same-model OCR11 old-input comparison: 8/10 checked fields; new input: 9/10. New input recovers net amount and supplier city/state/postcode, but still omits Causeway from supplier address because layout isolates that word. Evidence checks do not detect this omission. Alternate text-layout A: 9/9 fields match. This is a single-run combined reading/layout diagnostic, not a controlled repeated benchmark or buyer-field extraction. New process results are persisted; old attempts retained. See log_2026-10-06_layout_gemini_validation.md and the three layout_gemini_* evidence JSON files. Guide now marks Step 4 as implemented with this open quality issue; next is Step 5, idempotent review tasks and a real minimal read-only review page. No review tasks created or code changed in this verification. No Git commit.
+
+## Latest implementation — Local layout and Paddle comparison (2026-10-06)
+
+Migrated SITECO geometry ideas into backend/pdf_layout.py; source project unchanged. Native PDF word boxes use pdfplumber 0.11.10. Small-image pages can stay native with an explicit warning; safe single-scan pages preserve original pixels and placement. Low-resolution images use a separate 2x OCR working image. All paths retain tokens, physical rows, lines, blocks, raw text, units and page dimensions. Gemini now receives row/block metadata, but no LLM calls were made in this change. Version: layout-quality-v3 / step4-layout-v1. The rebuilt backend is deployed; n8n unchanged. Existing stored results are not automatically rerun.
+
+47 tests pass. All 16 fixtures completed offline reading. Three diagnostic cases: previous Tesseract 24/26 selected literal spans; optimized Tesseract 26/26; isolated PaddleOCR mobile 26/26. This is a tuned diagnostic comparison, not semantic field accuracy or held-out OCR accuracy. Paddle is slower here and remains benchmark-only. Reproduction scripts under test_data/ocr_benchmark; decision, caveats and results in decision_2026-10-06_local_layout.md, local_layout_results.json, ocr_layout_comparison.json, paddle_ocr_comparison_raw.json and tesseract_variants_raw.json. Next: small paced Gemini validation of field ownership on OCR11/new layouts; review task/page still pending. No Git commit.
+
+## Latest fix — OCR TSV parsing (2026-10-06)
+
+Diagnosed OCR 11: TSV quote handling leaked control rows into text; fixed with QUOTE_NONE and regression coverage. 43 tests pass; backend deployed. Current page version text-quality-v2 and pipeline step4-v6 invalidate old OCR caches on explicit processing, without automatic model calls. Six local-only Tesseract probes on original/resized OCR 11 images recovered 739.69 under all tested configurations; supplier text/column ordering varied. This is not an end-to-end benchmark. Historical supplier-address misclassification was also found outside the original eight-field score. Read-only SITECO parser review and candidate-engine research are recorded in `ocr_quality_review_2026-10-06.md`. Layout migration/image routing remains proposed, not implemented. No provider calls or Git commit in this change.
+
+## Latest configuration — Gemini primary (2026-10-06)
+
+User preference supersedes the previous OpenAI default. Active `.env`: Gemini `gemini-3.5-flash-lite` through Google's OpenAI-compatible endpoint. Only one real Gemini extraction was called and passed for invoice A; no OpenAI calls in this change. Previous 16-document metrics remain OpenAI-only. Model URL/name/key are the switching interface; recreate python-api after changing them. No automatic fallback. A 60-second single-worker request gate and explicit 429 errors prevent rapid repeated requests. Evaluator defaults to one document, spaces batches by 65 seconds and stops on 429. Cache now includes model and endpoint identity. 42 offline regression tests pass. See `decision_2026-10-06_gemini_switch.md` and `gemini_switch_verification.json`. No commit created.
+
+## Latest implementation — Step 4 (2026-10-06)
+
+This section supersedes older pending-OCR/501 status below. Original template and Step 3 export remain unchanged.
+
+- Implemented `backend/document_text.py`, `extraction.py`, `validation.py`; updated `app.py`, Docker image and Compose. Real per-page native text/Tesseract OCR, OpenAI gpt-4.1-mini structured extraction, literal evidence checks, Decimal/date/currency validation, source idempotence and business-duplicate candidates are persisted. Processing attempts retain raw drafts and technical errors; current pipeline is step4-v5.
+- Added `n8n_workflows/01_AP_intake_process_v2.json`. JSON/connections checked, imported and published in the local n8n instance as APIntakeProcessV2. Actual text/OCR, amount mismatch, same-ID retry and conflicting-file branches verified. Use http://127.0.0.1:5678/form/ap-intake-process-v2 . The export remains inactive for other-instance imports. No workflow credentials are required; OpenAI credentials live only in the backend environment.
+- OpenAI key was tested successfully with real structured-output calls. User key text files and `.env` are ignored by Git. Gemini/Grok are not integrated. `.env.example` contains no key. Model calls use user-authorized test invoices.
+- `test_data/first_round/expected_fields.json` records visually reviewed source mappings; `evaluate.py --process` exercises the real API and may incur model cost. Application processing never reads reference answers.
+- 40 regression tests passed. Real final evaluation: 16/16 processed, 123/128 strict field matches (including nulls and duplicated fixtures), all expected issue codes present. Text cases match. Three OCR invoice numbers contain extra whitespace; OCR case 11 misses supplier name/net amount. These are documented limits, not silently repaired. This is a development set, not unseen-layout accuracy.
+- C retains 129.00 and receives TOTAL_MISMATCH. Different-layout A remains a separate invoice with a business-duplicate candidate. New receipts preserve new sources; identical bytes reuse invoice_id. Missing supplier identity returns not_evaluable. All successful results still require manual review.
+- Real post-restart verification: original SHA-256 matches, processed result retained, cached process call returns the same attempt. One application worker is required. Synchronous processing and conservative OCR routing are demo limitations.
+- Evidence: `step_04_verification.json` (pre-key failure/OCR), `step_04_field_evaluation_v2.json` (early prompt baseline), `step_04_field_evaluation.json` (final), `step_04_n8n_verification.json` (actual form + restart), `decision_2026-10-06_step04_processing.md` (decisions/limits). Backend README and phase guide updated. No Git commit made in this step.
+- Run: set ignored `.env` using `.env.example`; `docker compose up -d --build python-api`. Local instance is already running. For another n8n instance import v2, publish it and ensure HTTP nodes can resolve `http://python-api:8000` on the same Compose network.
+- Next: Step 5 real review-task persistence and a minimal original/fields/issues/duplicates page, then Step 6 test notifications. No review link, approval, export, email trigger, due-date scheduler or external mail sending has been implemented in this step. review_status=not_created and review_url=null remain explicit.
+
 ## Latest implementation — Step 3 n8n upload (2026-10-06)
 
 Step 3 is now verified through the running n8n instance. Current setup supersedes the earlier single-container checkpoint below.
