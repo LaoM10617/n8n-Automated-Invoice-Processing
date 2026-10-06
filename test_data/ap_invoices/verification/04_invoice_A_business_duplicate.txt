@@ -1,0 +1,17 @@
+Amberleaf Supplies Ltd
+INVOICE
+INVOICE NUMBER ISSUE DATE AMOUNT DUE
+INV-A-202610-001 2026-10-01 EUR 119.00
+DUE DATE
+2026-10-15
+FROM BILL TO
+Amberleaf Supplies Ltd Paperkite Operations Ltd
+12 Amberleaf Park 24 Paperkite Square
+Willowmere Willowmere
+# DESCRIPTION QTY UNIT PRICE TAX AMOUNT
+1 Document trays 2 EUR 30.00 19% EUR 60.00
+2 Archive folders 4 EUR 10.00 19% EUR 40.00
+Subtotal EUR 100.00
+VAT 19% EUR 19.00
+Total EUR 119.00
+Thank you for your business

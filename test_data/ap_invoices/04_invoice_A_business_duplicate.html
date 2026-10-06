@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  @page { size: A4; margin: 25mm 20mm; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 10pt; color: #2d3436; line-height: 1.5; }
+  
+  .top-bar { height: 4px; background: #244663; margin-bottom: 30px; }
+  
+  .header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 40px; }
+  .brand h1 { font-size: 20pt; font-weight: 300; color: #244663; letter-spacing: 2px; }
+  .brand .tagline { font-size: 8pt; color: #999; text-transform: uppercase; letter-spacing: 3px; margin-top: 3px; }
+  
+  .invoice-badge { background: #244663; color: white; padding: 8px 20px; font-size: 11pt; font-weight: 600; letter-spacing: 1px; }
+  
+  .meta-grid { display: flex; justify-content: space-between; margin-bottom: 30px; }
+  .meta-col { width: 30%; }
+  .meta-label { font-size: 7.5pt; text-transform: uppercase; letter-spacing: 1.5px; color: #999; margin-bottom: 4px; }
+  .meta-value { font-size: 10pt; }
+  .meta-value.large { font-size: 14pt; font-weight: 600; }
+  
+  .addresses { display: flex; justify-content: space-between; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 1px solid #eee; }
+  .addr-block { width: 45%; }
+  .addr-label { font-size: 7.5pt; text-transform: uppercase; letter-spacing: 1.5px; color: #244663; margin-bottom: 6px; font-weight: 600; }
+  .addr-text { font-size: 9pt; color: #555; }
+  
+  .items-table { width: 100%; border-collapse: collapse; margin-bottom: 25px; }
+  .items-table thead th { font-size: 7.5pt; text-transform: uppercase; letter-spacing: 1px; color: #999; padding: 10px 8px; border-bottom: 2px solid #eee; text-align: left; }
+  .items-table thead th.num { text-align: right; }
+  .items-table tbody td { padding: 12px 8px; border-bottom: 1px solid #f5f5f5; font-size: 9.5pt; }
+  .items-table tbody td.num { text-align: right; font-variant-numeric: tabular-nums; }
+  .items-table tbody td.desc { color: #2d3436; }
+  .items-table tbody td.desc small { display: block; font-size: 8pt; color: #999; margin-top: 2px; }
+  
+  .summary { display: flex; justify-content: flex-end; }
+  .summary-box { width: 250px; }
+  .summary-row { display: flex; justify-content: space-between; padding: 6px 0; font-size: 9.5pt; }
+  .summary-row.sub { color: #777; }
+  .summary-row.total { font-size: 14pt; font-weight: 700; color: #244663; border-top: 2px solid #244663; padding-top: 10px; margin-top: 5px; }
+  
+  .payment-section { margin-top: 35px; padding-top: 20px; border-top: 1px solid #eee; display: flex; justify-content: space-between; }
+  .payment-block { font-size: 8.5pt; color: #777; }
+  .payment-block strong { color: #2d3436; }
+  
+  .footer-note { margin-top: 30px; text-align: center; font-size: 8pt; color: #bbb; }
+
+  .logo-area { max-width: 330px; }
+  .logo-text { font-size: 20pt; }
+  .brand { max-width: 360px; }
+  .brand h1 { font-size: 18pt; letter-spacing: 0; }
+  .invoice-badge { padding: 8px 12px; }
+  .meta-value.large { font-size: 12pt; }
+  .footer-note { color: #555; }
+  tr { break-inside: avoid; }
+</style>
+</head>
+<body>
+
+<div class="top-bar"></div>
+
+<div class="header">
+  <div class="brand">
+    <h1>Amberleaf Supplies Ltd</h1>
+    
+  </div>
+  <div class="invoice-badge">INVOICE</div>
+</div>
+
+<div class="meta-grid">
+  <div class="meta-col">
+    <div class="meta-label">Invoice Number</div>
+    <div class="meta-value large">INV-A-202610-001</div>
+  </div>
+  <div class="meta-col">
+    <div class="meta-label">Issue Date</div>
+    <div class="meta-value">2026-10-01</div>
+    
+    <div class="meta-label" style="margin-top: 10px;">Due Date</div>
+    <div class="meta-value">2026-10-15</div>
+    
+  </div>
+  <div class="meta-col">
+    <div class="meta-label">Amount Due</div>
+    <div class="meta-value large" style="color: #244663">EUR 119.00</div>
+  </div>
+</div>
+
+<div class="addresses">
+  <div class="addr-block">
+    <div class="addr-label">From</div>
+    <div class="addr-text">
+      <strong>Amberleaf Supplies Ltd</strong><br>
+      12 Amberleaf Park<br>Willowmere<br>
+      
+      
+    </div>
+  </div>
+  <div class="addr-block">
+    <div class="addr-label">Bill To</div>
+    <div class="addr-text">
+      <strong>Paperkite Operations Ltd</strong><br>
+      24 Paperkite Square<br>Willowmere<br>
+      
+    </div>
+  </div>
+</div>
+
+<table class="items-table">
+  <thead>
+    <tr>
+      <th style="width: 5%">#</th>
+      <th>Description</th>
+      <th class="num">Qty</th>
+      <th class="num">Unit Price</th>
+      <th class="num">Tax</th>
+      <th class="num">Amount</th>
+    </tr>
+  </thead>
+  <tbody>
+    
+    <tr>
+      <td>1</td>
+      <td class="desc">Document trays</td>
+      <td class="num">2</td>
+      <td class="num">EUR 30.00</td>
+      <td class="num">19%</td>
+      <td class="num">EUR 60.00</td>
+    </tr>
+    
+    <tr>
+      <td>2</td>
+      <td class="desc">Archive folders</td>
+      <td class="num">4</td>
+      <td class="num">EUR 10.00</td>
+      <td class="num">19%</td>
+      <td class="num">EUR 40.00</td>
+    </tr>
+    
+  </tbody>
+</table>
+
+<div class="summary">
+  <div class="summary-box">
+    <div class="summary-row sub"><span>Subtotal</span><span>EUR 100.00</span></div>
+    
+    <div class="summary-row sub"><span>VAT 19%</span><span>EUR 19.00</span></div>
+    
+    
+    <div class="summary-row total"><span>Total</span><span>EUR 119.00</span></div>
+  </div>
+</div>
+
+
+
+<div class="footer-note">Thank you for your business</div>
+
+</body>
+</html>

@@ -1,0 +1,8 @@
+{
+  "review_date": "2026-10-06",
+  "method": "Rendered every PDF with Poppler pdftoppm and visually inspected each page image.",
+  "reviewed_files": ["01_invoice_A.pdf", "02_invoice_B.pdf", "03_invoice_A_exact_copy.pdf", "04_invoice_A_business_duplicate.pdf", "05_invoice_C_amount_mismatch.pdf"],
+  "result": "pass",
+  "observations": "All five regenerated one-page documents have no visible synthetic/demo banners or demo-related field values. Required fields and tables are legible, with no observed overlap, clipping or missing glyphs. Company names, addresses and invoice identifiers match revised input.json. Case 04 has a visibly different layout. Case 05 visibly retains total EUR 129.00.",
+  "scope": "Artifact layout review only; no AP or n8n workflow execution. Reinspect after regeneration."
+}

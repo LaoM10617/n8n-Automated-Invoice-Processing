@@ -1,0 +1,73 @@
+{
+  "description": "Fixed synthetic records in synthetic-invoice-gen's rendering schema. No LLM generation or arithmetic correction.",
+  "records": [
+    {
+      "supplier_name": "Amberleaf Supplies Ltd",
+      "supplier_address": "12 Amberleaf Park, Willowmere",
+      "customer_name": "Paperkite Operations Ltd",
+      "customer_address": "24 Paperkite Square, Willowmere",
+      "invoice_number": "INV-A-202610-001",
+      "document_date": "2026-10-01",
+      "due_date": "2026-10-15",
+      "document_currency": "EUR",
+      "document_type_extended": "invoice",
+      "locale": "en",
+      "line_items": [
+        {"description": "Document trays", "quantity": 2, "unit_price": 30.00, "amount": 60.00, "tax_rate": "19%", "tax_amount": 11.40},
+        {"description": "Archive folders", "quantity": 4, "unit_price": 10.00, "amount": 40.00, "tax_rate": "19%", "tax_amount": 7.60}
+      ],
+      "taxes": [{"code": "VAT", "rate": "19%", "base": 100.00, "value": 19.00}],
+      "document_total_net": 100.00,
+      "document_total_tax": 19.00,
+      "document_total_amount": 119.00
+    },
+    {
+      "supplier_name": "Violetcloud Services Ltd",
+      "supplier_address": "8 Violetcloud Lane, Willowmere",
+      "customer_name": "Paperkite Operations Ltd",
+      "customer_address": "24 Paperkite Square, Willowmere",
+      "invoice_number": "INV-B-202610-002",
+      "document_date": "2026-10-03",
+      "due_date": "2026-10-24",
+      "document_currency": "EUR",
+      "document_type_extended": "invoice",
+      "locale": "en",
+      "line_items": [
+        {"description": "Data preparation", "quantity": 2, "unit_price": 50.00, "amount": 100.00, "tax_rate": "19%", "tax_amount": 19.00},
+        {"description": "Template setup", "quantity": 1, "unit_price": 90.00, "amount": 90.00, "tax_rate": "19%", "tax_amount": 17.10},
+        {"description": "Validation support", "quantity": 3, "unit_price": 20.00, "amount": 60.00, "tax_rate": "19%", "tax_amount": 11.40}
+      ],
+      "taxes": [{"code": "VAT", "rate": "19%", "base": 250.00, "value": 47.50}],
+      "document_total_net": 250.00,
+      "document_total_tax": 47.50,
+      "document_total_amount": 297.50
+    },
+    {
+      "supplier_name": "Amberleaf Supplies Ltd",
+      "supplier_address": "12 Amberleaf Park, Willowmere",
+      "customer_name": "Paperkite Operations Ltd",
+      "customer_address": "24 Paperkite Square, Willowmere",
+      "invoice_number": "INV-C-202610-003",
+      "document_date": "2026-10-05",
+      "due_date": "2026-10-26",
+      "document_currency": "EUR",
+      "document_type_extended": "invoice",
+      "locale": "en",
+      "line_items": [
+        {"description": "Document trays", "quantity": 2, "unit_price": 30.00, "amount": 60.00, "tax_rate": "19%", "tax_amount": 11.40},
+        {"description": "Archive folders", "quantity": 4, "unit_price": 10.00, "amount": 40.00, "tax_rate": "19%", "tax_amount": 7.60}
+      ],
+      "taxes": [{"code": "VAT", "rate": "19%", "base": 100.00, "value": 19.00}],
+      "document_total_net": 100.00,
+      "document_total_tax": 19.00,
+      "document_total_amount": 129.00
+    }
+  ],
+  "cases": [
+    {"file_name": "01_invoice_A.pdf", "record_index": 0, "template": "formal_corporate"},
+    {"file_name": "02_invoice_B.pdf", "record_index": 1, "template": "formal_corporate"},
+    {"file_name": "03_invoice_A_exact_copy.pdf", "record_index": 0, "copy_from": "01_invoice_A.pdf"},
+    {"file_name": "04_invoice_A_business_duplicate.pdf", "record_index": 0, "template": "modern_minimal"},
+    {"file_name": "05_invoice_C_amount_mismatch.pdf", "record_index": 2, "template": "formal_corporate"}
+  ]
+}

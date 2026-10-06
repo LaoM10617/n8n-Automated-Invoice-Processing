@@ -1,0 +1,376 @@
+{
+  "description": "SYNTHETIC — DEMO ONLY. Fixed English AP invoice fixtures; EUR and test VAT of 19%.",
+  "created_date": "2026-10-06",
+  "source": {
+    "project": "synthetic-invoice-gen",
+    "local_path": "D:/Projects/synthetic-invoice-gen",
+    "upstream": "https://github.com/alamgirqazi/synthetic-invoice-gen",
+    "commit": "bd20ae9b0a3fa4a6080ef883c7c734ffc87c2b18",
+    "license": "MIT",
+    "license_copy": "templates/LICENSE"
+  },
+  "generation": "Fixed input.json -> adapted upstream Jinja2 templates -> headless Edge PDF. No LLM, random context, math correction, scan noise, or bank details. Native WeasyPrint was unavailable (missing GObject/Pango). Case 03 is a byte copy; case 04 uses exactly the same input record as case 01.",
+  "scope": "Artifact verification only. No AP ingestion, application validation, n8n execution, approval, export, or payment has been tested.",
+  "cases": [
+    {
+      "file_name": "01_invoice_A.pdf",
+      "sha256": "e2572aa88fdae19e2984a2e2005d399e142f8444680929b975cab8acfb59b432",
+      "input_record_index": 0,
+      "expected_fields": {
+        "supplier_name": "Amberleaf Supplies Ltd",
+        "supplier_address": "12 Amberleaf Park, Willowmere",
+        "customer_name": "Paperkite Operations Ltd",
+        "customer_address": "24 Paperkite Square, Willowmere",
+        "invoice_number": "INV-A-202610-001",
+        "document_date": "2026-10-01",
+        "due_date": "2026-10-15",
+        "document_currency": "EUR",
+        "document_type_extended": "invoice",
+        "locale": "en",
+        "line_items": [
+          {
+            "description": "Document trays",
+            "quantity": 2,
+            "unit_price": 30.0,
+            "amount": 60.0,
+            "tax_rate": "19%",
+            "tax_amount": 11.4
+          },
+          {
+            "description": "Archive folders",
+            "quantity": 4,
+            "unit_price": 10.0,
+            "amount": 40.0,
+            "tax_rate": "19%",
+            "tax_amount": 7.6
+          }
+        ],
+        "taxes": [
+          {
+            "code": "VAT",
+            "rate": "19%",
+            "base": 100.0,
+            "value": 19.0
+          }
+        ],
+        "document_total_net": 100.0,
+        "document_total_tax": 19.0,
+        "document_total_amount": 119.0
+      },
+      "expected_validation": {
+        "required_fields": "pass",
+        "line_arithmetic": "pass",
+        "vat_19_percent": "pass",
+        "net_plus_tax_equals_printed_total": "pass",
+        "computed_total": "119.00",
+        "printed_total_difference": "0.00",
+        "issues": [],
+        "review": "Manual review required; no automatic approval."
+      },
+      "duplicate_relationship": {
+        "business_duplicate_of": null,
+        "byte_identical_to": null,
+        "file_hash_duplicate_expected": false,
+        "source_upload_id": "demo-upload-A-replay",
+        "delivery_replay_instruction": "For a repeated delivery test, reuse the original source identifier and attachment identifier. Identical PDF bytes alone do not establish repeated delivery. A new source identifier represents a new receipt."
+      },
+      "actual_artifact_checks": {
+        "text_extraction": "pass",
+        "key_fields": "pass",
+        "page_count": 1,
+        "text_within_page": "pass",
+        "raster_images": 0
+      }
+    },
+    {
+      "file_name": "02_invoice_B.pdf",
+      "sha256": "2395eb6875d8f2322edbf8d1d4322cbc032f4e8ca50bbe518793d95c8fdb0481",
+      "input_record_index": 1,
+      "expected_fields": {
+        "supplier_name": "Violetcloud Services Ltd",
+        "supplier_address": "8 Violetcloud Lane, Willowmere",
+        "customer_name": "Paperkite Operations Ltd",
+        "customer_address": "24 Paperkite Square, Willowmere",
+        "invoice_number": "INV-B-202610-002",
+        "document_date": "2026-10-03",
+        "due_date": "2026-10-24",
+        "document_currency": "EUR",
+        "document_type_extended": "invoice",
+        "locale": "en",
+        "line_items": [
+          {
+            "description": "Data preparation",
+            "quantity": 2,
+            "unit_price": 50.0,
+            "amount": 100.0,
+            "tax_rate": "19%",
+            "tax_amount": 19.0
+          },
+          {
+            "description": "Template setup",
+            "quantity": 1,
+            "unit_price": 90.0,
+            "amount": 90.0,
+            "tax_rate": "19%",
+            "tax_amount": 17.1
+          },
+          {
+            "description": "Validation support",
+            "quantity": 3,
+            "unit_price": 20.0,
+            "amount": 60.0,
+            "tax_rate": "19%",
+            "tax_amount": 11.4
+          }
+        ],
+        "taxes": [
+          {
+            "code": "VAT",
+            "rate": "19%",
+            "base": 250.0,
+            "value": 47.5
+          }
+        ],
+        "document_total_net": 250.0,
+        "document_total_tax": 47.5,
+        "document_total_amount": 297.5
+      },
+      "expected_validation": {
+        "required_fields": "pass",
+        "line_arithmetic": "pass",
+        "vat_19_percent": "pass",
+        "net_plus_tax_equals_printed_total": "pass",
+        "computed_total": "297.50",
+        "printed_total_difference": "0.00",
+        "issues": [],
+        "review": "Manual review required; no automatic approval."
+      },
+      "duplicate_relationship": {
+        "business_duplicate_of": null,
+        "byte_identical_to": null,
+        "file_hash_duplicate_expected": false,
+        "source_upload_id": "demo-upload-02_invoice_B",
+        "delivery_replay_instruction": "For a repeated delivery test, reuse the original source identifier and attachment identifier. Identical PDF bytes alone do not establish repeated delivery. A new source identifier represents a new receipt."
+      },
+      "actual_artifact_checks": {
+        "text_extraction": "pass",
+        "key_fields": "pass",
+        "page_count": 1,
+        "text_within_page": "pass",
+        "raster_images": 0
+      }
+    },
+    {
+      "file_name": "03_invoice_A_exact_copy.pdf",
+      "sha256": "e2572aa88fdae19e2984a2e2005d399e142f8444680929b975cab8acfb59b432",
+      "input_record_index": 0,
+      "expected_fields": {
+        "supplier_name": "Amberleaf Supplies Ltd",
+        "supplier_address": "12 Amberleaf Park, Willowmere",
+        "customer_name": "Paperkite Operations Ltd",
+        "customer_address": "24 Paperkite Square, Willowmere",
+        "invoice_number": "INV-A-202610-001",
+        "document_date": "2026-10-01",
+        "due_date": "2026-10-15",
+        "document_currency": "EUR",
+        "document_type_extended": "invoice",
+        "locale": "en",
+        "line_items": [
+          {
+            "description": "Document trays",
+            "quantity": 2,
+            "unit_price": 30.0,
+            "amount": 60.0,
+            "tax_rate": "19%",
+            "tax_amount": 11.4
+          },
+          {
+            "description": "Archive folders",
+            "quantity": 4,
+            "unit_price": 10.0,
+            "amount": 40.0,
+            "tax_rate": "19%",
+            "tax_amount": 7.6
+          }
+        ],
+        "taxes": [
+          {
+            "code": "VAT",
+            "rate": "19%",
+            "base": 100.0,
+            "value": 19.0
+          }
+        ],
+        "document_total_net": 100.0,
+        "document_total_tax": 19.0,
+        "document_total_amount": 119.0
+      },
+      "expected_validation": {
+        "required_fields": "pass",
+        "line_arithmetic": "pass",
+        "vat_19_percent": "pass",
+        "net_plus_tax_equals_printed_total": "pass",
+        "computed_total": "119.00",
+        "printed_total_difference": "0.00",
+        "issues": [],
+        "review": "Manual review required; no automatic approval."
+      },
+      "duplicate_relationship": {
+        "business_duplicate_of": "01_invoice_A.pdf",
+        "byte_identical_to": "01_invoice_A.pdf",
+        "file_hash_duplicate_expected": true,
+        "source_upload_id": "demo-upload-A-replay",
+        "delivery_replay_instruction": "For a repeated delivery test, reuse the original source identifier and attachment identifier. Identical PDF bytes alone do not establish repeated delivery. A new source identifier represents a new receipt."
+      },
+      "actual_artifact_checks": {
+        "text_extraction": "pass",
+        "key_fields": "pass",
+        "page_count": 1,
+        "text_within_page": "pass",
+        "raster_images": 0
+      }
+    },
+    {
+      "file_name": "04_invoice_A_business_duplicate.pdf",
+      "sha256": "22ee9eda8098da9a542af6410e323fb12251a913deaeb32fa9a2098e98a4f030",
+      "input_record_index": 0,
+      "expected_fields": {
+        "supplier_name": "Amberleaf Supplies Ltd",
+        "supplier_address": "12 Amberleaf Park, Willowmere",
+        "customer_name": "Paperkite Operations Ltd",
+        "customer_address": "24 Paperkite Square, Willowmere",
+        "invoice_number": "INV-A-202610-001",
+        "document_date": "2026-10-01",
+        "due_date": "2026-10-15",
+        "document_currency": "EUR",
+        "document_type_extended": "invoice",
+        "locale": "en",
+        "line_items": [
+          {
+            "description": "Document trays",
+            "quantity": 2,
+            "unit_price": 30.0,
+            "amount": 60.0,
+            "tax_rate": "19%",
+            "tax_amount": 11.4
+          },
+          {
+            "description": "Archive folders",
+            "quantity": 4,
+            "unit_price": 10.0,
+            "amount": 40.0,
+            "tax_rate": "19%",
+            "tax_amount": 7.6
+          }
+        ],
+        "taxes": [
+          {
+            "code": "VAT",
+            "rate": "19%",
+            "base": 100.0,
+            "value": 19.0
+          }
+        ],
+        "document_total_net": 100.0,
+        "document_total_tax": 19.0,
+        "document_total_amount": 119.0
+      },
+      "expected_validation": {
+        "required_fields": "pass",
+        "line_arithmetic": "pass",
+        "vat_19_percent": "pass",
+        "net_plus_tax_equals_printed_total": "pass",
+        "computed_total": "119.00",
+        "printed_total_difference": "0.00",
+        "issues": [],
+        "review": "Manual review required; no automatic approval."
+      },
+      "duplicate_relationship": {
+        "business_duplicate_of": "01_invoice_A.pdf",
+        "byte_identical_to": null,
+        "file_hash_duplicate_expected": false,
+        "source_upload_id": "demo-upload-04_invoice_A_business_duplicate",
+        "delivery_replay_instruction": "For a repeated delivery test, reuse the original source identifier and attachment identifier. Identical PDF bytes alone do not establish repeated delivery. A new source identifier represents a new receipt."
+      },
+      "actual_artifact_checks": {
+        "text_extraction": "pass",
+        "key_fields": "pass",
+        "page_count": 1,
+        "text_within_page": "pass",
+        "raster_images": 0
+      }
+    },
+    {
+      "file_name": "05_invoice_C_amount_mismatch.pdf",
+      "sha256": "14ba8fa8637c7e8f5231a9e8da3ecd42d8e0639ba597db9b1bbba62230edea62",
+      "input_record_index": 2,
+      "expected_fields": {
+        "supplier_name": "Amberleaf Supplies Ltd",
+        "supplier_address": "12 Amberleaf Park, Willowmere",
+        "customer_name": "Paperkite Operations Ltd",
+        "customer_address": "24 Paperkite Square, Willowmere",
+        "invoice_number": "INV-C-202610-003",
+        "document_date": "2026-10-05",
+        "due_date": "2026-10-26",
+        "document_currency": "EUR",
+        "document_type_extended": "invoice",
+        "locale": "en",
+        "line_items": [
+          {
+            "description": "Document trays",
+            "quantity": 2,
+            "unit_price": 30.0,
+            "amount": 60.0,
+            "tax_rate": "19%",
+            "tax_amount": 11.4
+          },
+          {
+            "description": "Archive folders",
+            "quantity": 4,
+            "unit_price": 10.0,
+            "amount": 40.0,
+            "tax_rate": "19%",
+            "tax_amount": 7.6
+          }
+        ],
+        "taxes": [
+          {
+            "code": "VAT",
+            "rate": "19%",
+            "base": 100.0,
+            "value": 19.0
+          }
+        ],
+        "document_total_net": 100.0,
+        "document_total_tax": 19.0,
+        "document_total_amount": 129.0
+      },
+      "expected_validation": {
+        "required_fields": "pass",
+        "line_arithmetic": "pass",
+        "vat_19_percent": "pass",
+        "net_plus_tax_equals_printed_total": "fail",
+        "computed_total": "119.00",
+        "printed_total_difference": "10.00",
+        "issues": [
+          "TOTAL_MISMATCH"
+        ],
+        "review": "Manual review required; no automatic approval."
+      },
+      "duplicate_relationship": {
+        "business_duplicate_of": null,
+        "byte_identical_to": null,
+        "file_hash_duplicate_expected": false,
+        "source_upload_id": "demo-upload-05_invoice_C_amount_mismatch",
+        "delivery_replay_instruction": "For a repeated delivery test, reuse the original source identifier and attachment identifier. Identical PDF bytes alone do not establish repeated delivery. A new source identifier represents a new receipt."
+      },
+      "actual_artifact_checks": {
+        "text_extraction": "pass",
+        "key_fields": "pass",
+        "page_count": 1,
+        "text_within_page": "pass",
+        "raster_images": 0
+      }
+    }
+  ]
+}

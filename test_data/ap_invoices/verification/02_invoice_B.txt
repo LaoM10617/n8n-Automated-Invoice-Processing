@@ -1,0 +1,19 @@
+Violetcloud Services Ltd
+EUR SALES INVOICE
+1/1
+Invoice Number INV-B-202610-002
+Paperkite Operations Ltd
+24 Paperkite Square, Willowmere Invoice Date 2026-10-03
+Due Date 2026-10-24
+Description Quantity Unit Price Value
+Data preparation 2.00 50.00 100.00
+Template setup 1.00 90.00 90.00
+Validation support 3.00 20.00 60.00
+VAT Analysis % Net VAT NET TOTAL 250.00
+VAT TOTAL 47.50
+19% 250.00 47.50
+EUR TOTAL 297.50
+Invoice amount: EUR 297.50; due 2026-10-24.
+EUR SALES INVOICE
+Violetcloud Services Ltd Payment terms: due on 2026-10-24
+8 Violetcloud Lane, Willowmere
