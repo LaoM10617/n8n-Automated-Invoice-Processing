@@ -28,6 +28,7 @@ from backend.document_stages import DocumentStages
 from backend.intake_stages import register_intake_stages
 from backend.migrations import migrate
 from backend.reviews import register_reviews
+from backend.review_events import register_review_events
 
 MAX_BYTES = 20 * 1024 * 1024
 
@@ -295,6 +296,7 @@ def create_app(data_dir: Path | None = None) -> FastAPI:
         return FileResponse(Path(__file__).with_name('review.js'), media_type='text/javascript', headers={'Cache-Control': 'no-store', 'X-Content-Type-Options': 'nosniff'})
 
     reviews = register_reviews(app, connect)
+    register_review_events(app, connect)
 
     stages = DocumentStages(connect, invoice_row, get_invoice, originals,
                             lambda path, media: read_pages(path, media), lambda pages: extract_fields(pages))

@@ -1,10 +1,51 @@
 ## Phase02 review and approval (2026-10-07)
 
+### Section 6: durable event delivery
+
+Decisions commit before network delivery. Delivery is explicit in this version:
+`docker compose exec -T python-api python -m backend.review_events EVENT_ID`.
+Find the event ID and visible delivery status/attempts/error in the review API/page.
+Each command attempts one delivery; the cumulative limit is five per event. Pending,
+failed, unknown and accepted events can be retried with the same ID. A live delivery
+holds a 60-second lease; after a process interruption, wait for that lease before retrying.
+No automatic loop, startup sweep, or background queue is enabled. At the limit, stop
+and reconcile the receiver before operator recovery; do not create a new decision/event.
+
+The independent `02_AP_review_events_v1.json` (`APReviewEventsV1`) receives at
+`/webhook/ap-review-events-v1`, acknowledges HTTP 202, then reloads the authoritative
+decision through authenticated GET `/api/ap/review-events/{event_id}`. It carries only
+IDs, revision and event type, and checks the saved event against the current final
+task and immutable snapshot. Rejected events return `can_export: false`.
+The future export endpoint must independently reuse this check and read the snapshot.
+
+`accepted` means HTTP receipt only. Downstream failures and lost responses remain
+replayable. No endpoint in section 6 marks an event `processed`; Excel and result
+handling are not yet implemented. Approval pages continue to show export pending.
+
+For another local instance: run `scripts/configure_review_event_local.py`, import
+the workflow, bind `AP review event local header`, publish and restart n8n. Recreate
+python-api after adding the ignored `.env` token. Compose mounts the required
+`scripts/n8n_review_header_privacy.cjs` external hook; it retains Header Auth access
+while excluding the secret from serialized request headers, only for this receiver.
+n8n 2.42.3 saves initial execution payloads even when execution saving is disabled;
+those settings alone are insufficient. Do not activate this receiver without the hook.
+Verify a new authenticated request with `scripts/check_review_event_privacy.py` after
+n8n upgrades. Credentials belong only in `.env` and encrypted n8n credential storage.
+
+Verification: `scripts/phase02_event_probe.py` is a local fault-injection tool, not
+an automatic retry worker. `lost-response` makes a real request and then injects a
+client-side timeout; it does not simulate a physical network outage.
+
 The local review page now supports **Save changes**, **Approve** and **Reject**.
 Machine drafts/evidence remain unchanged. Saved revisions are immutable, stale
 revision/analysis submissions return 409, and approvals rerun deterministic checks.
 Enter a reason and original page for corrections. Resolve each evidence issue or
 duplicate candidate explicitly; arithmetic errors cannot be acknowledged away.
+For each duplicate, select **Not a duplicate**, **Justified continuation**, or
+**Confirmed duplicate — reject**, with a reason and original page. Unresolved
+candidates block either decision; confirmed duplicates block approval. Saving
+records both the candidate fingerprint and its invoice ID. Field edits clear
+the page's selected resolutions so they must be checked again before saving.
 If analysis changed, compare it and explicitly accept the new attempt. Existing
 manual values are retained. Final invoices cannot be reanalyzed; cached replay is allowed.
 
@@ -24,8 +65,16 @@ local demo reviewer, not authenticated multi-user access. The explicit local
 POST `/api/ap/invoices/{invoice_id}/review/evaluate-policy` applies the policy to
 a selected pending record; it is never invoked on startup or in a batch.
 
+PATCH `duplicate_resolutions` items require `id`, `disposition` (`not_duplicate`,
+`justified_continue`, or `confirmed_duplicate`), `reason`, and `page`. Existing
+saved resolutions without a disposition retain their earlier justified-continuation
+meaning. GET includes `decision_gate` with `can_approve`, `can_reject`, and prerequisite
+`blockers`. Decision payloads cannot include unsaved field or resolution changes.
+Reject always requires a reason, including replays. Final reads and replays return
+the saved decision validation snapshot rather than recomputing historical results.
+
 Automatic/manual decisions share a snapshot and transactional outbox event.
-**Event delivery and Excel generation are not connected yet.** Approved pages
+**Event delivery is connected; Excel generation is not connected yet.** Approved pages
 therefore say `Approved; export pending`. No accounting submission or payment occurs.
 SQLite schema version is 2; the additional request ledger rejects reuse with
 different content, including aliases used when replaying a final decision.

@@ -1,0 +1,97 @@
+{
+  "id": "APReviewEventsV1",
+  "name": "02_AP_Review_Events_v1",
+  "active": false,
+  "nodes": [
+    {
+      "id": "1ef5fb81-c925-4ad3-a8ce-2c8b2a9f1dc0",
+      "name": "Review Decision Received",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        200
+      ],
+      "webhookId": "58fb8247-a5f7-4ce6-bd64-464b98a884b0",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "APReviewEventLocalV1",
+          "name": "AP review event local header"
+        }
+      },
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "ap-review-events-v1",
+        "authentication": "headerAuth",
+        "responseMode": "onReceived",
+        "options": {
+          "responseCode": {
+            "values": {
+              "responseCode": 202
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "ae560346-4596-487d-b1e5-793dc2d2c268",
+      "name": "Load Current Decision",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        300,
+        200
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "APReviewEventLocalV1",
+          "name": "AP review event local header"
+        }
+      },
+      "parameters": {
+        "url": "={{ 'http://python-api:8000/api/ap/review-events/' + encodeURIComponent($json.body.event_id) }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {
+          "timeout": 10000
+        }
+      }
+    },
+    {
+      "id": "3bf6f5ab-0784-410c-8d73-f660e9a7ec97",
+      "name": "Scope and Recovery",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -60,
+        -130
+      ],
+      "parameters": {
+        "width": 820,
+        "height": 240,
+        "content": "## Independent review event receiver | Section 6\nAutomatic and manual decisions use the same entry. Header credential is required. Reload the authoritative event, current final status and immutable snapshot reference from Python; never authorize export from webhook fields.\n\nHTTP 202 means accepted, not processed. Excel and result notification are added in the next step. Accepted/failed/unknown events can be explicitly replayed with the same event ID, up to five deliveries. No automatic loop. The Compose external hook excludes the authentication header from serialized execution data; disabling execution saving alone is insufficient. Bind AP review event local header and install the hook before activating on another instance."
+      }
+    }
+  ],
+  "connections": {
+    "Review Decision Received": {
+      "main": [
+        [
+          {
+            "node": "Load Current Decision",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "saveDataSuccessExecution": "none",
+    "saveDataErrorExecution": "none",
+    "saveManualExecutions": false,
+    "saveExecutionProgress": false
+  },
+  "pinData": {}
+}

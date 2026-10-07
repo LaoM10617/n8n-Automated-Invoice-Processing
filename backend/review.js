@@ -12,8 +12,8 @@ function message(text) { byId('review-message').textContent = text; }
 function buttons() {
   const pending = state && state.status === 'pending' && !busy;
   byId('save-review').disabled = !pending || state.version_conflict;
-  byId('approve-review').disabled = !pending || dirty || state.version_conflict || !state.current_revision || !state.validation.can_approve;
-  byId('reject-review').disabled = !pending || dirty || state.version_conflict || !state.current_revision;
+  byId('approve-review').disabled = !pending || dirty || !state.decision_gate.can_approve;
+  byId('reject-review').disabled = !pending || dirty || !state.decision_gate.can_reject;
   byId('adopt-review').hidden = !(pending && state.version_conflict);
   fields.forEach(input => { input.disabled = !pending || state.version_conflict; });
 }
@@ -30,14 +30,24 @@ function resolution(kind, id, title, previous) {
   const div = document.createElement('div'); div.className = 'resolution';
   div.dataset.kind = kind; div.dataset.id = id;
   const label = document.createElement('label');
-  const check = document.createElement('input'); check.type = 'checkbox'; check.checked = !!previous;
-  label.append(check, document.createTextNode(' ' + title));
+  let choice;
+  if (kind === 'duplicate') {
+    choice = document.createElement('select');
+    for (const [value, text] of [['', 'Select a disposition'], ['not_duplicate', 'Not a duplicate'], ['justified_continue', 'Justified continuation'], ['confirmed_duplicate', 'Confirmed duplicate — reject']]) {
+      const option = document.createElement('option'); option.value = value; option.textContent = text; choice.append(option);
+    }
+    choice.value = previous ? previous.disposition || 'justified_continue' : '';
+    choice.setAttribute('aria-label', title + ' disposition');
+  } else {
+    choice = document.createElement('input'); choice.type = 'checkbox'; choice.checked = !!previous;
+  }
+  label.append(choice, document.createTextNode(' ' + title));
   const note = document.createElement('textarea'); note.placeholder = 'What you checked and why this issue is resolved';
   note.setAttribute('aria-label', title + ' resolution reason'); note.maxLength = 2000; note.value = previous?.reason || '';
   const page = document.createElement('input'); page.type = 'number'; page.min = '1'; page.value = previous?.page || 1;
   page.setAttribute('aria-label', title + ' original page');
   div.append(label, note, document.createTextNode(' Original page '), page);
-  div.addEventListener('input', () => { dirty = true; buttons(); });
+  div.addEventListener('input', () => { dirty = true; buttons(); message('Unsaved exception resolutions. Save changes before deciding.'); });
   byId('resolutions').append(div);
 }
 function render(data) {
@@ -52,11 +62,16 @@ function render(data) {
   byId('machine-draft').textContent = JSON.stringify(data.raw_extraction, null, 2);
   byId('review-history').textContent = JSON.stringify(data.history.map(r => ({...r, changes: JSON.parse(r.changes_json), changes_json: undefined})), null, 2);
   byId('approval-issues').replaceChildren();
-  for (const issue of data.validation.issues) {
+  for (const issue of [...data.decision_gate.blockers, ...data.validation.issues]) {
     const li = document.createElement('li'); li.textContent = `${issue.code}: ${issue.message}`;
     byId('approval-issues').append(li);
   }
-  if (!data.validation.issues.length) {
+  if (data.event) {
+    const li = document.createElement('li');
+    li.textContent = `Event delivery: ${data.event.status} · Attempts: ${data.event.attempts}/5 · ${data.event.last_error || 'No transport error'}. HTTP acceptance does not mean export completed.`;
+    byId('approval-issues').append(li);
+  }
+  if (!data.validation.issues.length && !data.decision_gate.blockers.length) {
     const li = document.createElement('li'); li.textContent = 'No current blockers. Compare every field with the original before saving and approving.';
     byId('approval-issues').append(li);
   }
@@ -64,8 +79,8 @@ function render(data) {
   for (const issue of data.validation.machine_issues.filter(i => i.resolvable))
     resolution('evidence', issue.id, `${issue.code}: ${issue.message}`, data.evidence_resolutions.find(r => r.id === issue.id));
   for (const candidate of data.validation.duplicate_candidates)
-    resolution('duplicate', candidate.id, `Not a duplicate / justified continuation: ${candidate.invoice_id}`, data.duplicate_resolutions.find(r => r.id === candidate.id));
-  if (data.status !== 'pending') byId('resolutions').querySelectorAll('input,textarea').forEach(el => { el.disabled = true; });
+    resolution('duplicate', candidate.id, `Duplicate candidate: ${candidate.invoice_id}`, data.duplicate_resolutions.find(r => r.id === candidate.id));
+  if (data.status !== 'pending') byId('resolutions').querySelectorAll('input,textarea,select').forEach(el => { el.disabled = true; });
   byId('latest-analysis').hidden = !data.version_conflict;
   byId('latest-analysis').querySelector('pre').textContent = JSON.stringify(data.latest_fields, null, 2);
   buttons();
@@ -80,7 +95,8 @@ async function save(adopt = false) {
   const body = {...version(), changes, reason: byId('review-reason').value, page: Number(byId('review-page').value), evidence_resolutions: [], duplicate_resolutions: []};
   if (adopt) body.adopt_attempt_id = state.latest_attempt_id;
   else for (const div of byId('resolutions').children) {
-    if (div.querySelector('[type=checkbox]').checked) body[div.dataset.kind + '_resolutions'].push({id: div.dataset.id, reason: div.querySelector('textarea').value, page: Number(div.querySelector('[type=number]').value)});
+    const disposition = div.querySelector('select')?.value;
+    if (disposition || div.querySelector('[type=checkbox]')?.checked) body[div.dataset.kind + '_resolutions'].push({id: div.dataset.id, reason: div.querySelector('textarea').value, page: Number(div.querySelector('[type=number]').value), ...(disposition ? {disposition} : {})});
   }
   await perform(() => api('PATCH', body), 'Saved. Approval checks have been rerun.');
 }
@@ -90,7 +106,12 @@ async function perform(action, success) {
   catch (error) { message(error.message); }
   finally { busy = false; buttons(); }
 }
-fields.forEach(input => input.addEventListener('input', () => { dirty = true; buttons(); message('Unsaved changes. Save and recheck before deciding.'); }));
+fields.forEach(input => input.addEventListener('input', () => {
+  dirty = true;
+  byId('resolutions').querySelectorAll('[type=checkbox]').forEach(el => { el.checked = false; });
+  byId('resolutions').querySelectorAll('select').forEach(el => { el.value = ''; });
+  buttons(); message('Unsaved changes. Recheck exception resolutions, then save before deciding.');
+}));
 byId('save-review').addEventListener('click', () => save());
 byId('adopt-review').addEventListener('click', () => save(true));
 for (const decision of ['approve', 'reject']) byId(decision + '-review').addEventListener('click', () => {

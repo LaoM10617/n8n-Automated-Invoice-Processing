@@ -17,6 +17,8 @@ services:
       - "127.0.0.1:8000:8000"
     environment:
       AP_DATA_DIR: /data/ap
+      AP_REVIEW_EVENT_URL: http://n8n:5678/webhook/ap-review-events-v1
+      AP_REVIEW_EVENT_TOKEN: ${AP_REVIEW_EVENT_TOKEN:-}
       AP_PUBLIC_BASE_URL: ${AP_PUBLIC_BASE_URL:-http://127.0.0.1:8000}
       AP_LLM_BASE_URL: ${AP_LLM_BASE_URL:-}
       AP_LLM_MODEL: ${AP_LLM_MODEL:-}
@@ -38,8 +40,10 @@ services:
       TZ: Europe/Berlin
       GENERIC_TIMEZONE: Europe/Berlin
       N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS: "true"
+      EXTERNAL_HOOK_FILES: /opt/ap-hooks/n8n_review_header_privacy.cjs
     volumes:
       - n8n_data:/home/node/.n8n
+      - ./scripts/n8n_review_header_privacy.cjs:/opt/ap-hooks/n8n_review_header_privacy.cjs:ro
 
 volumes:
   n8n_data:

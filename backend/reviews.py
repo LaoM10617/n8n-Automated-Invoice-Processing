@@ -8,7 +8,7 @@ from typing import Literal
 from uuid import uuid4
 
 from fastapi import HTTPException, Request
-from pydantic import BaseModel, ConfigDict, Field, field_validator
+from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
 from backend.extraction import RawFields
 from backend.validation import validate, duplicate_candidates
@@ -50,12 +50,16 @@ class Resolution(BaseModel):
         return value.strip()
 
 
+class DuplicateResolution(Resolution):
+    disposition: Literal['not_duplicate', 'justified_continue', 'confirmed_duplicate']
+
+
 class SaveReview(Version):
     changes: dict[str, str | bool | None] = Field(default_factory=dict)
     reason: str = Field(min_length=1, max_length=2000)
     page: int = Field(ge=1)
     evidence_resolutions: list[Resolution] = Field(default_factory=list, max_length=100)
-    duplicate_resolutions: list[Resolution] = Field(default_factory=list, max_length=100)
+    duplicate_resolutions: list[DuplicateResolution] = Field(default_factory=list, max_length=100)
     adopt_attempt_id: int | None = Field(default=None, gt=0)
 
 
@@ -63,6 +67,18 @@ class Decision(Version):
     decision: Literal['approve', 'reject']
     request_id: str = Field(min_length=1, max_length=100)
     reason: str = Field(default='', max_length=2000)
+
+    @model_validator(mode='before')
+    @classmethod
+    def saved_decision_only(cls, value):
+        if isinstance(value, dict):
+            if any(key in value for key in ('changes', 'evidence_resolutions', 'duplicate_resolutions', 'has_unsaved_changes')):
+                raise ValueError('Save changes and exception resolutions before deciding.')
+            if value.get('decision') == 'reject' and not str(value.get('reason') or '').strip():
+                raise ValueError('Reject requires a reason.')
+            if not str(value.get('request_id') or '').strip():
+                raise ValueError('A nonblank request ID is required.')
+        return value
 
 
 def protect_write(request: Request):
@@ -126,9 +142,13 @@ class Reviews:
             # A changed candidate invalidates an earlier manual resolution.
             other = next(value for key, value in others if key == candidate['invoice_id'])
             candidate['id'] = digest([candidate['invoice_id'], other])
-            if not any(r['id'] == candidate['id'] for r in duplicates):
+            resolution = next((r for r in duplicates if r['id'] == candidate['id']), None)
+            if not resolution:
                 issues.append({'code': 'BUSINESS_DUPLICATE_CANDIDATE', 'field': 'invoice_number',
-                               'message': 'Resolve this candidate with a reason or reject the invoice.', 'id': candidate['id']})
+                               'message': 'Record a disposition and reason for this duplicate candidate before deciding.', 'id': candidate['id']})
+            elif resolution.get('disposition') == 'confirmed_duplicate':
+                issues.append({'code': 'CONFIRMED_DUPLICATE', 'field': 'invoice_number',
+                               'message': 'Confirmed duplicate: reject this invoice; approval is blocked.', 'id': candidate['id']})
         if status == 'not_evaluable':
             issues.append({'code': 'DUPLICATE_CHECK_INCOMPLETE', 'field': 'supplier', 'message': 'Supplier identity and invoice number are required for duplicate checking.'})
         if normalized.get('total_amount') is not None and Decimal(normalized['total_amount']) <= 0:
@@ -140,15 +160,28 @@ class Reviews:
         task, bound, revision, result, fields, latest = self.load(db, invoice_id)
         evidence = json.loads(revision['evidence_resolution_json']) if revision else []
         duplicates = json.loads(revision['duplicate_resolution_json']) if revision else []
-        checked = self.evaluate(db, invoice_id, bound, result, fields, evidence, duplicates)
+        # Final decisions retain their original validation explanation, even if other invoices change.
+        checked = json.loads(revision['validation_json']) if task['status'] != 'pending' and revision else self.evaluate(db, invoice_id, bound, result, fields, evidence, duplicates)
+        blockers = []
+        if task['status'] != 'pending':
+            blockers.append({'code': 'REVIEW_FINAL', 'message': 'This decision is final. Its saved validation is shown.'})
+        if latest['status'] != 'processed':
+            blockers.append({'code': 'PROCESSING_INCOMPLETE', 'message': 'Complete processing before saving or deciding.'})
+        if latest['attempt_id'] != bound:
+            blockers.append({'code': 'ANALYSIS_VERSION_CONFLICT', 'message': 'Compare and explicitly accept the latest analysis first.'})
+        if not revision:
+            blockers.append({'code': 'REVIEW_NOT_SAVED', 'message': 'Save a review version before deciding.'})
+        unresolved_duplicates = any(i['code'] == 'BUSINESS_DUPLICATE_CANDIDATE' for i in checked['issues'])
+        gate = {'can_approve': not blockers and checked['can_approve'],
+                'can_reject': not blockers and not unresolved_duplicates, 'blockers': blockers}
         history = [dict(r) for r in db.execute('SELECT revision,processing_attempt_id,changes_json,actor,notes,created_at FROM review_revisions WHERE review_id=? ORDER BY revision', (task['review_id'],))]
-        event = db.execute('SELECT event_id,event_type,status FROM review_events WHERE review_id=?', (task['review_id'],)).fetchone()
+        event = db.execute('SELECT event_id,event_type,status,attempts,last_error,last_attempt_at,accepted_at,processed_at FROM review_events WHERE review_id=?', (task['review_id'],)).fetchone()
         return {**task, 'processing_attempt_id': bound, 'latest_attempt_id': latest['attempt_id'],
                 'latest_fields': json.loads(db.execute('SELECT result_json FROM processing_attempts WHERE attempt_id=?', (latest['attempt_id'],)).fetchone()[0] or '{}').get('fields'),
                 'version_conflict': latest['attempt_id'] != bound, 'processing_status': latest['status'],
                 'machine_fields': result.get('fields', {}), 'raw_extraction': result.get('raw_extraction', {}),
                 'analysis_source': result.get('analysis_source', 'provider_analysis'),
-                'current_fields': fields, 'validation': checked, 'history': history,
+                'current_fields': fields, 'validation': checked, 'decision_gate': gate, 'history': history,
                 'evidence_resolutions': evidence, 'duplicate_resolutions': duplicates,
                 'event': dict(event) if event else None, 'reviewer': REVIEWER}
 
@@ -209,6 +242,10 @@ class Reviews:
             valid_duplicates = {c['id'] for c in checked['duplicate_candidates']}
             if any(r['id'] not in valid_evidence for r in evidence) or any(r['id'] not in valid_duplicates for r in duplicates):
                 raise HTTPException(409, 'Exception or duplicate candidate changed. Refresh and compare.')
+            if len({r['id'] for r in evidence}) != len(evidence) or len({r['id'] for r in duplicates}) != len(duplicates):
+                raise HTTPException(422, 'Record only one resolution per issue or candidate.')
+            candidate_ids = {c['id']: c['invoice_id'] for c in checked['duplicate_candidates']}
+            duplicates = [{**r, 'invoice_id': candidate_ids[r['id']]} for r in duplicates]
             self.snapshot(db, task, bound, checked, changed, evidence, duplicates, REVIEWER, request.reason.strip())
             state = self.state(db, invoice_id)
             db.commit()
@@ -249,6 +286,8 @@ class Reviews:
                 evidence = json.loads(revision['evidence_resolution_json'])
                 duplicates = json.loads(revision['duplicate_resolution_json'])
                 checked = self.evaluate(db, invoice_id, bound, result, fields, evidence, duplicates)
+                if any(i['code'] == 'BUSINESS_DUPLICATE_CANDIDATE' for i in checked['issues']):
+                    raise HTTPException(422, {'message': 'Save a disposition and reason for each duplicate candidate before deciding.', 'issues': checked['issues']})
                 if final == 'approved' and not checked['can_approve']:
                     raise HTTPException(422, {'message': 'Resolve approval blockers first.', 'issues': checked['issues']})
                 event_id = self.commit_decision(db, task, bound, checked, evidence, duplicates, 'manual', final, request.reason.strip(), request.request_id, request_hash)

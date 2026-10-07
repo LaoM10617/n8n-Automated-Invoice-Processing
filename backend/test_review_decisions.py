@@ -160,7 +160,7 @@ def test_duplicates_rechecked_at_approval(env):
     current = state(env, invoice_id)
     candidate = current['validation']['duplicate_candidates'][0]
     assert candidate['invoice_id'] == other_id
-    assert save(env, invoice_id, duplicate_resolutions=[{'id': candidate['id'], 'reason': 'Independent synthetic scenario, justified continuation', 'page': 1}]).status_code == 200
+    assert save(env, invoice_id, duplicate_resolutions=[{'id': candidate['id'], 'disposition': 'justified_continue', 'reason': 'Independent synthetic scenario, justified continuation', 'page': 1}]).status_code == 200
     assert decide(env, invoice_id).status_code == 200
 
 

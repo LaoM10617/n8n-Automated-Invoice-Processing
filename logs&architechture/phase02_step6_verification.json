@@ -1,0 +1,314 @@
+{
+  "backup": "data\\baselines\\phase02-step6-20261007-083359Z",
+  "method": "SQLite online backup API",
+  "before_counts": {
+    "invoices": 19,
+    "receipts": 162,
+    "processing_attempts": 93,
+    "notification_attempts": 7,
+    "email_outcomes": 123,
+    "document_reads": 0,
+    "intake_runs": 52,
+    "intake_stage_events": 224,
+    "review_tasks": 7,
+    "review_revisions": 5,
+    "review_events": 3,
+    "exports": 0,
+    "result_notifications": 0,
+    "result_notification_attempts": 0,
+    "review_requests": 2
+  },
+  "workflow_hashes": {
+    "n8n_workflows\\01_AP_agent_intake_v7.json": "1a6fa0e1dc6c18d0d7598f14be008770bf78ea664a802ea10124d488278e33e9",
+    "n8n_workflows\\01_AP_approval_intake_v8.json": "2510b8bda5bc5f5561541c9de5b03a7b65304311789c46ba0f0a254217c75e52",
+    "n8n_workflows\\01_AP_compact_intake_v6.json": "fb9ad08335291635c961aff45eecedeb5539fa17f0d8c0240913d0610e6cdac2",
+    "n8n_workflows\\01_AP_email_attachment_v1.json": "45e83c4146734b4a84bf9b139205bc9e889e772d23b197234cd0962a0901510e",
+    "n8n_workflows\\01_AP_gmail_intake_v1.json": "fb09d799b14a0505d444dae22ce9fb56c71ad81400d048bc524828394dea1feb",
+    "n8n_workflows\\01_AP_intake_notify_v4.json": "bcdc6cf30a3319d2c76a554e9a245266bd5775c23020f22506c2b6c5d338a1e4",
+    "n8n_workflows\\01_AP_intake_process_v2.json": "deb73f62b405dd42123d1412eeb21de3de30de8de9ed01b975902563c8104f53",
+    "n8n_workflows\\01_AP_intake_review_v3.json": "511b8dfeb34bff7d396c97ded15363b012ab2d993a329fa8f4c15666f9467cdf",
+    "n8n_workflows\\01_AP_intake_upload_v1.json": "c6fb7a88b21c919026baeef542c6a2b66fa5420230cdcc4e26a42c710e7ae309",
+    "n8n_workflows\\01_AP_local_email_bridge_v1.json": "8eb02d50a27affa06e174a6c30c0a13d905cbde7d35d28b15e7902977f91d4ad",
+    "n8n_workflows\\01_AP_unified_intake_v5.json": "42036710acd6245147a55ee60b37fded5c11c2faf14fee3e8dded15298bc19dc",
+    "n8n_workflows\\Email invoice archiving & data extraction.json": "71255542f88fc811493b44b8c22a84dec1fab626fe98926f4ff2a2e4830f4110"
+  },
+  "probes": [
+    {
+      "label": "real_n8n_stopped",
+      "result": {
+        "event_id": "56386780-79ad-4001-82aa-07e683b29563",
+        "status": "unknown",
+        "attempts": 1,
+        "last_error": "TRANSPORT_UNCONFIRMED",
+        "processed_at": null
+      }
+    },
+    {
+      "label": "real_missing_credential",
+      "mode": "unauthenticated",
+      "result": {
+        "unauthenticated_status": 403
+      }
+    },
+    {
+      "label": "real_n8n_restored",
+      "mode": "deliver",
+      "result": {
+        "event_id": "56386780-79ad-4001-82aa-07e683b29563",
+        "invoice_id": "0d7ed1cf-2ec4-4e29-b6a5-7c5a9e5bb72e",
+        "review_id": "37c97bc6-fe78-4563-9ab2-448919ac28aa",
+        "review_revision": 1,
+        "event_type": "approved",
+        "status": "accepted",
+        "attempts": 2,
+        "max_attempts": 5,
+        "last_error": null,
+        "accepted_at": "2026-10-07T08:36:37.018694+00:00",
+        "processed_at": null,
+        "review_status": "approved",
+        "snapshot_revision": 1,
+        "can_export": true,
+        "business_processed": false
+      }
+    },
+    {
+      "label": "real_acceptance_backend_stopped",
+      "mode": "deliver",
+      "result": {
+        "event_id": "49f81bda-f796-46ee-b024-70e7e6ce720c",
+        "invoice_id": "8ade3c45-6f37-44a9-872b-c143efcc471c",
+        "review_id": "a4997427-0863-4d0e-8c4d-cf9a100c21db",
+        "review_revision": 2,
+        "event_type": "approved",
+        "status": "accepted",
+        "attempts": 1,
+        "max_attempts": 5,
+        "last_error": null,
+        "accepted_at": "2026-10-07T08:36:58.981606+00:00",
+        "processed_at": null,
+        "review_status": "approved",
+        "snapshot_revision": 2,
+        "can_export": true,
+        "business_processed": false
+      }
+    },
+    {
+      "label": "real_backend_restored",
+      "mode": "deliver",
+      "result": {
+        "event_id": "49f81bda-f796-46ee-b024-70e7e6ce720c",
+        "invoice_id": "8ade3c45-6f37-44a9-872b-c143efcc471c",
+        "review_id": "a4997427-0863-4d0e-8c4d-cf9a100c21db",
+        "review_revision": 2,
+        "event_type": "approved",
+        "status": "accepted",
+        "attempts": 2,
+        "max_attempts": 5,
+        "last_error": null,
+        "accepted_at": "2026-10-07T08:37:40.154239+00:00",
+        "processed_at": null,
+        "review_status": "approved",
+        "snapshot_revision": 2,
+        "can_export": true,
+        "business_processed": false
+      }
+    },
+    {
+      "label": "rejected_event",
+      "mode": "deliver",
+      "result": {
+        "event_id": "531d8b4c-0b9a-462e-8786-109bbfc70047",
+        "invoice_id": "24e2a990-a33b-4a0c-a736-c6eea1c52c0f",
+        "review_id": "df4cc033-038f-41b5-9f22-86276f02fa57",
+        "review_revision": 2,
+        "event_type": "rejected",
+        "status": "accepted",
+        "attempts": 1,
+        "max_attempts": 5,
+        "last_error": null,
+        "accepted_at": "2026-10-07T08:37:41.765015+00:00",
+        "processed_at": null,
+        "review_status": "rejected",
+        "snapshot_revision": 2,
+        "can_export": false,
+        "business_processed": false
+      }
+    },
+    {
+      "label": "actual_send_injected_response_loss",
+      "mode": "lost-response",
+      "result": {
+        "event_id": "49f81bda-f796-46ee-b024-70e7e6ce720c",
+        "invoice_id": "8ade3c45-6f37-44a9-872b-c143efcc471c",
+        "review_id": "a4997427-0863-4d0e-8c4d-cf9a100c21db",
+        "review_revision": 2,
+        "event_type": "approved",
+        "status": "unknown",
+        "attempts": 3,
+        "max_attempts": 5,
+        "last_error": "TRANSPORT_UNCONFIRMED",
+        "accepted_at": "2026-10-07T08:37:40.154239+00:00",
+        "processed_at": null,
+        "review_status": "approved",
+        "snapshot_revision": 2,
+        "can_export": true,
+        "business_processed": false
+      }
+    },
+    {
+      "label": "response_loss_recovery",
+      "mode": "deliver",
+      "result": {
+        "event_id": "49f81bda-f796-46ee-b024-70e7e6ce720c",
+        "invoice_id": "8ade3c45-6f37-44a9-872b-c143efcc471c",
+        "review_id": "a4997427-0863-4d0e-8c4d-cf9a100c21db",
+        "review_revision": 2,
+        "event_type": "approved",
+        "status": "accepted",
+        "attempts": 4,
+        "max_attempts": 5,
+        "last_error": null,
+        "accepted_at": "2026-10-07T08:38:49.108476+00:00",
+        "processed_at": null,
+        "review_status": "approved",
+        "snapshot_revision": 2,
+        "can_export": true,
+        "business_processed": false
+      }
+    },
+    {
+      "label": "interrupted_probe_lease_recovery",
+      "mode": "deliver",
+      "result": {
+        "event_id": "56386780-79ad-4001-82aa-07e683b29563",
+        "invoice_id": "0d7ed1cf-2ec4-4e29-b6a5-7c5a9e5bb72e",
+        "review_id": "37c97bc6-fe78-4563-9ab2-448919ac28aa",
+        "review_revision": 1,
+        "event_type": "approved",
+        "status": "accepted",
+        "attempts": 4,
+        "max_attempts": 5,
+        "last_error": null,
+        "accepted_at": "2026-10-07T08:38:49.685274+00:00",
+        "processed_at": null,
+        "review_status": "approved",
+        "snapshot_revision": 1,
+        "can_export": true,
+        "business_processed": false
+      }
+    },
+    {
+      "label": "header_hook_still_denies_missing_credential",
+      "mode": "unauthenticated",
+      "result": {
+        "unauthenticated_status": 403
+      }
+    },
+    {
+      "label": "authenticated_receiver_with_privacy_hook",
+      "mode": "deliver",
+      "result": {
+        "event_id": "531d8b4c-0b9a-462e-8786-109bbfc70047",
+        "invoice_id": "24e2a990-a33b-4a0c-a736-c6eea1c52c0f",
+        "review_id": "df4cc033-038f-41b5-9f22-86276f02fa57",
+        "review_revision": 2,
+        "event_type": "rejected",
+        "status": "accepted",
+        "attempts": 2,
+        "max_attempts": 5,
+        "last_error": null,
+        "accepted_at": "2026-10-07T08:43:42.395576+00:00",
+        "processed_at": null,
+        "review_status": "rejected",
+        "snapshot_revision": 2,
+        "can_export": false,
+        "business_processed": false
+      }
+    }
+  ],
+  "execution_payload_check": {
+    "payload_rows": 9,
+    "credential_found": false,
+    "redacted_existing_probes": false
+  },
+  "unchanged_business_tables": {
+    "invoices": true,
+    "receipts": true,
+    "processing_attempts": true,
+    "notification_attempts": true,
+    "email_outcomes": true,
+    "document_reads": true,
+    "intake_runs": true,
+    "intake_stage_events": true,
+    "review_tasks": true,
+    "review_revisions": true,
+    "exports": true,
+    "result_notifications": true,
+    "result_notification_attempts": true,
+    "review_requests": true
+  },
+  "after_counts": {
+    "invoices": 19,
+    "receipts": 162,
+    "processing_attempts": 93,
+    "notification_attempts": 7,
+    "email_outcomes": 123,
+    "document_reads": 0,
+    "intake_runs": 52,
+    "intake_stage_events": 224,
+    "review_tasks": 7,
+    "review_revisions": 5,
+    "review_events": 3,
+    "exports": 0,
+    "result_notifications": 0,
+    "result_notification_attempts": 0,
+    "review_requests": 2
+  },
+  "event_summary": [
+    [
+      "49f81bda-f796-46ee-b024-70e7e6ce720c",
+      "accepted",
+      4,
+      null,
+      null
+    ],
+    [
+      "531d8b4c-0b9a-462e-8786-109bbfc70047",
+      "accepted",
+      2,
+      null,
+      null
+    ],
+    [
+      "56386780-79ad-4001-82aa-07e683b29563",
+      "accepted",
+      4,
+      null,
+      null
+    ]
+  ],
+  "schema_version": 2,
+  "foreign_key_errors": [],
+  "historical_workflow_hashes_unchanged": true,
+  "health": {
+    "status": "ok",
+    "capabilities": {
+      "intake": true,
+      "extraction": true,
+      "ocr": true,
+      "review": true,
+      "review_decisions": true,
+      "automatic_approval": true,
+      "excel_export": false
+    }
+  },
+  "tests_passed": 135,
+  "header_hook_tests": "passed: authentication access, serialization privacy, path isolation, missing header",
+  "instance": {
+    "active": 1,
+    "published_version": "4e170b15-9d42-4f9d-89d4-be2550f1dc82",
+    "nodes_match": true,
+    "connections_match": true,
+    "settings_match": true
+  }
+}

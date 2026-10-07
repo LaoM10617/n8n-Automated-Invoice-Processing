@@ -1,0 +1,52 @@
+{
+  "backup": "data\\baselines\\phase02-step53-20261007-082536Z",
+  "method": "SQLite online backup API; services running",
+  "schema_version": 2,
+  "database_logical_sha256": "d03274b60cd72df9679237afa07c916258e520e00c815b42e1eec5f585888507",
+  "counts": {
+    "invoices": 19,
+    "receipts": 162,
+    "processing_attempts": 93,
+    "notification_attempts": 7,
+    "email_outcomes": 123,
+    "document_reads": 0,
+    "intake_runs": 52,
+    "intake_stage_events": 224,
+    "review_tasks": 7,
+    "review_revisions": 5,
+    "review_events": 3,
+    "exports": 0,
+    "result_notifications": 0,
+    "result_notification_attempts": 0,
+    "review_requests": 2
+  },
+  "workflow_sha256": {
+    "n8n_workflows\\01_AP_agent_intake_v7.json": "1a6fa0e1dc6c18d0d7598f14be008770bf78ea664a802ea10124d488278e33e9",
+    "n8n_workflows\\01_AP_approval_intake_v8.json": "2510b8bda5bc5f5561541c9de5b03a7b65304311789c46ba0f0a254217c75e52",
+    "n8n_workflows\\01_AP_compact_intake_v6.json": "fb9ad08335291635c961aff45eecedeb5539fa17f0d8c0240913d0610e6cdac2",
+    "n8n_workflows\\01_AP_email_attachment_v1.json": "45e83c4146734b4a84bf9b139205bc9e889e772d23b197234cd0962a0901510e",
+    "n8n_workflows\\01_AP_gmail_intake_v1.json": "fb09d799b14a0505d444dae22ce9fb56c71ad81400d048bc524828394dea1feb",
+    "n8n_workflows\\01_AP_intake_notify_v4.json": "bcdc6cf30a3319d2c76a554e9a245266bd5775c23020f22506c2b6c5d338a1e4",
+    "n8n_workflows\\01_AP_intake_process_v2.json": "deb73f62b405dd42123d1412eeb21de3de30de8de9ed01b975902563c8104f53",
+    "n8n_workflows\\01_AP_intake_review_v3.json": "511b8dfeb34bff7d396c97ded15363b012ab2d993a329fa8f4c15666f9467cdf",
+    "n8n_workflows\\01_AP_intake_upload_v1.json": "c6fb7a88b21c919026baeef542c6a2b66fa5420230cdcc4e26a42c710e7ae309",
+    "n8n_workflows\\01_AP_local_email_bridge_v1.json": "8eb02d50a27affa06e174a6c30c0a13d905cbde7d35d28b15e7902977f91d4ad",
+    "n8n_workflows\\01_AP_unified_intake_v5.json": "42036710acd6245147a55ee60b37fded5c11c2faf14fee3e8dded15298bc19dc",
+    "n8n_workflows\\Email invoice archiving & data extraction.json": "71255542f88fc811493b44b8c22a84dec1fab626fe98926f4ff2a2e4830f4110"
+  },
+  "database_unchanged_after_deployment": true,
+  "workflows_unchanged": true,
+  "health": {
+    "status": "ok",
+    "capabilities": {
+      "intake": true,
+      "extraction": true,
+      "ocr": true,
+      "review": true,
+      "review_decisions": true,
+      "automatic_approval": true,
+      "excel_export": false
+    }
+  },
+  "tests_passed": 128
+}
