@@ -4,5 +4,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends poppler-utils t
 COPY requirements.txt ./requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 COPY *.py ./backend/
+COPY *.sql *.js ./backend/
 ENV AP_DATA_DIR=/data/ap
 CMD ["python", "-m", "uvicorn", "backend.app:create_app", "--factory", "--host", "0.0.0.0", "--port", "8000"]

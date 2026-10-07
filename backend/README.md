@@ -1,4 +1,43 @@
-## Default demo entry (Phase01 refactor steps 4–5 accepted)
+## Phase02 review and approval (2026-10-07)
+
+The local review page now supports **Save changes**, **Approve** and **Reject**.
+Machine drafts/evidence remain unchanged. Saved revisions are immutable, stale
+revision/analysis submissions return 409, and approvals rerun deterministic checks.
+Enter a reason and original page for corrections. Resolve each evidence issue or
+duplicate candidate explicitly; arithmetic errors cannot be acknowledged away.
+If analysis changed, compare it and explicitly accept the new attempt. Existing
+manual values are retained. Final invoices cannot be reanalyzed; cached replay is allowed.
+
+The opt-in [v8 editor](http://localhost:5678/workflow/APApprovalIntakeV8) and
+[v8 upload](http://127.0.0.1:5678/form/ap-approval-intake-v8) add deterministic
+approval for newly created tasks. EUR gross total must satisfy `0 < total < 10000.00`
+and every validation/evidence/quality/duplicate gate must pass. Other cases remain
+pending and notify the local Mailpit reviewer. Historical pending tasks are not
+automatically reevaluated. Human revisions always require manual approval.
+v7 and historical JSON are preserved; v7 remains the Phase01 demonstration entry.
+
+Review API: GET/PATCH `/api/ap/invoices/{invoice_id}/review`, POST
+`/api/ap/invoices/{invoice_id}/review/decision`. Writes require `X-AP-Review: 1`
+and same-origin browser requests on the local host. Send `expected_revision` and
+`processing_attempt_id`; decisions also require a unique `request_id`. This is a
+local demo reviewer, not authenticated multi-user access. The explicit local
+POST `/api/ap/invoices/{invoice_id}/review/evaluate-policy` applies the policy to
+a selected pending record; it is never invoked on startup or in a batch.
+
+Automatic/manual decisions share a snapshot and transactional outbox event.
+**Event delivery and Excel generation are not connected yet.** Approved pages
+therefore say `Approved; export pending`. No accounting submission or payment occurs.
+SQLite schema version is 2; the additional request ledger rejects reuse with
+different content, including aliases used when replaying a final decision.
+
+Import `n8n_workflows/01_AP_approval_intake_v8.json` independently, retain its ID,
+bind the existing readonly Gmail credential on another instance, then publish.
+Its 15 execution nodes and two notes expose business decisions; Python owns
+validation, versions, policy and persistence. This step verified real upload and
+local review, not a new Gmail run. Three labeled synthetic PDFs/cached analyses
+were used without provider calls. See `logs&architechture/phase02_review_log.md`.
+
+## Default demo entry (Phase01 refactor steps 4–5 accepted; historical below)
 
 Use [v7 editor](http://localhost:5678/workflow/APAgentIntakeV7) or
 [v7 upload form](http://127.0.0.1:5678/form/ap-agent-intake-v7).

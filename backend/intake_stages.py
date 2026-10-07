@@ -8,11 +8,12 @@ import smtplib
 import threading
 from typing import Annotated, Literal
 from uuid import uuid4
-from fastapi import File, Form, HTTPException, UploadFile
+from fastapi import File, Form, HTTPException, UploadFile, Request
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 from backend.document_text import ProcessingError
 from backend.email_receipts import EmailOutcome
 from backend.notifications import NotificationResult
+from backend.reviews import protect_write
 
 
 class Source(BaseModel):
@@ -38,7 +39,7 @@ class StageResult(BaseModel):
     run_id: str
     source: Source
     stage: str = 'archive'
-    outcome: Literal['continue','review_ready','skipped','failed'] = 'continue'
+    outcome: Literal['continue','review_ready','decision_ready','skipped','failed'] = 'continue'
     receipt_id: str | None = None
     invoice_id: str | None = None
     analysis_run_id: int | None = None
@@ -50,6 +51,10 @@ class StageResult(BaseModel):
     notification_status: str = 'not_started'
     extractor: str = 'python_langchain_agent'
     analysis_cached: bool = False
+    analysis_source: str = 'provider_analysis'
+    review_status: str | None = None
+    approval_method: str | None = None
+    event_id: str | None = None
 
 
 def unpack(value):
@@ -88,7 +93,7 @@ def send_local_notification(claim, record, invoice_id):
     return record(notice['notification_id'], result)
 
 
-def register_intake_stages(app, connect, intake, documents, review, notifications, save_outcome):
+def register_intake_stages(app, connect, intake, documents, review, notifications, save_outcome, reviews=None):
     lock = threading.RLock()
     with closing(connect()) as db:
         db.executescript('''CREATE TABLE IF NOT EXISTS intake_runs (
@@ -108,9 +113,9 @@ def register_intake_stages(app, connect, intake, documents, review, notification
             db.execute('INSERT INTO intake_stage_events(run_id,stage,result_json) VALUES(?,?,?)', (result.run_id,result.stage,encoded))
             db.commit()
         if result.source.source_type == 'email' and result.outcome != 'continue':
-            status = 'skipped' if result.outcome == 'skipped' else 'review_ready' if result.outcome == 'review_ready' else 'intake_failed' if result.receipt_id is None else 'review_failed' if result.stage == 'validate' else 'processing_failed'
+            status = 'skipped' if result.outcome == 'skipped' else 'decision_ready' if result.outcome == 'decision_ready' else 'review_ready' if result.outcome == 'review_ready' else 'intake_failed' if result.receipt_id is None else 'review_failed' if result.stage == 'validate' else 'processing_failed'
             save_outcome(EmailOutcome(**{k:v for k,v in result.source.model_dump().items() if k!='source_type'}, status=status,
-                reason_code=result.error_code or 'PENDING_REVIEW', receipt_id=result.receipt_id, invoice_id=result.invoice_id))
+                reason_code=result.error_code or ('DECISION_SAVED' if result.outcome == 'decision_ready' else 'PENDING_REVIEW'), receipt_id=result.receipt_id, invoice_id=result.invoice_id))
         return result
 
     def load(run_id):
@@ -171,12 +176,22 @@ def register_intake_stages(app, connect, intake, documents, review, notification
                 previous = documents.latest(result.invoice_id)
                 result.analysis_cached = documents.reusable(previous)
                 result.analysis_run_id = documents.analyze(result.invoice_id, wait_for_slot=True)
+                saved = documents.latest(result.invoice_id)
+                result.analysis_source = json.loads(saved['result_json'] or '{}').get('analysis_source', 'provider_analysis')
                 return save(result)
             except Exception as exc:
                 return failure(result, exc)
 
     @app.post('/api/ap/stages/{run_id}/validate', response_model=StageResult)
     def finalize(run_id: str):
+        return finalize_run(run_id, False)
+
+    @app.post('/api/ap/stages/{run_id}/validate-policy', response_model=StageResult)
+    def finalize_policy(run_id: str, request: Request):
+        protect_write(request)
+        return finalize_run(run_id, True)
+
+    def finalize_run(run_id, apply_policy):
         with lock:
             result = load(run_id)
             if result.outcome != 'continue':
@@ -186,10 +201,20 @@ def register_intake_stages(app, connect, intake, documents, review, notification
             result.stage = 'validate'
             try:
                 invoice = documents.finalize(result.invoice_id, result.analysis_run_id)
-                task = unpack(review(result.invoice_id))
-                result.review_id, result.review_url = task['review_id'], task['review_url']
+                if apply_policy:
+                    task = reviews.automatic(result.invoice_id, new_only=True)
+                    result.review_id = task['review_id']
+                    result.review_url = os.environ.get('AP_PUBLIC_BASE_URL', 'http://127.0.0.1:8000').rstrip('/') + '/reviews/' + result.invoice_id
+                    result.review_status, result.approval_method = task['status'], task['approval_method']
+                    result.event_id = task['event']['event_id'] if task['event'] else None
+                else:
+                    task = unpack(review(result.invoice_id))
+                    result.review_id, result.review_url = task['review_id'], task['review_url']
+                    result.review_status = task['review_status']
                 result.issue_codes = sorted({i['code'] for i in invoice['validation_issues']})
-                result.outcome = 'review_ready'
+                result.outcome = 'review_ready' if result.review_status == 'pending' else 'decision_ready'
+                if not apply_policy and result.outcome == 'decision_ready':
+                    result.outcome, result.error_code = 'skipped', 'REVIEW_ALREADY_FINAL'
                 return save(result)
             except Exception as exc:
                 return failure(result, exc)

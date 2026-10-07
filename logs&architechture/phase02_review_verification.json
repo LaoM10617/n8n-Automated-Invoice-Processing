@@ -1,0 +1,116 @@
+{
+  "schema_version": 2,
+  "counts": {
+    "invoices": 19,
+    "receipts": 162,
+    "processing_attempts": 93,
+    "review_tasks": 7,
+    "review_revisions": 5,
+    "review_events": 3,
+    "exports": 0,
+    "notification_attempts": 7,
+    "review_requests": 2
+  },
+  "historical_rows_unchanged": [
+    "invoices",
+    "receipts",
+    "processing_attempts",
+    "review_tasks",
+    "notification_attempts"
+  ],
+  "historical_originals_and_workflows_sha256_unchanged": true,
+  "new_provider_calls": 0,
+  "synthetic_cached_analyses": 3,
+  "outcomes": [
+    {
+      "case": "auto",
+      "invoice_id": "0d7ed1cf-2ec4-4e29-b6a5-7c5a9e5bb72e",
+      "status": "approved",
+      "approval_method": "automatic",
+      "revision": 1,
+      "event": {
+        "event_id": "56386780-79ad-4001-82aa-07e683b29563",
+        "event_type": "approved",
+        "status": "pending"
+      }
+    },
+    {
+      "case": "manual",
+      "invoice_id": "8ade3c45-6f37-44a9-872b-c143efcc471c",
+      "status": "approved",
+      "approval_method": "manual",
+      "revision": 2,
+      "event": {
+        "event_id": "49f81bda-f796-46ee-b024-70e7e6ce720c",
+        "event_type": "approved",
+        "status": "pending"
+      }
+    },
+    {
+      "case": "reject",
+      "invoice_id": "24e2a990-a33b-4a0c-a736-c6eea1c52c0f",
+      "status": "rejected",
+      "approval_method": "manual",
+      "revision": 2,
+      "event": {
+        "event_id": "531d8b4c-0b9a-462e-8786-109bbfc70047",
+        "event_type": "rejected",
+        "status": "pending"
+      }
+    }
+  ],
+  "instance_checks": {
+    "v7": {
+      "nodes_connections_match": true,
+      "published": true
+    },
+    "v8": {
+      "nodes_connections_match": true,
+      "published": true
+    }
+  },
+  "mailpit_total": 118,
+  "runs": [
+    {
+      "run_id": "b81ca27d-d04d-4ba4-8a63-f0d2b6646acd",
+      "outcome": "decision_ready",
+      "invoice_id": "0d7ed1cf-2ec4-4e29-b6a5-7c5a9e5bb72e",
+      "analysis_cached": true,
+      "analysis_source": null,
+      "notification_status": "not_started",
+      "event_id": "56386780-79ad-4001-82aa-07e683b29563"
+    },
+    {
+      "run_id": "124cae2a-2bb0-4678-9121-b6fdac685c7c",
+      "outcome": "review_ready",
+      "invoice_id": "8ade3c45-6f37-44a9-872b-c143efcc471c",
+      "analysis_cached": true,
+      "analysis_source": null,
+      "notification_status": "sent",
+      "event_id": null
+    },
+    {
+      "run_id": "1c9a9f13-bf3d-418b-9472-4cf63a8ab691",
+      "outcome": "review_ready",
+      "invoice_id": "24e2a990-a33b-4a0c-a736-c6eea1c52c0f",
+      "analysis_cached": true,
+      "analysis_source": "synthetic_saved_analysis_no_model",
+      "notification_status": "sent",
+      "event_id": null
+    },
+    {
+      "run_id": "709d7bcf-947b-49ab-9fde-2c369c6f628d",
+      "outcome": "decision_ready",
+      "invoice_id": "0d7ed1cf-2ec4-4e29-b6a5-7c5a9e5bb72e",
+      "analysis_cached": true,
+      "analysis_source": "synthetic_saved_analysis_no_model",
+      "notification_status": "not_started",
+      "event_id": "56386780-79ad-4001-82aa-07e683b29563"
+    }
+  ],
+  "tests_passed": 101,
+  "event_delivery_implemented": false,
+  "excel_generation_implemented": false,
+  "gmail": "Existing credential reference preserved; no new Gmail execution in this step.",
+  "restart_and_replay_business_state_unchanged": true
+}

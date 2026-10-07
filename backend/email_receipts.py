@@ -11,7 +11,7 @@ class EmailOutcome(BaseModel):
     attachment_id: str = Field(min_length=1, max_length=200)
     batch_id: str = Field(pattern=r'^[A-Za-z0-9_-]{1,80}$')
     case_id: str = Field(pattern=r'^[A-Za-z0-9_-]{1,80}$')
-    status: Literal['skipped', 'intake_failed', 'processing_failed', 'review_failed', 'review_ready']
+    status: Literal['skipped', 'intake_failed', 'processing_failed', 'review_failed', 'review_ready', 'decision_ready']
     reason_code: str = Field(max_length=100)
     receipt_id: str | None = None
     invoice_id: str | None = None

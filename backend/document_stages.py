@@ -67,6 +67,9 @@ class DocumentStages:
                 previous = db.execute('SELECT * FROM processing_attempts WHERE invoice_id=? ORDER BY attempt_id DESC LIMIT 1', (invoice_id,)).fetchone()
                 if self.reusable(previous):
                     return previous['attempt_id']
+                task = db.execute('SELECT status FROM review_tasks WHERE invoice_id=?', (invoice_id,)).fetchone()
+                if task and task['status'] != 'pending':
+                    raise HTTPException(409, 'Final invoices cannot be reanalyzed. Their approved snapshot is preserved.')
                 if previous and previous['status'] == 'processing':
                     raise HTTPException(409, 'Invoice processing is already in progress.')
                 attempt_id = db.execute("INSERT INTO processing_attempts(invoice_id,status) VALUES(?,'processing')", (invoice_id,)).lastrowid

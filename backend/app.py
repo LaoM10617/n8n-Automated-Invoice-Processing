@@ -26,6 +26,8 @@ from backend.notifications import register_notifications
 from backend.email_receipts import register_email_receipts
 from backend.document_stages import DocumentStages
 from backend.intake_stages import register_intake_stages
+from backend.migrations import migrate
+from backend.reviews import register_reviews
 
 MAX_BYTES = 20 * 1024 * 1024
 
@@ -102,6 +104,7 @@ def create_app(data_dir: Path | None = None) -> FastAPI:
                 created_at TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ','now'))
             );
         ''')
+        migrate(db)
         # This demo runs one application worker. Preserve interrupted attempts for audit.
         for attempt in db.execute("SELECT attempt_id,result_json FROM processing_attempts WHERE status='processing'").fetchall():
             result = json.loads(attempt['result_json'] or '{}')
@@ -135,7 +138,7 @@ def create_app(data_dir: Path | None = None) -> FastAPI:
     def health():
         with closing(connect()) as db:
             db.execute('SELECT 1').fetchone()
-        return {'status': 'ok', 'capabilities': {'intake': True, 'extraction': model_configured(), 'ocr': ocr_available(), 'review': True, 'review_decisions': False}}
+        return {'status': 'ok', 'capabilities': {'intake': True, 'extraction': model_configured(), 'ocr': ocr_available(), 'review': True, 'review_decisions': True, 'automatic_approval': True, 'excel_export': False}}
 
     @app.post('/api/ap/intakes')
     def intake(
@@ -277,11 +280,21 @@ def create_app(data_dir: Path | None = None) -> FastAPI:
     def review_page(invoice_id: str):
         with closing(connect()) as db:
             task = db.execute('SELECT * FROM review_tasks WHERE invoice_id=?', (invoice_id,)).fetchone()
+            bound_attempt = db.execute('SELECT result_json FROM processing_attempts WHERE attempt_id=?',
+                                      (task['extraction_attempt_id'] or task['created_attempt_id'],)).fetchone() if task else None
         if task is None:
             raise HTTPException(404, 'Review task not found')
-        return HTMLResponse(render_review(get_invoice(invoice_id), dict(task)), headers={
+        invoice = get_invoice(invoice_id)
+        invoice['review_machine_result'] = json.loads(bound_attempt['result_json'] or '{}')
+        return HTMLResponse(render_review(invoice, dict(task)), headers={
             'Cache-Control': 'no-store', 'X-Content-Type-Options': 'nosniff',
-            'Content-Security-Policy': "default-src 'none'; style-src 'unsafe-inline'; img-src 'self'; frame-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'self'"})
+            'Content-Security-Policy': "default-src 'none'; script-src 'self'; connect-src 'self'; style-src 'unsafe-inline'; img-src 'self'; frame-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'self'"})
+
+    @app.get('/static/review.js')
+    def review_script():
+        return FileResponse(Path(__file__).with_name('review.js'), media_type='text/javascript', headers={'Cache-Control': 'no-store', 'X-Content-Type-Options': 'nosniff'})
+
+    reviews = register_reviews(app, connect)
 
     stages = DocumentStages(connect, invoice_row, get_invoice, originals,
                             lambda path, media: read_pages(path, media), lambda pages: extract_fields(pages))
@@ -292,5 +305,5 @@ def create_app(data_dir: Path | None = None) -> FastAPI:
 
     notifications = register_notifications(app, connect, get_invoice)
     save_outcome = register_email_receipts(app, connect)
-    register_intake_stages(app, connect, intake, stages, create_review_task, notifications, save_outcome)
+    register_intake_stages(app, connect, intake, stages, create_review_task, notifications, save_outcome, reviews)
     return app

@@ -51,7 +51,7 @@ def register_notifications(app, connect, get_invoice):
         fields = invoice['extracted_fields']
         issues = ', '.join(issue['code'] for issue in invoice['validation_issues']) or 'No rule exceptions; extraction still requires human review.'
         text = '\n'.join([
-            'AP invoice ready for read-only review.', f'Invoice ID: {invoice_id}',
+            'AP invoice ready for review. Compare, save changes, then approve or reject.', f'Invoice ID: {invoice_id}',
             f"Supplier: {fields.get('supplier_name') or 'Unknown'}",
             f"Invoice number: {fields.get('invoice_number') or 'Unknown'}",
             f"Amount: {fields.get('total_amount') or 'Unknown'} {fields.get('currency') or ''}",

@@ -1,6 +1,18 @@
 # Handoff — AP invoice test fixtures
 
+## Phase02 sections 5.1–5.2 implemented (2026-10-07)
+
+Editable review, immutable revisions, explicit analysis-version adoption, deterministic automatic approval, manual decisions and transactional pending events are deployed locally. See `phase02_review_log.md`, `phase02_review_verification.json` and test reports. New opt-in `APApprovalIntakeV8` is imported/published (15 execution nodes + 2 notes); v7 and historical files remain unchanged. Three labeled synthetic saved-analysis samples verified actual automatic approval, manual address correction/approval and rejection without model calls. Historical pending tasks were not auto-approved. Schema version 2 adds the decision request ledger. Event delivery/02 workflow and Excel generation remain unimplemented; approved means export pending. Services are running. Next: event delivery/recovery and the shared Excel export workflow.
+
+## Phase02 step 1 implemented (2026-10-07)
+
+Baseline and local database migration are complete; see `phase02_migration_log.md`, `phase02_migration_verification.json` and `phase02_migration_tests.xml`. SQLite user_version=1, historical rows and original/workflow hashes preserved, four tasks still pending, all new revision/event/export/result-notification tables empty. 74 offline tests pass (69 existing + 5 migration tests). Containers remain stopped; the updated image has not been built or deployed. Automatic approval and Excel export remain mandatory later steps, not implemented behavior. Next: review backend and editable Web surface, followed by automatic policy/outbox and shared export workflow. This supersedes the planning-only implementation status below.
+
 Date: 2026-10-06
+
+## Phase02 planning handoff (2026-10-07)
+
+Phase01 work is committed as `e77ddcc` (`Unified Workflow Canvas, added LangChain and Agent`). The previous “No commit made” statements below describe earlier checkpoints. Phase02 has not started implementation. Follow `phase_02_AP_review_export_implementation_guide_zh.md` for mandatory rule-based amount auto-approval plus human review, durable decision events, the independent 02 workflow and local Excel (.xlsx) exports only. DATEV/Lexoffice integration is removed from the plan. The proposed default is EUR gross total below 10,000 with all auto-approval checks passing; equal/above threshold or exceptions go to manual review. This supersedes the earlier manual-only Phase02 scope. Keep v7 as the Phase01 demo entry; the guide introduces no runtime changes.
 
 ## Default demo — Phase01 refactor steps 4–5 accepted (2026-10-06)
 

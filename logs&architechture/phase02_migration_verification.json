@@ -1,0 +1,31 @@
+{
+  "baseline": "data/baselines/phase02-start-20261007-073157Z",
+  "schema_version": 1,
+  "isolated_migration": "passed",
+  "isolated_repeat": "passed",
+  "historical_rows_equal": true,
+  "legacy_table_counts": {
+    "invoices": 16,
+    "receipts": 159,
+    "processing_attempts": 90,
+    "sqlite_sequence": 2,
+    "review_tasks": 4,
+    "notification_attempts": 5,
+    "email_outcomes": 123,
+    "document_reads": 0,
+    "intake_runs": 48,
+    "intake_stage_events": 202
+  },
+  "originals_and_workflows_sha256_unchanged": true,
+  "new_tables_empty": [
+    "review_revisions",
+    "review_events",
+    "exports",
+    "result_notifications",
+    "result_notification_attempts"
+  ],
+  "live_database_migrated": true,
+  "live_repeat": "passed",
+  "integrity_check": "ok",
+  "foreign_key_check": []
+}

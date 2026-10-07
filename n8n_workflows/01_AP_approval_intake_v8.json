@@ -1,0 +1,557 @@
+{
+  "id": "APApprovalIntakeV8",
+  "name": "01_AP_Approval_Intake_v8",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "ff1cc838-e584-4eae-bbaf-128cfacae056",
+      "name": "Run Gmail Batch",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "returnAll": true,
+        "simple": false,
+        "filters": {
+          "q": "subject:AP-DEMO subject:phase01-connect-001"
+        },
+        "options": {
+          "dataPropertyAttachmentsPrefixName": "attachment_",
+          "downloadAttachments": true
+        }
+      },
+      "id": "c03512dc-5546-4d20-b4e8-cb93acc5ee22",
+      "name": "Gmail",
+      "type": "n8n-nodes-base.gmail",
+      "position": [
+        240,
+        200
+      ],
+      "webhookId": "9845d90d-f1e2-4a15-96d8-5939e4900397",
+      "typeVersion": 2.1,
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "SGOORT8HCIJeyC72",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "path": "ap-approval-intake-v8",
+        "formTitle": "AP Invoice Intake and Review",
+        "formDescription": "AP intake with deterministic approval. Eligible EUR gross totals below 10,000 are approved; exceptions go to local review. Export delivery is not connected yet. Reuse Upload ID to retry.",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Upload ID",
+              "placeholder": "e.g. ap-upload-001",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Invoice File",
+              "fieldType": "file",
+              "multipleFiles": false,
+              "acceptFileTypes": ".pdf,.jpg,.jpeg,.png",
+              "requiredField": true
+            }
+          ]
+        },
+        "responseMode": "responseNode",
+        "options": {
+          "appendAttribution": false,
+          "buttonLabel": "Store invoice"
+        }
+      },
+      "id": "54184d80-38c6-4aaf-8bab-a724b3e6d6c8",
+      "name": "Upload Invoice",
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.1,
+      "position": [
+        240,
+        -30
+      ],
+      "webhookId": "fa807412-9b47-4c9a-ad24-9663db481379"
+    },
+    {
+      "name": "Prepare Attachments",
+      "id": "e2554a2a-9fe7-4c28-9a5b-ebe16dfcdb68",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        480,
+        140
+      ],
+      "parameters": {
+        "jsCode": "const results=[];\nfor (const [i,item] of $input.all().entries()) {\n const j=item.json;\n if (j['Upload ID'] !== undefined) {\n  const keys=Object.keys(item.binary || {}), source=String(j['Upload ID']).trim();\n  if (keys.length!==1 || !source || source.length>200) throw new Error('One file and a valid Upload ID are required.');\n  results.push({json:{source_type:'upload',source_namespace:'n8n-ap-upload-v1',source_id:source,attachment_id:'0'},binary:{data:item.binary[keys[0]]},pairedItem:{item:i}});continue;\n }\n\n const match=String(j.subject || '').match(/^\\[AP-DEMO\\]\\[([A-Za-z0-9_-]{1,80})\\]\\[([A-Za-z0-9_-]{1,80})\\]/);\n if (!match || !j.id) throw new Error('Expected a batch-tagged email with a provider message ID.');\n const keys=Object.keys(item.binary || {});\n for (const key of keys.length?keys:['none']) {\n  const b=item.binary?.[key];\n  const supported=Boolean(b && ['application/pdf','image/png','image/jpeg'].includes(b.mimeType));\n  results.push({json:{source_type:'email',source_namespace:'gmail:ap-test-inbox',source_id:String(j.id),attachment_id:key,batch_id:match[1],case_id:match[2]},binary:{data:b || {data:'',mimeType:'application/x-ap-no-attachment',fileName:'no-attachment'}},pairedItem:{item:i}});\n }\n}\nreturn results;"
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "4ba26a49-54c4-4b95-a4f2-d7f52ed5a492",
+      "name": "Process Each Invoice",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        720,
+        140
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "8a3e67b8-a9ea-4644-bd1a-4668224f933c",
+      "name": "Batch Complete",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        720,
+        -50
+      ]
+    },
+    {
+      "name": "Archive & Read Document",
+      "id": "6240b5ba-3862-44be-898e-ba8fef3fcfd5",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        960,
+        140
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "http://python-api:8000/api/ap/stages/archive",
+        "sendBody": true,
+        "contentType": "multipart-form-data",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "metadata",
+              "value": "={{ JSON.stringify($json) }}"
+            },
+            {
+              "parameterType": "formBinaryData",
+              "name": "file",
+              "inputDataFieldName": "data"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 480000
+        }
+      }
+    },
+    {
+      "name": "Invoice Analysis Agent",
+      "id": "ad4aede7-936c-44f7-9bdb-d2c0b84436ce",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1200,
+        140
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "={{ 'http://python-api:8000/api/ap/stages/' + $json.run_id + '/analyze' }}",
+        "options": {
+          "timeout": 480000
+        }
+      }
+    },
+    {
+      "name": "Validate & Apply Approval Policy",
+      "id": "2a1920ec-dbc6-4edd-b831-86f553c0b8fa",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1440,
+        140
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "={{ 'http://python-api:8000/api/ap/stages/' + $json.run_id + '/validate-policy' }}",
+        "options": {
+          "timeout": 480000
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-AP-Review",
+              "value": "1"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Notify Reviewer",
+      "id": "01277f10-c874-4139-a76e-d06378a82a1d",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2160,
+        140
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "={{ 'http://python-api:8000/api/ap/stages/' + $json.run_id + '/notify' }}",
+        "options": {
+          "timeout": 480000
+        }
+      }
+    },
+    {
+      "name": "Record Exception",
+      "id": "4d21acee-5ffd-48ee-8182-c814d27ac4d2",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2160,
+        340
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "={{ 'http://python-api:8000/api/ap/stages/' + $json.run_id + '/exception' }}",
+        "options": {
+          "timeout": 480000
+        }
+      }
+    },
+    {
+      "name": "Route Outcome",
+      "id": "c160eab9-a4a2-4ce5-8d9d-094afd1c7155",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        1920,
+        240
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "1f6e4792-18b4-4b04-b8a8-fcea517e4597",
+              "leftValue": "={{ $json.outcome === 'review_ready' }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      }
+    },
+    {
+      "name": "Return or Continue",
+      "id": "ccc3c1d7-f476-4511-a8a3-2cd10a1b6468",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        2400,
+        140
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "1f6e4792-18b4-4b04-b8a8-fcea517e4597",
+              "leftValue": "={{ $json.source.source_type === 'email' }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      }
+    },
+    {
+      "name": "Upload Result",
+      "id": "cd40caf7-591b-4c13-9cb9-feeed25bb59c",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        2640,
+        240
+      ],
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ {...$json, formSubmittedText: $json.outcome === 'decision_ready' ? 'Decision: ' + $json.review_status + '. Event saved; export delivery pending. Review: ' + $json.review_url : $json.outcome === 'review_ready' ? 'Manual review: ' + $json.review_url + '. Notification: ' + $json.notification_status : 'Result: ' + $json.outcome + '. ' + $json.error_code} }}",
+        "options": {}
+      }
+    },
+    {
+      "name": "Business Overview",
+      "id": "4279c78f-69b0-4abd-a32f-9f163bd4e8d8",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        0,
+        -280
+      ],
+      "parameters": {
+        "content": "## AP intake | Deterministic approval and human review\nUpload / readonly Gmail \u2192 Archive & Read \u2192 Invoice Analysis Agent \u2192 Validate & Apply Approval Policy. Approved/rejected decisions return immediately; pending reviews notify the local reviewer. Technical checks, versions and audit records stay in Python.",
+        "width": 2800,
+        "height": 180
+      }
+    },
+    {
+      "name": "Current Scope",
+      "id": "89b3c6e5-f6e0-4449-a77b-a92cb1fde6c2",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        0,
+        490
+      ],
+      "parameters": {
+        "content": "## Derived from APAgentIntakeV7; v7 is preserved\nOnly newly created review tasks enter automatic policy here. Existing pending tasks require explicit reevaluation. EUR gross total must be positive and below 10,000; all validation, evidence, quality and duplicate checks must pass. AI never approves. Human edits remain manual.\n\nBoth decisions save an immutable snapshot and durable event. The independent 02 workflow and Excel delivery are not connected in this step. Mailpit is local only. No payment, external accounting, mailbox deletion or external notification. Bind the existing readonly Gmail credential after import. This export is inactive for safe import.",
+        "width": 2800,
+        "height": 230
+      }
+    },
+    {
+      "name": "Decision Saved?",
+      "id": "ed56f2e3-0014-47d4-b4c5-7ee9af15ff7a",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        1680,
+        140
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "1f6e4792-18b4-4b04-b8a8-fcea517e4597",
+              "leftValue": "={{ $json.outcome === 'decision_ready' }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      }
+    }
+  ],
+  "connections": {
+    "Run Gmail Batch": {
+      "main": [
+        [
+          {
+            "node": "Gmail",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gmail": {
+      "main": [
+        [
+          {
+            "node": "Prepare Attachments",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload Invoice": {
+      "main": [
+        [
+          {
+            "node": "Prepare Attachments",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Attachments": {
+      "main": [
+        [
+          {
+            "node": "Process Each Invoice",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process Each Invoice": {
+      "main": [
+        [
+          {
+            "node": "Batch Complete",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Archive & Read Document",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Archive & Read Document": {
+      "main": [
+        [
+          {
+            "node": "Invoice Analysis Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Invoice Analysis Agent": {
+      "main": [
+        [
+          {
+            "node": "Validate & Apply Approval Policy",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Route Outcome": {
+      "main": [
+        [
+          {
+            "node": "Notify Reviewer",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Record Exception",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Notify Reviewer": {
+      "main": [
+        [
+          {
+            "node": "Return or Continue",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Record Exception": {
+      "main": [
+        [
+          {
+            "node": "Return or Continue",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Return or Continue": {
+      "main": [
+        [
+          {
+            "node": "Process Each Invoice",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Upload Result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate & Apply Approval Policy": {
+      "main": [
+        [
+          {
+            "node": "Decision Saved?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Decision Saved?": {
+      "main": [
+        [
+          {
+            "node": "Return or Continue",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Route Outcome",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Europe/Berlin",
+    "saveDataSuccessExecution": "all",
+    "saveDataErrorExecution": "all"
+  },
+  "active": false,
+  "pinData": {}
+}
