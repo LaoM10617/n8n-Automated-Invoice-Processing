@@ -1,0 +1,318 @@
+{
+  "backup": "data/baselines/phase02-final-20261007-100832Z",
+  "backup_method": "SQLite online backup",
+  "migration_rehearsal_twice": true,
+  "baseline_counts": {
+    "invoices": 19,
+    "receipts": 162,
+    "processing_attempts": 93,
+    "notification_attempts": 7,
+    "email_outcomes": 123,
+    "document_reads": 0,
+    "intake_runs": 52,
+    "intake_stage_events": 224,
+    "review_tasks": 7,
+    "review_revisions": 5,
+    "review_events": 3,
+    "exports": 2,
+    "result_notifications": 0,
+    "result_notification_attempts": 0,
+    "review_requests": 2,
+    "export_batches": 1,
+    "export_batch_items": 2
+  },
+  "baseline_files": {
+    "data/ap/originals/0922529a-940a-4cf9-8764-39264b2ae656.pdf": "71b84b260da89014868b9172af56471872dc0d5dce7859454ef30263ab3f4979",
+    "data/ap/originals/0961d9e0-781d-4c9f-8afd-3839aae2c7dc.pdf": "b02a9976b56e2545688ffe114f68e17061d7248491f41622059af699333e3327",
+    "data/ap/originals/0d7ed1cf-2ec4-4e29-b6a5-7c5a9e5bb72e.pdf": "02f0160dc65ea7e6dc0b006feec9dd84f4cda7c4637c103d94f629b600a71545",
+    "data/ap/originals/1771e496-d925-4832-a504-fbcb96eba30e.pdf": "22ee9eda8098da9a542af6410e323fb12251a913deaeb32fa9a2098e98a4f030",
+    "data/ap/originals/19c3cd1d-f041-4450-a341-625b74ffaaf7.pdf": "2395eb6875d8f2322edbf8d1d4322cbc032f4e8ca50bbe518793d95c8fdb0481",
+    "data/ap/originals/23299883-eeb1-48a3-80c8-f521e57227e9.pdf": "796ba9f2b96d99e7dfd88df2f4adf3bd71196ac1dde8c3fc8afd87a4b209becf",
+    "data/ap/originals/24e2a990-a33b-4a0c-a736-c6eea1c52c0f.pdf": "7e525d95cbef3e54cb25156375cd61ca86c2bd00090cdcb6c6fd78444858431e",
+    "data/ap/originals/2d87b92b-8a29-4236-9b1b-5dec6f9a7fe8.pdf": "360632aa2dc2269293a53ad47c4aefe3404c2c6db40c511da804326aaa4f31aa",
+    "data/ap/originals/41608a73-1043-48ec-9482-bd84bc6fc2ee.pdf": "c06af902df0418f3502a36fb9d82b1043c1cef092b8eb2872d5193cc99eaaac9",
+    "data/ap/originals/528eac97-c831-4b19-9329-e0347a8536f8.pdf": "e2572aa88fdae19e2984a2e2005d399e142f8444680929b975cab8acfb59b432",
+    "data/ap/originals/590b699e-1626-41eb-a4cf-4edebd263e75.pdf": "5035387d80a058693145ee0079d8ca577d66216303f2b9d67f8f25e5bccffc1a",
+    "data/ap/originals/5e9d79ec-ad71-4d18-b517-ce44581a4e86.pdf": "f23777b361ffca6f758895ddeb0356d9e9824b5dda7b14a9fed59354d764ac22",
+    "data/ap/originals/6c14f2cb-01f6-4b8b-a49f-c8ebbba148b1.pdf": "aeac1f2b608838a522c05f809521531a3015309194e5bbd6bf00f4bd2b9aacc0",
+    "data/ap/originals/860b7adb-e80f-4bf2-b835-bd9426723b49.pdf": "3b4f4a2438d1f2ba3311e1d7069c8154884e497f6967ccdbcbf86a97f67939b5",
+    "data/ap/originals/8ade3c45-6f37-44a9-872b-c143efcc471c.pdf": "8e1813f32f956ec7bbf9219383dd32a73874eacb60d3013c52f2f5d6777ed622",
+    "data/ap/originals/9ece27a7-0b1f-49df-b44f-0bc1c4be94bd.pdf": "07d26cd2941330855d9b90082e31228841b5dc13965d0841cdc1a883a337696e",
+    "data/ap/originals/aeee9cae-e330-417c-9f3d-88d77776037a.pdf": "7ad8b87872af17fdc8fa840579ce4ac4e9bcb6bb4a20cb68d202b882df563216",
+    "data/ap/originals/d284b695-5b9e-4e6e-b40d-39c57c80b4e1.pdf": "2de16e773c5d46f046496667d475113de3d741ce2fcad7e53e00e90244bc188e",
+    "data/ap/originals/fa48d0e9-1aa4-4221-9b70-65e5ee4e2604.pdf": "14ba8fa8637c7e8f5231a9e8da3ecd42d8e0639ba597db9b1bbba62230edea62",
+    "data/ap/exports/d567a817-8f5f-4356-b2fd-2624ab1ad14c.xlsx": "9804629d62cf1d4e41bb0b48a5b48517e69b42a794d405dd62cd41ba13c25770",
+    "data/ap/exports/e906032b-1d6f-469f-a0a6-187e4a25d947.xlsx": "0a8fa65929cb20c5dcd9858fe46acb7716715b4dc7be8c2a485142c9c258a3f8",
+    "data/ap/exports/batches/79ae549f-bc12-44be-9189-c4130a9f6744.xlsx": "ddae16d45868deb98e105d1ff2e033a745976f7f2a4ff218261a6ebc699c37ed",
+    "n8n_workflows/01_AP_agent_intake_v7.json": "1a6fa0e1dc6c18d0d7598f14be008770bf78ea664a802ea10124d488278e33e9",
+    "n8n_workflows/01_AP_approval_intake_v8.json": "2510b8bda5bc5f5561541c9de5b03a7b65304311789c46ba0f0a254217c75e52",
+    "n8n_workflows/01_AP_approval_intake_v9.json": "b2102d13ea563417d9e0e292e8faeb6d13ffe7d8661b0b701cebf4385e1f60c6",
+    "n8n_workflows/01_AP_compact_intake_v6.json": "fb9ad08335291635c961aff45eecedeb5539fa17f0d8c0240913d0610e6cdac2",
+    "n8n_workflows/01_AP_email_attachment_v1.json": "45e83c4146734b4a84bf9b139205bc9e889e772d23b197234cd0962a0901510e",
+    "n8n_workflows/01_AP_gmail_intake_v1.json": "fb09d799b14a0505d444dae22ce9fb56c71ad81400d048bc524828394dea1feb",
+    "n8n_workflows/01_AP_intake_notify_v4.json": "bcdc6cf30a3319d2c76a554e9a245266bd5775c23020f22506c2b6c5d338a1e4",
+    "n8n_workflows/01_AP_intake_process_v2.json": "deb73f62b405dd42123d1412eeb21de3de30de8de9ed01b975902563c8104f53",
+    "n8n_workflows/01_AP_intake_review_v3.json": "511b8dfeb34bff7d396c97ded15363b012ab2d993a329fa8f4c15666f9467cdf",
+    "n8n_workflows/01_AP_intake_upload_v1.json": "c6fb7a88b21c919026baeef542c6a2b66fa5420230cdcc4e26a42c710e7ae309",
+    "n8n_workflows/01_AP_local_email_bridge_v1.json": "8eb02d50a27affa06e174a6c30c0a13d905cbde7d35d28b15e7902977f91d4ad",
+    "n8n_workflows/01_AP_unified_intake_v5.json": "42036710acd6245147a55ee60b37fded5c11c2faf14fee3e8dded15298bc19dc",
+    "n8n_workflows/02_AP_review_events_v1.json": "7c9441e05f51607b90412ce9b3ad0dada59b1116dc7cd14ad9e71e7f15d18eb3",
+    "n8n_workflows/02_AP_review_export_v1.json": "c35ef655cb32f6463199b17f7120914c41b55c7511b13ba4b827a4d702b1b011",
+    "n8n_workflows/Email invoice archiving & data extraction.json": "71255542f88fc811493b44b8c22a84dec1fab626fe98926f4ff2a2e4830f4110"
+  },
+  "old_instance_workflows_unchanged": true,
+  "workflows": {
+    "APApprovalIntakeV9": {
+      "nodes_connections_match": true,
+      "published": true,
+      "execution_nodes": 16,
+      "credential_references": [
+        {
+          "gmailOAuth2": {
+            "id": "SGOORT8HCIJeyC72",
+            "name": "Gmail account"
+          }
+        },
+        {
+          "httpHeaderAuth": {
+            "id": "APReviewEventLocalV1",
+            "name": "AP review event local header"
+          }
+        }
+      ]
+    },
+    "APReviewExportV1": {
+      "nodes_connections_match": true,
+      "published": true,
+      "execution_nodes": 8,
+      "credential_references": [
+        {
+          "httpHeaderAuth": {
+            "id": "APReviewEventLocalV1",
+            "name": "AP review event local header"
+          }
+        },
+        {
+          "httpHeaderAuth": {
+            "id": "APReviewEventLocalV1",
+            "name": "AP review event local header"
+          }
+        },
+        {
+          "httpHeaderAuth": {
+            "id": "APReviewEventLocalV1",
+            "name": "AP review event local header"
+          }
+        },
+        {
+          "httpHeaderAuth": {
+            "id": "APReviewEventLocalV1",
+            "name": "AP review event local header"
+          }
+        },
+        {
+          "httpHeaderAuth": {
+            "id": "APReviewEventLocalV1",
+            "name": "AP review event local header"
+          }
+        },
+        {
+          "httpHeaderAuth": {
+            "id": "APReviewEventLocalV1",
+            "name": "AP review event local header"
+          }
+        },
+        {
+          "httpHeaderAuth": {
+            "id": "APReviewEventLocalV1",
+            "name": "AP review event local header"
+          }
+        }
+      ]
+    }
+  },
+  "mailpit_outage_failure": {
+    "category": "review_rejected",
+    "status": "failed",
+    "attempts": 1,
+    "last_error": "SMTP_CONNECTION_FAILED"
+  },
+  "final_batch": {
+    "export_id": "cede2270-8054-4ece-b69d-8abb3cb3c24a",
+    "selection_hash": "5e19c7e66f3bca2f90bcc72a402c0ebaa00eb777c28cc1229718b9c838b00c37",
+    "mapping_version": "invoice-excel-v1",
+    "only_unexported": 0,
+    "status": "completed",
+    "attempts": 1,
+    "file_path": "exports/batches/cede2270-8054-4ece-b69d-8abb3cb3c24a.xlsx",
+    "file_sha256": "21c42ac4c92eb0959090b4bbc6f96cf5557b62ed2d11ab61c9a0819e1258743a",
+    "last_error": null,
+    "created_at": "2026-10-07T10:17:42.693Z",
+    "updated_at": "2026-10-07T10:17:42.833281+00:00",
+    "max_attempts": 5,
+    "download_url": "/api/ap/export-batches/cede2270-8054-4ece-b69d-8abb3cb3c24a/files/xlsx",
+    "file_health": "verified",
+    "row_count": 2,
+    "members": [
+      {
+        "invoice_id": "8ade3c45-6f37-44a9-872b-c143efcc471c",
+        "review_revision": 2
+      },
+      {
+        "invoice_id": "06f0ffb7-f68f-483a-b67d-7a3fd62af06e",
+        "review_revision": 1
+      }
+    ]
+  },
+  "smtp_response_loss_reconciled_without_resend": {
+    "notification_id": "474d144f-5628-4471-b879-e944bc184bdd",
+    "status": "sent",
+    "attempts": 1,
+    "message_id": "<ap-474d144f-5628-4471-b879-e944bc184bdd-1@example.invalid>"
+  },
+  "durable_snapshot": {
+    "events": [
+      {
+        "event_id": "077797c3-7717-4f2c-9244-ccc7d42dd59d",
+        "event_type": "approved",
+        "status": "processed",
+        "attempts": 1
+      },
+      {
+        "event_id": "49f81bda-f796-46ee-b024-70e7e6ce720c",
+        "event_type": "approved",
+        "status": "processed",
+        "attempts": 5
+      },
+      {
+        "event_id": "531d8b4c-0b9a-462e-8786-109bbfc70047",
+        "event_type": "rejected",
+        "status": "processed",
+        "attempts": 4
+      },
+      {
+        "event_id": "56386780-79ad-4001-82aa-07e683b29563",
+        "event_type": "approved",
+        "status": "processed",
+        "attempts": 5
+      },
+      {
+        "event_id": "c543b5ba-e91c-48bb-ac66-ade412205df5",
+        "event_type": "approved",
+        "status": "processed",
+        "attempts": 1
+      }
+    ],
+    "batches": [
+      {
+        "export_id": "6b0a081c-97af-483f-86d0-099f02b17d68",
+        "file_sha256": "ee44b704f47f75220149a118bbf9e12dc86534a80a4932bf1c494ffbe2aaeb6d",
+        "attempts": 1
+      },
+      {
+        "export_id": "79ae549f-bc12-44be-9189-c4130a9f6744",
+        "file_sha256": "ddae16d45868deb98e105d1ff2e033a745976f7f2a4ff218261a6ebc699c37ed",
+        "attempts": 1
+      },
+      {
+        "export_id": "cede2270-8054-4ece-b69d-8abb3cb3c24a",
+        "file_sha256": "21c42ac4c92eb0959090b4bbc6f96cf5557b62ed2d11ab61c9a0819e1258743a",
+        "attempts": 1
+      }
+    ],
+    "notifications": [
+      {
+        "notification_id": "2c734cf0-eb61-4b1e-be50-083f1b55bb6b",
+        "category": "review_approved",
+        "status": "sent",
+        "attempts": 1,
+        "message_id": "<ap-2c734cf0-eb61-4b1e-be50-083f1b55bb6b-1@example.invalid>"
+      },
+      {
+        "notification_id": "2fab54c2-894f-4e47-94bb-6ad981049f5b",
+        "category": "batch_completed",
+        "status": "sent",
+        "attempts": 1,
+        "message_id": "<ap-2fab54c2-894f-4e47-94bb-6ad981049f5b-1@example.invalid>"
+      },
+      {
+        "notification_id": "474d144f-5628-4471-b879-e944bc184bdd",
+        "category": "batch_completed",
+        "status": "sent",
+        "attempts": 1,
+        "message_id": "<ap-474d144f-5628-4471-b879-e944bc184bdd-1@example.invalid>"
+      },
+      {
+        "notification_id": "5fccae05-7db5-4dd5-8638-2f43980d80d3",
+        "category": "review_rejected",
+        "status": "sent",
+        "attempts": 2,
+        "message_id": "<ap-5fccae05-7db5-4dd5-8638-2f43980d80d3-2@example.invalid>"
+      },
+      {
+        "notification_id": "8d72982f-b66f-465b-923a-38baca112661",
+        "category": "review_approved",
+        "status": "sent",
+        "attempts": 1,
+        "message_id": "<ap-8d72982f-b66f-465b-923a-38baca112661-1@example.invalid>"
+      },
+      {
+        "notification_id": "a1a57bc3-72f5-42cb-9393-4d3b13311fb7",
+        "category": "review_approved",
+        "status": "sent",
+        "attempts": 1,
+        "message_id": "<ap-a1a57bc3-72f5-42cb-9393-4d3b13311fb7-1@example.invalid>"
+      },
+      {
+        "notification_id": "bf9cecd2-27b2-46e5-bb49-98ca725d3665",
+        "category": "batch_completed",
+        "status": "sent",
+        "attempts": 1,
+        "message_id": "<ap-bf9cecd2-27b2-46e5-bb49-98ca725d3665-1@example.invalid>"
+      },
+      {
+        "notification_id": "dc3ac4d9-a624-4dea-a9c4-6c6a27e1a39d",
+        "category": "review_approved",
+        "status": "sent",
+        "attempts": 1,
+        "message_id": "<ap-dc3ac4d9-a624-4dea-a9c4-6c6a27e1a39d-1@example.invalid>"
+      }
+    ],
+    "counts": {
+      "invoices": 21,
+      "receipts": 164,
+      "processing_attempts": 95,
+      "notification_attempts": 8,
+      "email_outcomes": 123,
+      "document_reads": 0,
+      "intake_runs": 54,
+      "intake_stage_events": 236,
+      "review_tasks": 9,
+      "review_revisions": 8,
+      "review_events": 5,
+      "exports": 2,
+      "result_notifications": 0,
+      "result_notification_attempts": 0,
+      "review_requests": 3,
+      "export_batches": 3,
+      "export_batch_items": 6,
+      "outcome_notifications": 8,
+      "outcome_notification_attempts": 9
+    }
+  },
+  "baseline_business_rows_and_files_preserved": true,
+  "mailpit_exactly_one_message_per_notification": true,
+  "restart_and_replay_unchanged": true,
+  "notification_links_verified": true,
+  "tests": {
+    "full": 187,
+    "final_affected": 13,
+    "distinct": 188
+  },
+  "recommended_intake": "APApprovalIntakeV9",
+  "both_webhooks_reject_unauthenticated": 403,
+  "final_fresh_pair_batch": "6b0a081c-97af-483f-86d0-099f02b17d68",
+  "new_samples": 2,
+  "new_model_calls": 0,
+  "gmail_reexecuted_this_acceptance": false
+}

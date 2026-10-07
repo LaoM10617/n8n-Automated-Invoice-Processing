@@ -1,4 +1,110 @@
+## Unified AP runtime (2026-10-07)
+
+Use the [unified canvas](http://127.0.0.1:5678/workflow/7xXB2pjXOE1EQ2bY) and [upload form](http://127.0.0.1:5678/form/ap-unified-intake-a2-v1). The export register and Mailpit URLs below are unchanged. Compose now targets `ap-unified-review-a2-v1` and `ap-unified-excel-a2-v1`; the privacy hook protects both production and test paths.
+
+For a new instance, import `n8n_workflows/AP_unified_canvas_python_agent_v1_A4.json`, bind the existing Gmail and Header Auth credentials, load the privacy hook, publish, and verify the two single event targets. Importing JSON alone does not activate a workflow. Original 01/02 remain published for rollback. Use only one canvas per email batch. See `logs&architechture/AP_unified_canvas_A3_A4_log.md` for evidence, demo instructions and rollback. Native Agent migration is pending. The sections below describe the prior runtime.
+
+## Final Phase02 runtime (2026-10-07)
+
+Recommended [upload](http://127.0.0.1:5678/form/ap-approval-intake-v9),
+[01 canvas](http://127.0.0.1:5678/workflow/APApprovalIntakeV9),
+[02 canvas](http://127.0.0.1:5678/workflow/APReviewExportV1),
+[export register](http://127.0.0.1:8000/exports), and
+[local Mailpit](http://127.0.0.1:8025).
+Both canvases are imported and published. Keep v7/v8 and historical workflows.
+The recommended entry changed only after final acceptance; no old workflow was overwritten or disabled.
+
+`docker compose up -d --build python-api` applies schema 5 idempotently.
+Compose sets `AP_OUTCOME_AUTODISPATCH=1`, review webhook `ap-review-export-v1`
+and batch webhook `ap-batch-export-v1`. The existing `APReviewEventLocalV1`
+Header Auth credential must match the ignored `.env` token; never paste tokens in JSON.
+For a new instance, import `01_AP_approval_intake_v9.json` and
+`02_AP_review_export_v1.json` from `n8n_workflows/`, bind the existing Gmail and
+Header Auth credentials, publish both, then restart n8n. Import alone is not activation.
+The current instance has completed those steps; Gmail credential references are preserved,
+but final acceptance uses cached synthetic uploads and does not re-run external Gmail/model calls.
+
+Automatic intake dispatches the saved event through its handoff stage. Manual review
+and batch creation dispatch after the database transaction through background tasks.
+A restart may interrupt delivery, but cannot remove the saved decision or batch.
+To retry one saved event through 02:
+`docker compose exec -T python-api python -m backend.review_events EVENT_ID`.
+Transport and SMTP attempts are bounded at five; HTTP 202 is only acceptance.
+A review event becomes processed after its result notification is confirmed.
+This does not mean Excel has been generated, downloaded or posted to accounting.
+
+The review and batch panels expose **Refresh notification**, **Retry notification**
+and **Check Mailpit**. Local API equivalents are GET
+`/api/ap/result-notifications/{review|batch}/{id}` and POST its `/retry` or `/check`
+with `X-AP-Review: 1` and a valid local Origin. Retry only sends the existing notification;
+it never changes a decision or regenerates Excel. For `unknown` or interrupted `sending`,
+wait at least 60 seconds and check Mailpit by the persisted Message-ID. If absent,
+leave it unknown for investigation; do not blindly resend. SMTP is limited to local Mailpit.
+Batch file recovery remains the separate `/api/ap/export-batches/{id}/retry` operation.
+
+See `logs&architechture/phase02_final_log.md` for acceptance and retained evidence.
+Earlier v8/receiver notes below describe historical stages.
+
 ## Phase02 review and approval (2026-10-07)
+
+### Section 7: export register and combined Excel (current)
+
+Open `/exports`, or **Open export register** from a review page. Approved immutable
+snapshots appear immediately without n8n delivery or physical workbook updates.
+Filter by inclusive invoice dates, literal supplier substring, currency and
+**Not yet exported / All approved**. Preview totals are separate per currency.
+Select records, then **Download Excel** to save one combined workbook (up to 500 rows).
+New approvals appear on the next refresh and cannot change an earlier selection.
+The database is authoritative; no `latest.xlsx`, local path setup or Excel synchronization.
+
+- GET `/api/ap/export-register`: `date_from`, `date_to`, `supplier`, `currency`,
+  `only_unexported` (default true). Approved snapshots only; Decimal totals as strings.
+- POST `/api/ap/export-batches`: `{"event_ids":["..."],"only_unexported":true}`.
+  Uses the same local `X-AP-Review: 1` and Origin protection as review writes.
+  The server rechecks every event/current decision/snapshot, then freezes membership.
+- GET `/api/ap/export-batches`: latest 30 batch records; GET `/{export_id}` adds
+  verified file health, download URL and member invoice IDs/revisions.
+- GET `/api/ap/export-batches/{export_id}/files/xlsx`: verified existing bytes only.
+- POST `/api/ap/export-batches/{export_id}/retry`: explicit recovery of that exact batch.
+
+Schema 4 adds `export_batches` and immutable `export_batch_items`. The register is a
+query of existing approval records, so no copied fields or approval backfill is needed.
+A unique hash of sorted event IDs reuses the same batch across reversed selections,
+retries, mode changes and mapping deployments. Different selected sets intentionally
+produce different combined files, even if some invoices also appear in earlier files.
+The not-yet-exported mode checks completion and active reservations transactionally;
+a stale/overlapping selection returns 409. It includes historical single exports when
+determining completion. Exported means file generation succeeded, not download receipt,
+accounting submission or payment. A damaged completed file remains historical exported
+and must be recovered under its existing ID, not silently put into a new batch.
+
+`invoice-excel-v1` columns are unchanged. Each combined row contains its invoice ID,
+approved revision and the batch ID in Export ID. Amounts are numeric and round-trip
+checked with Decimal and currency precision; dates use `yyyy-mm-dd`; optional values
+remain blank. Text is literal, including formula-like prefixes and leading zeros.
+The file has English headers, freeze/filter, and the notice
+`Invoice export — not submitted to an accounting system`. No formulas/macros/external links.
+Amounts exceeding Excel's reliable precision fail rather than silently rounding.
+
+Files live in `data/ap/exports/batches/<export_id>.xlsx`. The shared export service
+commits an attempt before writing, uses a 60-second claim lease and a write transaction
+to fence stale writers, then fsync/atomic replace and read-back snapshot/hash checks.
+Explicit attempts are limited to five. A saved file without completion is verified
+and reused; missing/corrupt completed files recover with the original ID, members and
+SHA256. GET never regenerates. Downloading an intact file consumes no attempts.
+
+Historical single files and `/api/ap/exports` remain compatible, including original
+hashes and recovery. The review page retains existing single-file download links but
+uses the register as its primary export action. `scripts/verify_phase02_exports.py`
+records the earlier single-file acceptance; use `scripts/verify_phase02_export_register.py
+verify` for this version. The backup action is a one-time pre-schema-4 rehearsal.
+
+The section-6 n8n receiver remains unchanged: it receives and reloads review events;
+it does not automatically generate files. Subsequent 02 integration should notify
+approval/register availability, and distinguish that from batch-file completion.
+Result notifications remain unimplemented; batch notification storage will need its
+own batch association instead of the existing single-export foreign key. No model,
+mail or external-accounting call occurs during register preview or Excel creation.
 
 ### Section 6: durable event delivery
 
@@ -19,8 +125,9 @@ task and immutable snapshot. Rejected events return `can_export: false`.
 The future export endpoint must independently reuse this check and read the snapshot.
 
 `accepted` means HTTP receipt only. Downstream failures and lost responses remain
-replayable. No endpoint in section 6 marks an event `processed`; Excel and result
-handling are not yet implemented. Approval pages continue to show export pending.
+replayable. No endpoint in section 6 marks an event `processed`. Excel is now available
+through the separate section-7 service; result notifications and receiver-to-export
+wiring remain pending. Approval pages show the actual saved export/file state.
 
 For another local instance: run `scripts/configure_review_event_local.py`, import
 the workflow, bind `AP review event local header`, publish and restart n8n. Recreate
@@ -74,9 +181,9 @@ Reject always requires a reason, including replays. Final reads and replays retu
 the saved decision validation snapshot rather than recomputing historical results.
 
 Automatic/manual decisions share a snapshot and transactional outbox event.
-**Event delivery is connected; Excel generation is not connected yet.** Approved pages
-therefore say `Approved; export pending`. No accounting submission or payment occurs.
-SQLite schema version is 2; the additional request ledger rejects reuse with
+**Event delivery and explicit Excel generation are implemented.** The 02 canvas still
+needs its export/result stages. No accounting submission or payment occurs.
+SQLite schema version is 3; the request ledger rejects reuse with
 different content, including aliases used when replaying a final decision.
 
 Import `n8n_workflows/01_AP_approval_intake_v8.json` independently, retain its ID,

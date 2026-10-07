@@ -20,14 +20,18 @@ from backend.invoice_agent import ANALYSIS_SIGNATURE
 from backend.validation import validate
 
 
-def main():
+def main(prefix='phase02-review', only_auto=False, case=None):
     root = Path(os.environ['AP_DATA_DIR'])
-    output = root / 'phase02_review_probes.json'
+    output = root / (prefix.replace('-', '_') + '_probes.json')
     if output.exists():
         print(output.read_text())
         return
     records = []
-    for label, net, tax, total in [('auto', '9999.99', '0.00', '9999.99'), ('manual', '10000.00', '0.00', '10000.00'), ('reject', '100.00', '19.00', '129.00')]:
+    cases = [('auto', '9999.99', '0.00', '9999.99'), ('manual', '10000.00', '0.00', '10000.00'), ('reject', '100.00', '19.00', '129.00')]
+    selected = cases[:1] if only_auto else cases
+    for label, net, tax, total in selected:
+        if case and case != label:
+            continue
         number = 'PHASE02-' + label.upper() + '-' + str(uuid4())[:8]
         fields = dict(supplier_name='Synthetic Review Supplier', supplier_address='Example Street 1', supplier_tax_id='TEST-PHASE02',
                       invoice_number=number, invoice_date='2026-10-01', due_date='2026-10-31', currency='EUR',
@@ -42,7 +46,7 @@ def main():
         page[NameObject('/Contents')] = writer._add_object(content)
         stream = io.BytesIO(); writer.write(stream)
         boundary = 'probe-' + str(uuid4())
-        source_id = 'phase02-review-' + label
+        source_id = prefix + '-' + label
         form = {'source_type': 'upload', 'source_namespace': 'n8n-ap-upload-v1', 'source_id': source_id, 'attachment_id': '0'}
         body = b''
         for key, value in form.items():
@@ -73,4 +77,12 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    import argparse
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--prefix', default='phase02-review')
+    parser.add_argument('--only-auto', action='store_true')
+    parser.add_argument('--case', choices=['auto', 'manual', 'reject'])
+    args = parser.parse_args()
+    if not args.prefix.replace('-', '').isalnum():
+        parser.error('Use an alphanumeric fixture prefix with optional hyphens.')
+    main(args.prefix, args.only_auto, args.case)

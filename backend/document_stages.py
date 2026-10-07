@@ -9,6 +9,7 @@ from backend.extraction import grounded_fields, wait_for_model_cooldown
 from backend.validation import validate
 
 from backend.invoice_agent import ANALYSIS_SIGNATURE, trace_sink
+from backend.model_gate import ModelGate, current_gate
 
 PIPELINE = 'langchain-agent-layout-v1'
 
@@ -18,6 +19,7 @@ class DocumentStages:
         self.connect, self.invoice_row, self.get_invoice = connect, invoice_row, get_invoice
         self.originals, self.read_pages, self.extract_fields = originals, read_pages, extract_fields
         self.lock = threading.RLock()
+        self.model_gate = ModelGate(connect)
         with closing(connect()) as db:
             db.execute('CREATE TABLE IF NOT EXISTS document_reads (invoice_id TEXT PRIMARY KEY REFERENCES invoices, quality_version TEXT NOT NULL, pages_json TEXT NOT NULL)')
             db.commit()
@@ -88,9 +90,11 @@ class DocumentStages:
                         trace_db.execute('UPDATE processing_attempts SET result_json=? WHERE attempt_id=?', (json.dumps(result), attempt_id))
                         trace_db.commit()
                 token = trace_sink.set(save_trace)
+                gate_token = current_gate.set(self.model_gate)
                 try:
                     result['raw_extraction'] = self.extract_fields(result['pages'])
                 finally:
+                    current_gate.reset(gate_token)
                     trace_sink.reset(token)
                 with closing(self.connect()) as db:
                     db.execute("UPDATE processing_attempts SET status='analyzed',result_json=? WHERE attempt_id=?", (json.dumps(result), attempt_id))

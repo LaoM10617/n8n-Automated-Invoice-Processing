@@ -1,0 +1,1 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="0" skipped="0" tests="1" time="4.546" timestamp="2026-10-07T15:56:43.038672+02:00" hostname="超人强"><testcase classname="backend.test_native_analysis" name="test_abrupt_process_exit_preserves_native_uncertain_request" time="2.753" /></testsuite></testsuites>

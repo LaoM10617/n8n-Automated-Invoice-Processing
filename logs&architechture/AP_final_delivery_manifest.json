@@ -1,0 +1,57 @@
+{
+  "created_at": "2026-10-07T15:00:20.330255+00:00",
+  "workflows": [
+    {
+      "id": "7xXB2pjXOE1EQ2bY",
+      "published_version": "fe01bad5-6a5d-46c6-8013-ccf3f846b565",
+      "nodes": 27,
+      "source": "n8n_workflows/delivery_7xXB2pjXOE1EQ2bY_20261007.json",
+      "instance_readback_unchanged": true
+    },
+    {
+      "id": "APApprovalIntakeV9",
+      "published_version": "0ed7c114-27ff-4704-822c-053243669104",
+      "nodes": 18,
+      "source": "n8n_workflows/delivery_APApprovalIntakeV9_20261007.json",
+      "instance_readback_unchanged": true
+    },
+    {
+      "id": "APReviewExportV1",
+      "published_version": "a48ef5ce-0339-495a-8661-1aaf4b2fa2fb",
+      "nodes": 10,
+      "source": "n8n_workflows/delivery_APReviewExportV1_20261007.json",
+      "instance_readback_unchanged": true
+    },
+    {
+      "id": "J4xPbnTCAgYFVNzJ",
+      "published_version": "ec9b355d-a4bf-433f-895b-4ab76119af20",
+      "nodes": 36,
+      "source": "n8n_workflows/delivery_J4xPbnTCAgYFVNzJ_20261007.json",
+      "instance_readback_unchanged": true
+    }
+  ],
+  "new_model_requests": 0,
+  "rollback_phases_passed": 3,
+  "recovery_tests_passed": 5,
+  "database_restore": "isolated backup copy only; online database not replaced",
+  "backup": "data\\baselines\\final-delivery-20261007-145502Z",
+  "all_business_rows_and_34_files_preserved": true,
+  "current_entry": "http://127.0.0.1:5678/form/ap-native-intake-b2-v2",
+  "fresh_paid_run_after_final_expression_fix": "not performed; limitation retained",
+  "visual_evidence": "B4 actual editor screenshot; same published version re-read at final delivery",
+  "secrets_scan": "passed; credential references only",
+  "files": {
+    "n8n_workflows/delivery_7xXB2pjXOE1EQ2bY_20261007.json": "ee0ccb465a6ab905e7b9d65f733ad4cca225c870e8f7c7c123bb0667ff4aff6c",
+    "n8n_workflows/delivery_APApprovalIntakeV9_20261007.json": "50c499a631f840d9fde66efda1ddcedcefc99b415ff6306612b1f50570f9f863",
+    "n8n_workflows/delivery_APReviewExportV1_20261007.json": "b65ffc780a9d1a81a83bf7842a90dff9e2fbf85daf60326a75ab339b07dda59b",
+    "n8n_workflows/delivery_J4xPbnTCAgYFVNzJ_20261007.json": "28f5012ce8fe76b0bbd336d1a9e6e815391b91ba65f345c07bf49d367c980dfc",
+    "logs&architechture/AP_unified_refactor_final_delivery.md": "a0292eb8d9169285739036599c9bd6724927eeff4063a3937fcb801e8c4897df",
+    "logs&architechture/AP_native_agent_demo_operations.md": "741d53e956431ea5f229f65afa64db9b7062997d266039935612c77538d35c80",
+    "logs&architechture/AP_final_delivery_rollback_verification.json": "c51cfc155f1ba8596b6c1426f14f1dad4d3c03bff44fc4ab921ba41fad116042",
+    "logs&architechture/AP_final_delivery_recovery_tests.xml": "94fa976d5c5f2731814fc24b1cf9392a245677199be828517ee512d4cf83484f",
+    "logs&architechture/AP_native_agent_B3_comparison.json": "63b3d73e603d3947972d2a8fd64cae84d324744eafed74dfb01fc855e66afb67",
+    "logs&architechture/AP_native_agent_B4_verification.json": "c27be2e208273dbf7eaf0023a211777fbb0862696da4f785746ec604d9863117",
+    "logs&architechture/AP_native_agent_B4_canvas.jpg": "84df71fdf04c072285cab0a5de4fc963f3416e0eda1bf2c1f9f231ecd243cb0e",
+    "scripts/rehearse_ap_rollback.py": "f28d025cda49f7c85975739b35182f36ce5462a8e8a618b6dd28c5a814c054b6"
+  }
+}

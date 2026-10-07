@@ -1,0 +1,39 @@
+{
+  "date": "2026-10-07",
+  "b0_gate_passed": false,
+  "b1": "proposed_contract_only",
+  "b2": "not_created",
+  "provider_requests": 0,
+  "runtime_changes": false,
+  "model": "gemini-3.5-flash-lite",
+  "accessible_googlePalmApi_credentials": 0,
+  "installed_packages": {
+    "n8n_compose_image": "2.42.3",
+    "langchain_google_genai": "2.1.24",
+    "langchain_core": "1.2.8"
+  },
+  "offline_probe": {
+    "script": "scripts/probe_native_gemini_b0.cjs",
+    "exit_code": 0,
+    "caller_max_retries": 6,
+    "fake_call_spacing_ms": 0.6001060000000962,
+    "credential_host_forwarded": true,
+    "node_sets_max_retries": false,
+    "scope": "Constructor and caller only; no Google request or Agent execution"
+  },
+  "stage_a_readback": {
+    "id": "7xXB2pjXOE1EQ2bY",
+    "active": true,
+    "versionId": "fe01bad5-6a5d-46c6-8013-ccf3f846b565",
+    "activeVersionId": "fe01bad5-6a5d-46c6-8013-ccf3f846b565"
+  },
+  "unverified": [
+    "Provider acceptance of complete nullable extraction schema",
+    "Request-scoped Gemini proxy and implicit retry containment",
+    "Shared provider spacing and durable exact budget",
+    "Native tool scope and six-call limit",
+    "Durable success, failure and interruption trace",
+    "B1 interfaces and state tests",
+    "B2 workflow, credentials, structured output and submission"
+  ]
+}

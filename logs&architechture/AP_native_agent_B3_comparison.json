@@ -1,0 +1,492 @@
+{
+  "total_real_requests": 18,
+  "native_requests": 12,
+  "old_python_requests": 6,
+  "all_39_fields_equal": true,
+  "minimum_global_request_gap_seconds": 60.080429792404175,
+  "cases": [
+    {
+      "case": "text",
+      "native_attempt_id": 99,
+      "field_differences": {},
+      "python_result": {
+        "native_attempt_id": 99,
+        "agent_trace": {
+          "agent_version": "langchain-invoice-v3",
+          "analysis_signature": "debedc038a4004d0c98941519696fe2d291c681934e8f23ee224a7248d1cd68e",
+          "provider": "gemini_native",
+          "status": "completed",
+          "started_at": "2026-10-07T14:26:00.963073+00:00",
+          "model_calls": [
+            {
+              "index": 1,
+              "started_at": "2026-10-07T14:26:01.054910+00:00",
+              "status": "completed",
+              "finished_at": "2026-10-07T14:26:02.203798+00:00",
+              "usage": [
+                {
+                  "input_tokens": 1245,
+                  "output_tokens": 18,
+                  "total_tokens": 1263,
+                  "input_token_details": {
+                    "cache_read": 0
+                  }
+                }
+              ]
+            },
+            {
+              "index": 2,
+              "started_at": "2026-10-07T14:27:01.197983+00:00",
+              "status": "completed",
+              "finished_at": "2026-10-07T14:27:03.749589+00:00",
+              "usage": [
+                {
+                  "input_tokens": 5128,
+                  "output_tokens": 436,
+                  "total_tokens": 5564,
+                  "input_token_details": {
+                    "cache_read": 0
+                  }
+                }
+              ]
+            }
+          ],
+          "tools": [
+            {
+              "tool": "read_invoice_page",
+              "arguments": {
+                "page_numbers": [
+                  1
+                ]
+              },
+              "at": "2026-10-07T14:26:02.213948+00:00",
+              "result_sha256": "6a5dffb467c199ce973f2dc208188922f68e93308089e38c902a3df588f5dd79"
+            }
+          ],
+          "max_model_calls": 3,
+          "max_tool_calls": 6,
+          "finished_at": "2026-10-07T14:27:03.775053+00:00",
+          "pages_read": [
+            1
+          ]
+        },
+        "raw_extraction": {
+          "fields": {
+            "supplier_name": "Native Demo Supplies Ltd",
+            "supplier_address": "12 Sample Street, Berlin 10115",
+            "supplier_tax_id": "DE123456789",
+            "invoice_number": "NATIVE-B3-20261007-TEXT",
+            "invoice_date": "2026-10-07",
+            "due_date": "2026-10-21",
+            "currency": "EUR",
+            "net_amount": "100.00",
+            "tax_amount": "19.00",
+            "total_amount": "119.00",
+            "discount_amount": null,
+            "shipping_amount": null,
+            "has_adjustments": false
+          },
+          "evidence": [
+            {
+              "field": "supplier_name",
+              "page": 1,
+              "quote": "Native Demo Supplies Ltd"
+            },
+            {
+              "field": "supplier_address",
+              "page": 1,
+              "quote": "12 Sample Street, Berlin 10115"
+            },
+            {
+              "field": "supplier_tax_id",
+              "page": 1,
+              "quote": "DE123456789"
+            },
+            {
+              "field": "invoice_number",
+              "page": 1,
+              "quote": "NATIVE-B3-20261007-TEXT"
+            },
+            {
+              "field": "invoice_date",
+              "page": 1,
+              "quote": "2026-10-07"
+            },
+            {
+              "field": "due_date",
+              "page": 1,
+              "quote": "2026-10-21"
+            },
+            {
+              "field": "currency",
+              "page": 1,
+              "quote": "EUR"
+            },
+            {
+              "field": "net_amount",
+              "page": 1,
+              "quote": "100.00"
+            },
+            {
+              "field": "tax_amount",
+              "page": 1,
+              "quote": "19.00"
+            },
+            {
+              "field": "total_amount",
+              "page": 1,
+              "quote": "119.00"
+            }
+          ],
+          "uncertainties": []
+        },
+        "fields": {
+          "supplier_name": "Native Demo Supplies Ltd",
+          "supplier_address": "12 Sample Street, Berlin 10115",
+          "supplier_tax_id": "DE123456789",
+          "invoice_number": "NATIVE-B3-20261007-TEXT",
+          "invoice_date": "2026-10-07",
+          "due_date": "2026-10-21",
+          "currency": "EUR",
+          "net_amount": "100.00",
+          "tax_amount": "19.00",
+          "total_amount": "119.00",
+          "discount_amount": null,
+          "shipping_amount": null,
+          "has_adjustments": false
+        },
+        "validation_issues": [],
+        "arithmetic_check": {
+          "total_equation": "net_plus_tax",
+          "tolerance": "0.01",
+          "computed_total": "119.00",
+          "difference": "0.00"
+        },
+        "status": "completed"
+      }
+    },
+    {
+      "case": "scan",
+      "native_attempt_id": 100,
+      "field_differences": {},
+      "python_result": {
+        "native_attempt_id": 100,
+        "agent_trace": {
+          "agent_version": "langchain-invoice-v3",
+          "analysis_signature": "debedc038a4004d0c98941519696fe2d291c681934e8f23ee224a7248d1cd68e",
+          "provider": "gemini_native",
+          "status": "completed",
+          "started_at": "2026-10-07T14:27:03.819015+00:00",
+          "model_calls": [
+            {
+              "index": 1,
+              "started_at": "2026-10-07T14:28:01.317984+00:00",
+              "status": "completed",
+              "finished_at": "2026-10-07T14:28:05.996530+00:00",
+              "usage": [
+                {
+                  "input_tokens": 1245,
+                  "output_tokens": 18,
+                  "total_tokens": 1263,
+                  "input_token_details": {
+                    "cache_read": 0
+                  }
+                }
+              ]
+            },
+            {
+              "index": 2,
+              "started_at": "2026-10-07T14:29:01.413359+00:00",
+              "status": "completed",
+              "finished_at": "2026-10-07T14:29:04.334086+00:00",
+              "usage": [
+                {
+                  "input_tokens": 6453,
+                  "output_tokens": 448,
+                  "total_tokens": 6901,
+                  "input_token_details": {
+                    "cache_read": 0
+                  }
+                }
+              ]
+            }
+          ],
+          "tools": [
+            {
+              "tool": "read_invoice_page",
+              "arguments": {
+                "page_numbers": [
+                  1
+                ]
+              },
+              "at": "2026-10-07T14:28:06.017209+00:00",
+              "result_sha256": "d3a7f2c2a6fc9c9ae74a4e1b05952e5e67049451ab0f473653c69784834637fe"
+            }
+          ],
+          "max_model_calls": 3,
+          "max_tool_calls": 6,
+          "finished_at": "2026-10-07T14:29:04.353665+00:00",
+          "pages_read": [
+            1
+          ]
+        },
+        "raw_extraction": {
+          "fields": {
+            "supplier_name": "Native Demo Supplies Ltd",
+            "supplier_address": "12 Sample Street, Berlin 10115",
+            "supplier_tax_id": "DE123456789",
+            "invoice_number": "NATIVE-B3-20261007-SCAN",
+            "invoice_date": "2026-10-07",
+            "due_date": "2026-10-21",
+            "currency": "EUR",
+            "net_amount": "10000.00",
+            "tax_amount": "1900.00",
+            "total_amount": "11900.00",
+            "discount_amount": null,
+            "shipping_amount": null,
+            "has_adjustments": false
+          },
+          "evidence": [
+            {
+              "field": "supplier_name",
+              "page": 1,
+              "quote": "Native Demo Supplies Ltd"
+            },
+            {
+              "field": "supplier_address",
+              "page": 1,
+              "quote": "12 Sample Street, Berlin 10115"
+            },
+            {
+              "field": "supplier_tax_id",
+              "page": 1,
+              "quote": "DE123456789"
+            },
+            {
+              "field": "invoice_number",
+              "page": 1,
+              "quote": "NATIVE-B3-20261007-SCAN"
+            },
+            {
+              "field": "invoice_date",
+              "page": 1,
+              "quote": "2026-10-07"
+            },
+            {
+              "field": "due_date",
+              "page": 1,
+              "quote": "2026-10-21"
+            },
+            {
+              "field": "currency",
+              "page": 1,
+              "quote": "EUR"
+            },
+            {
+              "field": "net_amount",
+              "page": 1,
+              "quote": "10000.00"
+            },
+            {
+              "field": "tax_amount",
+              "page": 1,
+              "quote": "1900.00"
+            },
+            {
+              "field": "total_amount",
+              "page": 1,
+              "quote": "11900.00"
+            }
+          ],
+          "uncertainties": []
+        },
+        "fields": {
+          "supplier_name": "Native Demo Supplies Ltd",
+          "supplier_address": "12 Sample Street, Berlin 10115",
+          "supplier_tax_id": "DE123456789",
+          "invoice_number": "NATIVE-B3-20261007-SCAN",
+          "invoice_date": "2026-10-07",
+          "due_date": "2026-10-21",
+          "currency": "EUR",
+          "net_amount": "10000.00",
+          "tax_amount": "1900.00",
+          "total_amount": "11900.00",
+          "discount_amount": null,
+          "shipping_amount": null,
+          "has_adjustments": false
+        },
+        "validation_issues": [],
+        "arithmetic_check": {
+          "total_equation": "net_plus_tax",
+          "tolerance": "0.01",
+          "computed_total": "11900.00",
+          "difference": "0.00"
+        },
+        "status": "completed"
+      }
+    },
+    {
+      "case": "missing",
+      "native_attempt_id": 103,
+      "field_differences": {},
+      "python_result": {
+        "native_attempt_id": 103,
+        "agent_trace": {
+          "agent_version": "langchain-invoice-v3",
+          "analysis_signature": "debedc038a4004d0c98941519696fe2d291c681934e8f23ee224a7248d1cd68e",
+          "provider": "gemini_native",
+          "status": "completed",
+          "started_at": "2026-10-07T14:29:04.401357+00:00",
+          "model_calls": [
+            {
+              "index": 1,
+              "started_at": "2026-10-07T14:30:01.532023+00:00",
+              "status": "completed",
+              "finished_at": "2026-10-07T14:30:02.563184+00:00",
+              "usage": [
+                {
+                  "input_tokens": 1245,
+                  "output_tokens": 18,
+                  "total_tokens": 1263,
+                  "input_token_details": {
+                    "cache_read": 0
+                  }
+                }
+              ]
+            },
+            {
+              "index": 2,
+              "started_at": "2026-10-07T14:31:01.644049+00:00",
+              "status": "completed",
+              "finished_at": "2026-10-07T14:31:03.595437+00:00",
+              "usage": [
+                {
+                  "input_tokens": 4844,
+                  "output_tokens": 400,
+                  "total_tokens": 5244,
+                  "input_token_details": {
+                    "cache_read": 0
+                  }
+                }
+              ]
+            }
+          ],
+          "tools": [
+            {
+              "tool": "read_invoice_page",
+              "arguments": {
+                "page_numbers": [
+                  1
+                ]
+              },
+              "at": "2026-10-07T14:30:02.573391+00:00",
+              "result_sha256": "31d2cc1cb483eefccf3b5454443c5eec847ce469324764211935b13063929b95"
+            }
+          ],
+          "max_model_calls": 3,
+          "max_tool_calls": 6,
+          "finished_at": "2026-10-07T14:31:03.611150+00:00",
+          "pages_read": [
+            1
+          ]
+        },
+        "raw_extraction": {
+          "fields": {
+            "supplier_name": "Native Demo Supplies Ltd",
+            "supplier_address": "12 Sample Street, Berlin 10115",
+            "supplier_tax_id": "DE123456789",
+            "invoice_number": "NATIVE-B3-20261007-MISSING",
+            "invoice_date": "2026-10-07",
+            "due_date": null,
+            "currency": "EUR",
+            "net_amount": "200.00",
+            "tax_amount": "38.00",
+            "total_amount": "238.00",
+            "discount_amount": null,
+            "shipping_amount": null,
+            "has_adjustments": false
+          },
+          "evidence": [
+            {
+              "field": "supplier_name",
+              "page": 1,
+              "quote": "Native Demo Supplies Ltd"
+            },
+            {
+              "field": "supplier_address",
+              "page": 1,
+              "quote": "12 Sample Street, Berlin 10115"
+            },
+            {
+              "field": "supplier_tax_id",
+              "page": 1,
+              "quote": "DE123456789"
+            },
+            {
+              "field": "invoice_number",
+              "page": 1,
+              "quote": "NATIVE-B3-20261007-MISSING"
+            },
+            {
+              "field": "invoice_date",
+              "page": 1,
+              "quote": "2026-10-07"
+            },
+            {
+              "field": "currency",
+              "page": 1,
+              "quote": "EUR"
+            },
+            {
+              "field": "net_amount",
+              "page": 1,
+              "quote": "200.00"
+            },
+            {
+              "field": "tax_amount",
+              "page": 1,
+              "quote": "38.00"
+            },
+            {
+              "field": "total_amount",
+              "page": 1,
+              "quote": "238.00"
+            }
+          ],
+          "uncertainties": []
+        },
+        "fields": {
+          "supplier_name": "Native Demo Supplies Ltd",
+          "supplier_address": "12 Sample Street, Berlin 10115",
+          "supplier_tax_id": "DE123456789",
+          "invoice_number": "NATIVE-B3-20261007-MISSING",
+          "invoice_date": "2026-10-07",
+          "due_date": null,
+          "currency": "EUR",
+          "net_amount": "200.00",
+          "tax_amount": "38.00",
+          "total_amount": "238.00",
+          "discount_amount": null,
+          "shipping_amount": null,
+          "has_adjustments": false
+        },
+        "validation_issues": [
+          {
+            "code": "MISSING_FIELD",
+            "field": "due_date",
+            "message": "due_date is not available from the document."
+          }
+        ],
+        "arithmetic_check": {
+          "total_equation": "net_plus_tax",
+          "tolerance": "0.01",
+          "computed_total": "238.00",
+          "difference": "0.00"
+        },
+        "status": "completed"
+      }
+    }
+  ],
+  "native_report": "AP_native_agent_B3_verification.json",
+  "recovery_note": "Native attempt 103 produced a valid real draft, but its n8n commit expression failed. The unchanged persisted draft was recovered through the normal authenticated commit and validation APIs; no provider retry. Final commit wiring was tested separately with three closed real drafts."
+}

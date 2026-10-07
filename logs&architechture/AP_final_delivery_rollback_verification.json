@@ -1,0 +1,169 @@
+{
+  "backup": "data\\baselines\\final-delivery-20261007-145502Z",
+  "before": {
+    "tables": {
+      "invoices": {
+        "rows": 27,
+        "sha256": "ad2895df5eaf43b6b6acbc9aaf76e68a266d45b1c814ec895485b3b41b987fe5"
+      },
+      "receipts": {
+        "rows": 179,
+        "sha256": "9e38fa0234fca9a089a54691c6c9ee62de68945c71f9139f4fbe0fd1a0fb8031"
+      },
+      "processing_attempts": {
+        "rows": 103,
+        "sha256": "2410e37b1118670ab7db9387d8361930f46cb1d2139375f16fb5d83e06d13939"
+      },
+      "notification_attempts": {
+        "rows": 12,
+        "sha256": "01567ada620cd7e221e501d062f5136c595846dc8066bd4e368ca66a1bb3164c"
+      },
+      "email_outcomes": {
+        "rows": 137,
+        "sha256": "42a0a69e65a11fd640b9a3e9ed473df918353b435e7608cca18f74afe3dec782"
+      },
+      "document_reads": {
+        "rows": 3,
+        "sha256": "91d9d6908c101f2b8064154b91bf58c81a928923875de80d5fe027be64d42a67"
+      },
+      "intake_runs": {
+        "rows": 88,
+        "sha256": "c3cc39f3b5f59e0bf4a55600eedb9ab7fae8afcde296a78977ed7a6d9cf06239"
+      },
+      "intake_stage_events": {
+        "rows": 390,
+        "sha256": "e29e6e84ed4d3efb7ae35123b5b861dc296ecf3934647e058ee583ddbe0af105"
+      },
+      "review_tasks": {
+        "rows": 15,
+        "sha256": "80f04548930079c2c502439d42a19a31d9c94d7758f33b0b3bb19c5abaf34654"
+      },
+      "review_revisions": {
+        "rows": 18,
+        "sha256": "3d351bb95f12d23ec1e2661cbd0d319d731b267a36f5731a9cb7de99dfc27eac"
+      },
+      "review_events": {
+        "rows": 11,
+        "sha256": "3c57247fee4450d128fa0daeb177bf62e1f9e2bd28c3b4880b22e6af339b53b7"
+      },
+      "exports": {
+        "rows": 2,
+        "sha256": "97b7a1a49ea6d9ca35ae1f4534f24e63bcc74d01c1c5a78b60c774476ebf809f"
+      },
+      "result_notifications": {
+        "rows": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "result_notification_attempts": {
+        "rows": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "review_requests": {
+        "rows": 7,
+        "sha256": "1392b58499c3e4ceea5b9c4f2a8266a7be62c36df654a7200f9016a64f1b47ae"
+      },
+      "export_batches": {
+        "rows": 5,
+        "sha256": "23a0b49cb1d0ab50846e547aa309a4f59a8f1d786cc66b2c9064339ca7261e29"
+      },
+      "export_batch_items": {
+        "rows": 10,
+        "sha256": "c0a7c1e6cad248d1e40d5b051d91dbcd77b2aa27eaedf8c79c9dcb1fe71a86b5"
+      },
+      "outcome_notifications": {
+        "rows": 16,
+        "sha256": "c4e604c4a4cbeaa49f84f4a775d8e5319525dcf40289aba0219c1f20d3f0e75b"
+      },
+      "outcome_notification_attempts": {
+        "rows": 18,
+        "sha256": "f6f9317e7ba32850edceee1fd319044108ca1bd55f01a82b0384b995b9a15ccb"
+      },
+      "model_request_gate": {
+        "rows": 1,
+        "sha256": "ff6a89a83aaf9ada8c492c20722ff7436ab884eea4e271bc71e52af3dedd8701"
+      },
+      "native_analysis": {
+        "rows": 5,
+        "sha256": "b56038e2a7351ad09710f6084a2bc55f0d2b87b2f7d6b5a05ef3785ee2b4bce6"
+      }
+    },
+    "files": {
+      "originals\\024ea7bb-d2aa-4e4d-90cd-fa2b6049e05d.pdf": "8e38aa4fdf28461db61f151c52519ab9aa8bcaf26944c3a81f03703d9c217de6",
+      "originals\\06f0ffb7-f68f-483a-b67d-7a3fd62af06e.pdf": "b21ffa9423bd34f7cd4897f3055edb1720c84441b84c510a122f991856e736d4",
+      "originals\\0922529a-940a-4cf9-8764-39264b2ae656.pdf": "71b84b260da89014868b9172af56471872dc0d5dce7859454ef30263ab3f4979",
+      "originals\\0961d9e0-781d-4c9f-8afd-3839aae2c7dc.pdf": "b02a9976b56e2545688ffe114f68e17061d7248491f41622059af699333e3327",
+      "originals\\0a40d391-8fd0-4193-9081-851d595e4a3a.pdf": "b91da57fa888c3a2ee557d1953d19f0cc319dd7ea82c0cf47f1c822bd1fd503b",
+      "originals\\0d06e690-7cfd-4741-917e-33ecee70bcdc.pdf": "0c1386cd4c124aab6ae3f775eea95789fada3993aebf4223fcccd4af2b222297",
+      "originals\\0d7ed1cf-2ec4-4e29-b6a5-7c5a9e5bb72e.pdf": "02f0160dc65ea7e6dc0b006feec9dd84f4cda7c4637c103d94f629b600a71545",
+      "originals\\13e7a901-c037-41b0-a84b-b246176848ca.pdf": "818452f671759bc782e75ee25fd25c9cb28421362fb273cf5228ae92a62fb977",
+      "originals\\1771e496-d925-4832-a504-fbcb96eba30e.pdf": "22ee9eda8098da9a542af6410e323fb12251a913deaeb32fa9a2098e98a4f030",
+      "originals\\19c3cd1d-f041-4450-a341-625b74ffaaf7.pdf": "2395eb6875d8f2322edbf8d1d4322cbc032f4e8ca50bbe518793d95c8fdb0481",
+      "originals\\23299883-eeb1-48a3-80c8-f521e57227e9.pdf": "796ba9f2b96d99e7dfd88df2f4adf3bd71196ac1dde8c3fc8afd87a4b209becf",
+      "originals\\24e2a990-a33b-4a0c-a736-c6eea1c52c0f.pdf": "7e525d95cbef3e54cb25156375cd61ca86c2bd00090cdcb6c6fd78444858431e",
+      "originals\\2d87b92b-8a29-4236-9b1b-5dec6f9a7fe8.pdf": "360632aa2dc2269293a53ad47c4aefe3404c2c6db40c511da804326aaa4f31aa",
+      "originals\\41608a73-1043-48ec-9482-bd84bc6fc2ee.pdf": "c06af902df0418f3502a36fb9d82b1043c1cef092b8eb2872d5193cc99eaaac9",
+      "originals\\4ff2e34b-6dff-48d8-901c-e64a800fb9f4.pdf": "87ee3b604cdff87428617a1ce9eac9e5d19408fc530eac5b3427b3d10618dff9",
+      "originals\\528eac97-c831-4b19-9329-e0347a8536f8.pdf": "e2572aa88fdae19e2984a2e2005d399e142f8444680929b975cab8acfb59b432",
+      "originals\\590b699e-1626-41eb-a4cf-4edebd263e75.pdf": "5035387d80a058693145ee0079d8ca577d66216303f2b9d67f8f25e5bccffc1a",
+      "originals\\5e9d79ec-ad71-4d18-b517-ce44581a4e86.pdf": "f23777b361ffca6f758895ddeb0356d9e9824b5dda7b14a9fed59354d764ac22",
+      "originals\\6870f4df-b874-4786-af20-82590ca9e409.pdf": "498b77253380bc4545d00173613b3f8c93abc08736db2d2a68841eef5207a8d0",
+      "originals\\6c14f2cb-01f6-4b8b-a49f-c8ebbba148b1.pdf": "aeac1f2b608838a522c05f809521531a3015309194e5bbd6bf00f4bd2b9aacc0",
+      "originals\\81a9bcfc-ff58-43fe-90ef-8ec128962694.pdf": "c68d4c0d399eb1867b01bb5071de4e39b828004a6654a1171b2c06efcaa8a1a7",
+      "originals\\860b7adb-e80f-4bf2-b835-bd9426723b49.pdf": "3b4f4a2438d1f2ba3311e1d7069c8154884e497f6967ccdbcbf86a97f67939b5",
+      "originals\\8ade3c45-6f37-44a9-872b-c143efcc471c.pdf": "8e1813f32f956ec7bbf9219383dd32a73874eacb60d3013c52f2f5d6777ed622",
+      "originals\\9ece27a7-0b1f-49df-b44f-0bc1c4be94bd.pdf": "07d26cd2941330855d9b90082e31228841b5dc13965d0841cdc1a883a337696e",
+      "originals\\aeee9cae-e330-417c-9f3d-88d77776037a.pdf": "7ad8b87872af17fdc8fa840579ce4ac4e9bcb6bb4a20cb68d202b882df563216",
+      "originals\\d284b695-5b9e-4e6e-b40d-39c57c80b4e1.pdf": "2de16e773c5d46f046496667d475113de3d741ce2fcad7e53e00e90244bc188e",
+      "originals\\fa48d0e9-1aa4-4221-9b70-65e5ee4e2604.pdf": "14ba8fa8637c7e8f5231a9e8da3ecd42d8e0639ba597db9b1bbba62230edea62",
+      "exports\\d567a817-8f5f-4356-b2fd-2624ab1ad14c.xlsx": "9804629d62cf1d4e41bb0b48a5b48517e69b42a794d405dd62cd41ba13c25770",
+      "exports\\e906032b-1d6f-469f-a0a6-187e4a25d947.xlsx": "0a8fa65929cb20c5dcd9858fe46acb7716715b4dc7be8c2a485142c9c258a3f8",
+      "exports\\batches\\66dc78c7-dd03-4e2f-a211-a38c8f210426.xlsx": "6bdb2616ca49dec757a7a632805d3f7a43974731b8ee5c491c7e640a352be42d",
+      "exports\\batches\\6b0a081c-97af-483f-86d0-099f02b17d68.xlsx": "ee44b704f47f75220149a118bbf9e12dc86534a80a4932bf1c494ffbe2aaeb6d",
+      "exports\\batches\\79ae549f-bc12-44be-9189-c4130a9f6744.xlsx": "ddae16d45868deb98e105d1ff2e033a745976f7f2a4ff218261a6ebc699c37ed",
+      "exports\\batches\\cede2270-8054-4ece-b69d-8abb3cb3c24a.xlsx": "21c42ac4c92eb0959090b4bbc6f96cf5557b62ed2d11ab61c9a0819e1258743a",
+      "exports\\batches\\eba39e8f-9e08-4859-8036-274a5648360f.xlsx": "d1095025dbc317100a0af232cd4adc49e4c026cdd200aaf8a6af22cfc479554a"
+    }
+  },
+  "phases": [
+    {
+      "phase": "stage_a",
+      "http_statuses": [
+        202,
+        202,
+        202,
+        202
+      ],
+      "review_target": "ap-unified-review-a2-v1",
+      "batch_target": "ap-unified-excel-a2-v1",
+      "all_business_rows_and_files_unchanged": true
+    },
+    {
+      "phase": "original_01_02",
+      "http_statuses": [
+        202,
+        202,
+        202,
+        202
+      ],
+      "review_target": "ap-review-export-v1",
+      "batch_target": "ap-batch-export-v1",
+      "all_business_rows_and_files_unchanged": true
+    },
+    {
+      "phase": "native",
+      "http_statuses": [
+        202,
+        202,
+        202,
+        202
+      ],
+      "review_target": "ap-native-review-b2-v2",
+      "batch_target": "ap-native-excel-b2-v2",
+      "all_business_rows_and_files_unchanged": true
+    }
+  ],
+  "original_compose_restored": true,
+  "final_state_unchanged": true,
+  "isolated_backup_restore_and_double_migration_passed": true,
+  "historical_phase02_log_unchanged": true
+}

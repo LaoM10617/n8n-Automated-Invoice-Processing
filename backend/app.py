@@ -29,6 +29,9 @@ from backend.intake_stages import register_intake_stages
 from backend.migrations import migrate
 from backend.reviews import register_reviews
 from backend.review_events import register_review_events
+from backend.exports import register_exports
+from backend.export_register import register_export_register
+from backend.outcomes import register_outcomes
 
 MAX_BYTES = 20 * 1024 * 1024
 
@@ -139,7 +142,7 @@ def create_app(data_dir: Path | None = None) -> FastAPI:
     def health():
         with closing(connect()) as db:
             db.execute('SELECT 1').fetchone()
-        return {'status': 'ok', 'capabilities': {'intake': True, 'extraction': model_configured(), 'ocr': ocr_available(), 'review': True, 'review_decisions': True, 'automatic_approval': True, 'excel_export': False}}
+        return {'status': 'ok', 'capabilities': {'intake': True, 'extraction': model_configured(), 'ocr': ocr_available(), 'review': True, 'review_decisions': True, 'automatic_approval': True, 'excel_export': True}}
 
     @app.post('/api/ap/intakes')
     def intake(
@@ -295,8 +298,11 @@ def create_app(data_dir: Path | None = None) -> FastAPI:
     def review_script():
         return FileResponse(Path(__file__).with_name('review.js'), media_type='text/javascript', headers={'Cache-Control': 'no-store', 'X-Content-Type-Options': 'nosniff'})
 
-    reviews = register_reviews(app, connect)
+    outcomes = register_outcomes(app, connect, root)
+    reviews = register_reviews(app, connect, outcomes.dispatch_review)
     register_review_events(app, connect)
+    register_exports(app, connect, root)
+    register_export_register(app, connect, root, outcomes.dispatch_batch)
 
     stages = DocumentStages(connect, invoice_row, get_invoice, originals,
                             lambda path, media: read_pages(path, media), lambda pages: extract_fields(pages))
@@ -307,5 +313,5 @@ def create_app(data_dir: Path | None = None) -> FastAPI:
 
     notifications = register_notifications(app, connect, get_invoice)
     save_outcome = register_email_receipts(app, connect)
-    register_intake_stages(app, connect, intake, stages, create_review_task, notifications, save_outcome, reviews)
+    register_intake_stages(app, connect, intake, stages, create_review_task, notifications, save_outcome, reviews, outcomes.dispatch_review)
     return app

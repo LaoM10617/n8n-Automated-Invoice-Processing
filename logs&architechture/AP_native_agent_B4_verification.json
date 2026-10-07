@@ -1,0 +1,234 @@
+{
+  "pending_excluded": true,
+  "decisions": {
+    "scan": {
+      "status": "approved",
+      "current_revision": 2,
+      "processing_attempt_id": 100,
+      "approval_method": "manual",
+      "event": {
+        "event_id": "47263a23-c574-4b6b-b071-62f2dee29540",
+        "event_type": "approved",
+        "status": "processed",
+        "attempts": 1,
+        "last_error": null,
+        "last_attempt_at": "2026-10-07T14:34:07.767702+00:00",
+        "accepted_at": "2026-10-07T14:34:07.767702+00:00",
+        "processed_at": "2026-10-07T14:34:09.067281+00:00"
+      }
+    },
+    "missing": {
+      "status": "rejected",
+      "current_revision": 2,
+      "processing_attempt_id": 103,
+      "approval_method": "manual",
+      "event": {
+        "event_id": "1f4cf4fe-baa8-4de9-a495-a60080ece083",
+        "event_type": "rejected",
+        "status": "pending",
+        "attempts": 0,
+        "last_error": null,
+        "last_attempt_at": null,
+        "accepted_at": null,
+        "processed_at": null
+      }
+    }
+  },
+  "batch": {
+    "export_id": "eba39e8f-9e08-4859-8036-274a5648360f",
+    "selection_hash": "5039e09b5459cd61dd38a1fe4d58fcb02af22fe1451a9197679809f724607da7",
+    "mapping_version": "invoice-excel-v1",
+    "only_unexported": 0,
+    "status": "completed",
+    "attempts": 1,
+    "file_path": "exports/batches/eba39e8f-9e08-4859-8036-274a5648360f.xlsx",
+    "file_sha256": "d1095025dbc317100a0af232cd4adc49e4c026cdd200aaf8a6af22cfc479554a",
+    "last_error": null,
+    "created_at": "2026-10-07T14:34:27.143Z",
+    "updated_at": "2026-10-07T14:34:27.314102+00:00",
+    "max_attempts": 5,
+    "download_url": "/api/ap/export-batches/eba39e8f-9e08-4859-8036-274a5648360f/files/xlsx",
+    "file_health": "verified",
+    "row_count": 2,
+    "members": [
+      {
+        "invoice_id": "13e7a901-c037-41b0-a84b-b246176848ca",
+        "review_revision": 2
+      },
+      {
+        "invoice_id": "4ff2e34b-6dff-48d8-901c-e64a800fb9f4",
+        "review_revision": 1
+      }
+    ]
+  },
+  "snapshot": {
+    "events": [
+      {
+        "event_id": "5d48945b-4c03-460e-9950-0352d55b7b4b",
+        "event_type": "approved",
+        "status": "processed",
+        "attempts": 1,
+        "last_error": null,
+        "last_attempt_at": "2026-10-07T13:52:05.358365+00:00",
+        "accepted_at": "2026-10-07T13:52:05.358365+00:00",
+        "processed_at": "2026-10-07T13:52:05.687616+00:00"
+      },
+      {
+        "event_id": "47263a23-c574-4b6b-b071-62f2dee29540",
+        "event_type": "approved",
+        "status": "processed",
+        "attempts": 1,
+        "last_error": null,
+        "last_attempt_at": "2026-10-07T14:34:07.767702+00:00",
+        "accepted_at": "2026-10-07T14:34:07.767702+00:00",
+        "processed_at": "2026-10-07T14:34:09.067281+00:00"
+      },
+      {
+        "event_id": "1f4cf4fe-baa8-4de9-a495-a60080ece083",
+        "event_type": "rejected",
+        "status": "processed",
+        "attempts": 1,
+        "last_error": null,
+        "last_attempt_at": "2026-10-07T14:34:26.696532+00:00",
+        "accepted_at": "2026-10-07T14:34:26.696532+00:00",
+        "processed_at": "2026-10-07T14:34:27.005593+00:00"
+      }
+    ],
+    "notices": [
+      {
+        "notification_id": "2c9c1f49-a4e0-4c48-932d-f0a4a0730d92",
+        "event_id": "5d48945b-4c03-460e-9950-0352d55b7b4b",
+        "export_id": null,
+        "category": "review_approved",
+        "status": "sent",
+        "attempts": 1,
+        "message_id": "<ap-2c9c1f49-a4e0-4c48-932d-f0a4a0730d92-1@example.invalid>",
+        "last_error": null,
+        "delivery_status": "processed",
+        "delivery_attempts": 0,
+        "delivery_at": null,
+        "delivery_error": null,
+        "created_at": "2026-10-07T13:52:05.337Z",
+        "updated_at": "2026-10-07T13:52:05.687616+00:00",
+        "kind": "review",
+        "id": "5d48945b-4c03-460e-9950-0352d55b7b4b",
+        "max_attempts": 5
+      },
+      {
+        "notification_id": "8995ba01-969a-446a-88b6-1cbacfa1948a",
+        "event_id": "47263a23-c574-4b6b-b071-62f2dee29540",
+        "export_id": null,
+        "category": "review_approved",
+        "status": "sent",
+        "attempts": 1,
+        "message_id": "<ap-8995ba01-969a-446a-88b6-1cbacfa1948a-1@example.invalid>",
+        "last_error": null,
+        "delivery_status": "processed",
+        "delivery_attempts": 0,
+        "delivery_at": null,
+        "delivery_error": null,
+        "created_at": "2026-10-07T14:34:07.732Z",
+        "updated_at": "2026-10-07T14:34:09.067281+00:00",
+        "kind": "review",
+        "id": "47263a23-c574-4b6b-b071-62f2dee29540",
+        "max_attempts": 5
+      },
+      {
+        "notification_id": "eea23a0e-1af4-427c-926e-e7fb68796631",
+        "event_id": "1f4cf4fe-baa8-4de9-a495-a60080ece083",
+        "export_id": null,
+        "category": "review_rejected",
+        "status": "sent",
+        "attempts": 1,
+        "message_id": "<ap-eea23a0e-1af4-427c-926e-e7fb68796631-1@example.invalid>",
+        "last_error": null,
+        "delivery_status": "processed",
+        "delivery_attempts": 0,
+        "delivery_at": null,
+        "delivery_error": null,
+        "created_at": "2026-10-07T14:34:26.654Z",
+        "updated_at": "2026-10-07T14:34:27.005593+00:00",
+        "kind": "review",
+        "id": "1f4cf4fe-baa8-4de9-a495-a60080ece083",
+        "max_attempts": 5
+      },
+      {
+        "notification_id": "b5ca34b7-2dae-4943-aac6-7ccd8355495a",
+        "event_id": null,
+        "export_id": "eba39e8f-9e08-4859-8036-274a5648360f",
+        "category": "batch_completed",
+        "status": "sent",
+        "attempts": 1,
+        "message_id": "<ap-b5ca34b7-2dae-4943-aac6-7ccd8355495a-1@example.invalid>",
+        "last_error": null,
+        "delivery_status": "processed",
+        "delivery_attempts": 1,
+        "delivery_at": "2026-10-07T14:34:27.472462+00:00",
+        "delivery_error": null,
+        "created_at": "2026-10-07T14:34:27.424Z",
+        "updated_at": "2026-10-07T14:34:27.848648+00:00",
+        "kind": "batch",
+        "id": "eba39e8f-9e08-4859-8036-274a5648360f",
+        "max_attempts": 5
+      }
+    ],
+    "batch": {
+      "export_id": "eba39e8f-9e08-4859-8036-274a5648360f",
+      "selection_hash": "5039e09b5459cd61dd38a1fe4d58fcb02af22fe1451a9197679809f724607da7",
+      "mapping_version": "invoice-excel-v1",
+      "only_unexported": 0,
+      "status": "completed",
+      "attempts": 1,
+      "file_path": "exports/batches/eba39e8f-9e08-4859-8036-274a5648360f.xlsx",
+      "file_sha256": "d1095025dbc317100a0af232cd4adc49e4c026cdd200aaf8a6af22cfc479554a",
+      "last_error": null,
+      "created_at": "2026-10-07T14:34:27.143Z",
+      "updated_at": "2026-10-07T14:34:27.314102+00:00",
+      "max_attempts": 5,
+      "download_url": "/api/ap/export-batches/eba39e8f-9e08-4859-8036-274a5648360f/files/xlsx",
+      "file_health": "verified",
+      "row_count": 2,
+      "members": [
+        {
+          "invoice_id": "13e7a901-c037-41b0-a84b-b246176848ca",
+          "review_revision": 2
+        },
+        {
+          "invoice_id": "4ff2e34b-6dff-48d8-901c-e64a800fb9f4",
+          "review_revision": 1
+        }
+      ]
+    },
+    "counts": {
+      "invoices": 27,
+      "receipts": 179,
+      "processing_attempts": 103,
+      "notification_attempts": 12,
+      "email_outcomes": 137,
+      "document_reads": 3,
+      "intake_runs": 88,
+      "intake_stage_events": 390,
+      "review_tasks": 15,
+      "review_revisions": 18,
+      "review_events": 11,
+      "exports": 2,
+      "result_notifications": 0,
+      "result_notification_attempts": 0,
+      "review_requests": 7,
+      "export_batches": 5,
+      "export_batch_items": 10,
+      "outcome_notifications": 16,
+      "outcome_notification_attempts": 18,
+      "model_request_gate": 1,
+      "native_analysis": 5
+    }
+  },
+  "excel": {
+    "sha256": "d1095025dbc317100a0af232cd4adc49e4c026cdd200aaf8a6af22cfc479554a",
+    "row_count": 2,
+    "total_eur": 12019,
+    "rejected_excluded": true,
+    "approved_versions_preserved": true
+  },
+  "restart_replay_unchanged": true
+}

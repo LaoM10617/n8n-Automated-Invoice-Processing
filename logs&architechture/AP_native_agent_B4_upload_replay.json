@@ -1,0 +1,23 @@
+[
+  {
+    "invoice_id": "4ff2e34b-6dff-48d8-901c-e64a800fb9f4",
+    "outcome": "decision_ready",
+    "analysis_cached": true,
+    "analysis_source": "native_provider_analysis",
+    "review_status": "approved"
+  },
+  {
+    "invoice_id": "13e7a901-c037-41b0-a84b-b246176848ca",
+    "outcome": "decision_ready",
+    "analysis_cached": true,
+    "analysis_source": "native_provider_analysis",
+    "review_status": "approved"
+  },
+  {
+    "invoice_id": "0a40d391-8fd0-4193-9081-851d595e4a3a",
+    "outcome": "decision_ready",
+    "analysis_cached": true,
+    "analysis_source": "native_provider_analysis",
+    "review_status": "rejected"
+  }
+]

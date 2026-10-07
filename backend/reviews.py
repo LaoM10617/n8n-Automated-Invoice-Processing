@@ -4,10 +4,11 @@ from datetime import datetime, timezone
 from decimal import Decimal
 import hashlib
 import json
+import os
 from typing import Literal
 from uuid import uuid4
 
-from fastapi import HTTPException, Request
+from fastapi import BackgroundTasks, HTTPException, Request
 from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
 from backend.extraction import RawFields
@@ -176,6 +177,7 @@ class Reviews:
                 'can_reject': not blockers and not unresolved_duplicates, 'blockers': blockers}
         history = [dict(r) for r in db.execute('SELECT revision,processing_attempt_id,changes_json,actor,notes,created_at FROM review_revisions WHERE review_id=? ORDER BY revision', (task['review_id'],))]
         event = db.execute('SELECT event_id,event_type,status,attempts,last_error,last_attempt_at,accepted_at,processed_at FROM review_events WHERE review_id=?', (task['review_id'],)).fetchone()
+        export = db.execute("SELECT export_id,status,attempts,last_error FROM exports WHERE invoice_id=? AND review_revision=? AND target='excel'", (invoice_id, task['current_revision'])).fetchone()
         return {**task, 'processing_attempt_id': bound, 'latest_attempt_id': latest['attempt_id'],
                 'latest_fields': json.loads(db.execute('SELECT result_json FROM processing_attempts WHERE attempt_id=?', (latest['attempt_id'],)).fetchone()[0] or '{}').get('fields'),
                 'version_conflict': latest['attempt_id'] != bound, 'processing_status': latest['status'],
@@ -183,7 +185,7 @@ class Reviews:
                 'analysis_source': result.get('analysis_source', 'provider_analysis'),
                 'current_fields': fields, 'validation': checked, 'decision_gate': gate, 'history': history,
                 'evidence_resolutions': evidence, 'duplicate_resolutions': duplicates,
-                'event': dict(event) if event else None, 'reviewer': REVIEWER}
+                'event': dict(event) if event else None, 'export': dict(export) if export else None, 'reviewer': REVIEWER}
 
     def read(self, invoice_id):
         with closing(self.connect()) as db:
@@ -334,7 +336,7 @@ class Reviews:
             return state
 
 
-def register_reviews(app, connect):
+def register_reviews(app, connect, on_decision=None):
     reviews = Reviews(connect)
 
     @app.get('/api/ap/invoices/{invoice_id}/review')
@@ -347,13 +349,19 @@ def register_reviews(app, connect):
         return reviews.save(invoice_id, body)
 
     @app.post('/api/ap/invoices/{invoice_id}/review/decision')
-    def decide(invoice_id: str, body: Decision, request: Request):
+    def decide(invoice_id: str, body: Decision, request: Request, background: BackgroundTasks):
         protect_write(request)
-        return reviews.decide(invoice_id, body)
+        result = reviews.decide(invoice_id, body)
+        if on_decision and os.environ.get('AP_OUTCOME_AUTODISPATCH') == '1':
+            background.add_task(on_decision, result['event']['event_id'])
+        return result
 
     @app.post('/api/ap/invoices/{invoice_id}/review/evaluate-policy')
-    def policy(invoice_id: str, body: Version, request: Request):
+    def policy(invoice_id: str, body: Version, request: Request, background: BackgroundTasks):
         protect_write(request)
-        return reviews.automatic(invoice_id, body)
+        result = reviews.automatic(invoice_id, body)
+        if result['event'] and on_decision and os.environ.get('AP_OUTCOME_AUTODISPATCH') == '1':
+            background.add_task(on_decision, result['event']['event_id'])
+        return result
 
     return reviews

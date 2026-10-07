@@ -1,0 +1,22 @@
+{
+  "id": "J4xPbnTCAgYFVNzJ",
+  "active": true,
+  "version": "ec9b355d-a4bf-433f-895b-4ab76119af20",
+  "sameAsDraft": true,
+  "nodes": 36,
+  "groups": 3,
+  "json_and_connections_valid": true,
+  "sdk_valid": true,
+  "credential_binding": "existing references retained; real native model/tools and local event receivers exercised",
+  "real_provider_requests": 18,
+  "min_request_gap_seconds": 60.080429792404175,
+  "cache_uploads": 3,
+  "active_attempts": 0,
+  "privacy_payload_rows_checked": 16,
+  "credential_found_in_payloads": false,
+  "review_event_target": "http://n8n:5678/webhook/ap-native-review-b2-v2",
+  "batch_event_target": "http://n8n:5678/webhook/ap-native-excel-b2-v2",
+  "rollback_workflow": "7xXB2pjXOE1EQ2bY",
+  "fresh_paid_execution_after_final_expression_fix": false,
+  "closed_draft_replay_passed": 3
+}

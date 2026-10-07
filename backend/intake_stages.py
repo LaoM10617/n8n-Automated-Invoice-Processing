@@ -14,6 +14,7 @@ from backend.document_text import ProcessingError
 from backend.email_receipts import EmailOutcome
 from backend.notifications import NotificationResult
 from backend.reviews import protect_write
+from backend.review_events import protect_event
 
 
 class Source(BaseModel):
@@ -55,6 +56,8 @@ class StageResult(BaseModel):
     review_status: str | None = None
     approval_method: str | None = None
     event_id: str | None = None
+    event_delivery_status: str | None = None
+    event_delivery_error: str | None = None
 
 
 def unpack(value):
@@ -93,7 +96,7 @@ def send_local_notification(claim, record, invoice_id):
     return record(notice['notification_id'], result)
 
 
-def register_intake_stages(app, connect, intake, documents, review, notifications, save_outcome, reviews=None):
+def register_intake_stages(app, connect, intake, documents, review, notifications, save_outcome, reviews=None, on_decision=None):
     lock = threading.RLock()
     with closing(connect()) as db:
         db.executescript('''CREATE TABLE IF NOT EXISTS intake_runs (
@@ -233,6 +236,18 @@ def register_intake_stages(app, connect, intake, documents, review, notification
             result.retryable = notice['status'] == 'failed'
             return save(result)
 
+    @app.post('/api/ap/stages/{run_id}/handoff', response_model=StageResult)
+    def handoff(run_id: str, request: Request):
+        protect_event(request)
+        result = load(run_id)
+        if not result.event_id or result.outcome != 'decision_ready' or not on_decision:
+            raise HTTPException(409, 'A saved review decision is required.')
+        delivery = on_decision(result.event_id)
+        if delivery:
+            result.event_delivery_status = delivery['status']
+            result.event_delivery_error = delivery['last_error']
+        return save(result)
+
     @app.post('/api/ap/stages/{run_id}/exception', response_model=StageResult)
     def exception(run_id: str):
         result = load(run_id)
@@ -240,3 +255,6 @@ def register_intake_stages(app, connect, intake, documents, review, notification
             raise HTTPException(409, 'No exception to acknowledge.')
         # The originating stage already saved the failure and source outcome.
         return result
+
+    from backend.native_analysis import register_native
+    register_native(app, connect, documents, load, save, failure)

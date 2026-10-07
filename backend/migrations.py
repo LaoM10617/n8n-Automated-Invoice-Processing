@@ -4,7 +4,7 @@ from contextlib import closing
 from pathlib import Path
 import sqlite3
 
-SCHEMA_VERSION = 2  # Version zero is the unversioned Phase01 schema.
+SCHEMA_VERSION = 5  # Version zero is the unversioned Phase01 schema.
 
 
 def migrate(db):
@@ -19,7 +19,7 @@ def migrate(db):
         version = db.execute('PRAGMA user_version').fetchone()[0]
         if version > SCHEMA_VERSION:
             raise RuntimeError(f'Unsupported schema version: {version}')
-        for target, filename in ((1, 'phase02_schema.sql'), (2, 'phase02_review_schema.sql')):
+        for target, filename in ((1, 'phase02_schema.sql'), (2, 'phase02_review_schema.sql'), (3, 'phase02_export_schema.sql'), (4, 'phase02_export_register_schema.sql'), (5, 'phase02_outcome_schema.sql')):
             if version >= target:
                 continue
             statement = ''

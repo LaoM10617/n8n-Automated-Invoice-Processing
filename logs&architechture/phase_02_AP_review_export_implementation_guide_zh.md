@@ -1,16 +1,18 @@
 # Phase02：AP 自动／人工批准与 Excel 导出实施指南
 
+> 2026-10-07 后续重构决策：用户已确认将 01、02 合并到同一业务画布，保留独立事件入口、持久化状态与现有清单／Excel规则；先整理画布，再迁移原生 Agent。后续实施以 [统一画布与原生 Agent 迁移指南](AP_unified_canvas_native_agent_implementation_guide_zh.md) 为准，替代本文“不把 02 嵌入 01 的画布”的旧要求。此重构尚未实施，本文其余内容仍记录 Phase02 已验收基线。
+
 日期：2026-10-07  
-状态：实施指南；2026-10-07已完成基线迁移及5.1／5.2，事件投递与Excel生成尚未接入。本文不是验收报告，实际证据见phase02_migration_log.md与phase02_review_log.md。  
+状态：当前实施指南；2026-10-07按用户确认改为“批准后自动进入导出清单 → 筛选预览 → 用户下载合并Excel”。此决定替代原第7节“一张批准快照一份文件”和“审批事件自动生成Excel”的主流程。旧单票导出保留兼容。Phase02集中验收已完成，当前结果见phase02_final_log.md与phase02_final_verification.json；此前分步日志保留为历史。推荐入口为APApprovalIntakeV9，独立02为APReviewExportV1；v7及历史入口保留。
 基线提交：`e77ddcc` — `Unified Workflow Canvas, added LangChain and Agent`
 
 ## 1. 目标与边界
 
-完成真实闭环：提取校验后的发票 → 确定性自动批准规则／人工审核分流 → 自动批准或 Web 修改、重新校验、人工批准／拒绝 → Python 保存决策与待发送事件 → 独立 n8n `02_AP_Review_Export` → 读取数据库当前状态 → 获准后生成可下载的 Excel（.xlsx）→ 持久化导出结果并发送本地通知。
+完成真实闭环：提取校验后的发票 → 确定性自动批准规则／人工审核分流 → 自动批准或 Web 修改、重新校验、人工批准／拒绝 → Python 保存决策、不可变快照与待发送事件；批准快照立即进入数据库导出清单 → 用户在Web筛选预览、勾选 → 生成并下载一份合并Excel（.xlsx），持久化本次文件及成员版本。独立n8n `02_AP_Review_Export` 处理审核结果及本地通知，不因审批事件自动生成每票文件，也不阻塞清单可见性。
 
 金额自动批准和人工审核两条分支均为必做、必验收项。实现时可先跑通人工分支，但不能以此结束阶段。批准不等于导出，导出不等于付款。Excel 文件生成、事件传输、状态保存和下载均真实运行；文件标注未提交记账系统。
 
-本轮不实现：DATEV／Lexoffice 或其他外部记账平台集成、实际付款、AP／AR 到期提醒、AR 开票、完整 MCP、多用户权限平台、批准后的撤销／重开／再次导出。先保持批准／拒绝为终态；后续需求另定版本和冲销语义。
+本轮不实现：DATEV／Lexoffice 或其他外部记账平台集成、实际付款、AP／AR 到期提醒、AR 开票、完整 MCP、多用户权限平台、批准后的撤销／重开；不实现持续更新的latest.xlsx或用户本地Excel路径同步。批准／拒绝保持终态；同一批准版本可由用户明确选入不同汇总批次，历史批次内容不变，这不表示再次批准或再次记账。后续更正需求另定版本和冲销语义。
 
 中文交流与开发日志；代码注释、页面文案、n8n 节点及说明使用英语。遵循根目录 AGENTS.md 与 karpathy-guidelines。
 
@@ -24,7 +26,7 @@
 4. `phase01_step45_verification.json`、`phase01_agent_verification.json`；需要追踪执行时再读对应 execution 文件。
 5. 实际 `backend/`、`compose.yaml`、`n8n_workflows/01_AP_agent_intake_v7.json` 与当前容器状态。
 
-已有能力：
+Phase01开始时的历史基线（非当前实现状态）：
 
 - Phase01 默认画布 `APAgentIntakeV7`，14 个执行节点、2 个说明节点，独立上传／只读 Gmail 入口，共用 Python 阶段服务；已导入、发布、绑定凭据并真实运行。
 - 本地 Tesseract／Poppler OCR；Python LangChain Agent 使用 Gemini `gemini-3.5-flash-lite`。证据校验、Decimal 金额规则、两层查重、幂等任务和通知均在确定性后端。
@@ -50,13 +52,14 @@ Intake → Deterministic Approval Policy
            ├─ Eligible low-value invoice → Auto Approve
            └─ Otherwise → Pending Review → Web: Edit / Approve / Reject
                                       ↓
-Python: persist decision + immutable snapshot + outbox event
-                                      ↓
-02_AP_Review_Export (independent workflow)
-Review Event → Load Current State → Route Decision
-                                     ├─ Approved → Export Excel → Notify Result
-                                     └─ Rejected / Pending / Stale → Return Outcome
+Python: decision + immutable snapshot + outbox event (one transaction)
+           ├─ Approved → Export register (database-backed)
+           │                → Web: Filter / Preview / Select
+           │                → Download combined Excel → Saved batch + membership
+           └─ Review event → Independent 02 → Load Current State → Notify Outcome
 ```
+
+批准快照本身构成导出清单，不复制另一份可修改字段；清单可见性不依赖n8n回调。生成Excel由用户选择触发，02不得在审核事件重放时再次生成文件。通知区分“已批准、可在清单导出”和“合并文件已生成”，后者按batch/export_id去重，不把每票审批事件等同于一份Excel。
 
 自动批准判断位于接收校验完成之后、待审核通知之前，由 Python 规则服务执行。符合条件时不发送“请人工审核”邮件，直接保存自动批准决定并发出同类事件；不符合条件才保持 pending 并通知审核人。保留已验证 v7 文件和入口，新分流通过独立的新01版本接入，验收后再切换默认入口。不要在启动时批量自动批准历史 pending 任务；历史记录只有显式重新评估才走新规则。
 
@@ -77,8 +80,9 @@ Agent 不参与批准、金额纠错、最终导出决策。人工修改不自�
 - **review_tasks**：审核状态 pending／approved／rejected、当前 revision、关联 extraction attempt、决策人和时间、approval_method=automatic/manual、policy_version、规则输入快照和分流理由。
 - **review_revisions**：不可变审核版本（自动批准也保存快照）；字段快照、原始提取引用、修改前后差异、重新校验结果、重复候选／处理理由、actor、时间及备注。revision 随保存递增。
 - **review_events / outbox**：event_id、invoice_id、review_id、approved/rejected revision、类型、投递状态、尝试次数及错误。决策与事件在同一数据库事务提交。
-- **exports**：export_id／batch_id、invoice_id、批准 revision、target=`excel`、mapping_version、状态、文件相对路径／哈希、失败原因和时间。先一张批准快照对应一个 .xlsx 文件，不要求批量合并，也不另导出 CSV／JSON。
-- **result notification ledger**：关联 export_id／decision_id，通知类别、状态和投递记录；可扩展现有实现，但保留旧通知语义。
+- **导出清单**：查询已批准的review_tasks＋review_events＋不可变review_revisions；invoice_id＋批准revision唯一，自动／人工批准共用，拒绝／待审核不入列。
+- **export_batches / export_batch_items**：批次export_id、选择集合哈希、mapping_version、状态、尝试次数、文件相对路径／哈希、失败原因和时间；成员保存event_id、invoice_id、批准revision和固定行序。每批一份合并.xlsx，不另导出CSV／JSON；保留旧exports表及已生成单票文件。
+- **result notification ledger**：schema 5新增outcome_notifications与outcome_notification_attempts，分别唯一关联review_events.event_id或export_batches.export_id，记录类别、SMTP状态、Message-ID、投递状态与尝试记录。保留旧result_notifications与单票exports外键。已实现批准、拒绝及合并批次完成通知。
 
 分别保存 processing、review、export、notification 状态。不要把 approved 写成 processing 状态，也不要用 n8n execution success 代替导出成功。
 
@@ -105,7 +109,7 @@ Agent 不参与批准、金额纠错、最终导出决策。人工修改不自�
 - 自动批准须满足必填字段完整、金额等式成立、无未解决校验／证据／OCR质量／提取不确定异常、重复检查可执行且无候选、没有人工修订或已有决策。任何一项不满足即 pending，不因金额低而忽略异常。
 - 人工修改后继续由人工批准，不因改低金额自动转换为自动批准。自动与人工决策并发时使用同一事务／版本检查，最多一个终态和一个决定事件。
 - 自动 actor 明确为 system，保存规则版本、金额／币种、检查结果和理由。Agent 不决定是否批准；规则无异常仍不是绝对提取正确性的证明，自动批准是本 Demo 的明确业务策略。
-- 两条批准分支共用批准快照、事件、02工作流和 Excel 导出幂等逻辑，不复制两套导出代码。高金额审批通知本阶段仍发本地 Mailpit 的演示审核人，不真实发送给 CFO。
+- 两条批准分支共用批准快照、事件、导出清单和合并Excel服务，不复制两套导出代码。高金额审批通知本阶段仍发本地 Mailpit 的演示审核人，不真实发送给 CFO。
 
 ### 5.3 共用审批门禁与人工处理
 
@@ -123,32 +127,46 @@ Agent 不参与批准、金额纠错、最终导出决策。人工修改不自�
 
 ## 6. 审核事件与失败恢复
 
-批准事务必须一起保存终态、不可变批准快照、审计记录与 outbox 事件。事务提交后再进行网络投递；n8n 不可用时审核结果仍然存在，事件保留待重试状态，页面显示“Approved; export pending”。
+批准事务必须一起保存终态、不可变批准快照、审计记录与 outbox 事件。事务提交后再进行网络投递；n8n 不可用时审核结果仍然存在，事件保留待重试状态，页面显示“Approved; in export register”，并独立显示事件投递状态。
 
 事件只传标识与版本，例如 event_id、invoice_id、review_id、review_revision、event_type。不要把事件携带的金额或 approved 字符串当作导出授权。02 必须从后端读取该事件及当前状态；Python 的导出接口也必须再次核验状态和批准快照，不能信任仅由 n8n 做门禁。
 
 第一版采用持久化 outbox＋显式本地重试入口／命令，不必先上消息队列。重试使用同一 event_id、有限次数和可见错误，禁止无节制循环。演示至少要能在 n8n 停止／恢复后重新投递待发事件。
 
-区分“HTTP 已接收”与“业务已处理”：Webhook 返回 2xx 不能直接代表导出完成。若 n8n 接收后执行失败，事件仍须可以重新驱动；保留 accepted/delivered 与 processed 的区别，或等业务确认再置完成。不得出现消息已出队而导出永久丢失的窗口。
+区分“HTTP 已接收”与“业务已处理”：Webhook 返回 2xx 不能直接代表导出完成。若 n8n 接收后执行失败，事件仍须可以重新驱动；保留 accepted/delivered 与 processed 的区别，或等业务确认再置完成。清单和用户下载不依赖事件消费；processed只说明对应审核结果处理完成，不能代表用户已生成或下载Excel。
 
 本地 Webhook 使用最小凭据校验，凭据在 .env／n8n credential 中保存，不进 JSON／日志。绑定方式以实际实例能力核实；新凭据或真实账户确实需要用户操作时再请求。
 
-## 7. Excel 导出契约与幂等
+## 7. 导出清单、合并Excel契约与幂等
 
-只生成标准 .xlsx 文件（不是把 CSV 改扩展名），标注 `Invoice export — not submitted to an accounting system`。不创建外部平台连接器、平台格式映射或外部凭据配置。
+采用数据库作为真实数据源，Excel作为用户下载的快照文件。不逐条append修改物理.xlsx，不要求用户配置本地路径，不提供latest.xlsx同步。标准.xlsx标注 `Invoice export — not submitted to an accounting system`；不接入外部记账平台。
 
-- 导出只读取不可变批准快照，不能读取“最新提取字段”替换批准内容。
-- 最小字段：invoice_id、review_revision、supplier_name/address/tax_id、invoice_number、invoice_date、due_date、currency、net/tax/total、discount/shipping（存在时）、approved_at、export_id、mapping_version、approval_method、policy_version。后端用 Decimal 计算，Excel 金额保存为数值单元格并设置币种精度；日期使用统一日期格式，缺失值留空、不改成 0。读取生成文件复核数值与批准快照一致。
-- 文本字段明确写成文本，防止以 =、+、-、@ 开头的外来内容变成公式；发票号、税号保留前导零。不含宏、外部链接或自动执行内容。表头使用英语，冻结首行、设置筛选及合理列宽即可，不增加复杂报表。
-- 同一 invoice_id＋批准 revision＋target 只能有一个逻辑导出记录；相同请求／事件返回原 export_id 与文件。mapping_version 记录在导出包里，不能仅因映射版本变化自动绕过去重再导出。
-- 唯一约束和事务实现并发幂等，不能只做“先查有没有”再插入。下载读取已有文件，不触发再次生成。
-- 文件写入受控 exports 目录，先临时文件再原子替换，记录校验哈希；用户文件名或路径不能控制写入位置。
-- 文件落盘和数据库提交不是同一事务：明确写完文件但状态未提交、状态已提交但文件缺失、进程中断后的恢复路径。重试同一 export_id，通过快照和哈希核对，不生成第二个业务导出。
-- 导出失败不撤销已批准状态；记录 failed/error，用户可以有界重试。导出完成后通知失败也不重建导出包，通知单独重试；发送结果 unknown 先核对 Mailpit，不盲目重发。
+### 7.1 清单与选择
 
-按2026-10-07用户修订，外部记账平台集成从当前计划移除，不作为默认后续步骤。
+- 自动或人工批准后立即进入清单；审批事务保存的不可变快照是唯一字段来源。无需额外模型调用、n8n在线或定时刷新文件，重复批准不重复入列。
+- Web `/exports` 显示发票号、供应商、发票日期、币种、含税总额、批准方式、批准revision及导出状态，可返回审核页查看原件。
+- 支持发票日期起止（含边界）、供应商名称包含匹配、币种，以及“尚未导出／全部已批准”筛选。展示条数与按币种分别汇总的Decimal金额，不跨币种加总。
+- 用户勾选当前预览记录后点击Download Excel；一次最多500条，超过则要求缩小选择，不静默截断。修改筛选后先重新应用，避免旧选择与新条件混淆。
+- 请求传确切event_id集合，服务端重新核验当前批准状态和版本；预览之后新增的批准记录不自动塞进本次文件，下次刷新可见。
+- “已导出”表示已成功生成单票或合并文件，不代表用户已下载、已记账或已付款。failed不标为已导出；completed但文件损坏／丢失时从历史按原编号恢复，不退回新业务导出。
+- “尚未导出”在创建事务内检查；预览后其他批次已导出或占用所选记录则返回409，要求刷新／恢复历史。全部已批准模式允许用户明确将同一批准快照纳入不同集合的汇总文件。
 
-## 8. 建议接口（尚未实现，最终以 OpenAPI 与日志为准）
+### 7.2 文件和持久化
+
+- 每个合并批次保存不可变成员集合与顺序：event_id、invoice_id、批准revision。文件仅读取这些快照，不能读取“最新提取字段”替换批准内容。
+- 最小字段：invoice_id、review_revision、supplier_name/address/tax_id、invoice_number、invoice_date、due_date、currency、net/tax/total、discount/shipping（存在时）、approved_at、export_id、mapping_version、approval_method、policy_version。合并文件每行export_id为同一批次ID。
+- 金额由Decimal计算，写数值单元格并保留币种精度；日期统一格式，缺失值空白不改0。生成后逐行读取复核与批准快照一致，超出Excel可靠数值精度时报错，不静默舍入。
+- 文本强制字符串，防止=、+、-、@开头内容变公式；发票号、税号保留前导零。不含宏、外部链接或自动执行内容。英语表头、冻结首行、筛选和合理列宽。
+- 将排序去重后的event_id集合计算selection_hash并施加数据库唯一约束；相同集合（无论请求顺序、模式或新mapping版本）返回原export_id和文件。不同集合为新的汇总批次；不再使用“一张发票只允许一份文件”的旧主流程约束。
+- 下载GET仅读取、核验已有文件，不生成；显式POST生成／重试。有并发写入时返回409，60秒租期后可恢复，最多5次尝试。
+- 文件写入受控exports/batches目录，临时文件fsync后原子替换，保存哈希；用户文件名或路径不能控制位置。
+- 文件落盘和数据库提交非同一事务：写完文件但未提交时校验并复用孤立文件；已提交但文件缺失／损坏时使用原成员、原ID恢复且核对哈希；进程中断保留writing状态和租期。不能用新批次掩盖失败。
+- 失败不撤销批准，历史显示错误与尝试次数并提供显式重试。后续通知失败只重试通知，不重建Excel；unknown先核对Mailpit，不盲目重发。
+- 保留已有单票exports、文件和兼容接口。审核页改以Open export register为主入口，并保留历史单票下载链接。旧记录无需重导出即可计入已导出筛选。
+
+按2026-10-07用户确认，此流程替代原第7节的逐票文件主流程；外部记账平台集成仍不在计划内。
+
+## 8. 接口契约（实现状态以OpenAPI与交接日志为准）
 
 | 操作 | 建议接口与关键语义 |
 | --- | --- |
@@ -157,10 +175,13 @@ Agent 不参与批准、金额纠错、最终导出决策。人工修改不自�
 | 审核决定 | POST /api/ap/invoices/{invoice_id}/review/decision：approve/reject、expected_revision、request_id、理由 |
 | 事件读取 | GET /api/ap/review-events/{event_id}：当前任务状态、批准快照引用、是否可导出 |
 | 事件投递 | 后端服务＋显式重试入口或命令；不向浏览器暴露凭据 |
-| Excel 导出 | POST /api/ap/exports：event_id；后台核验并返回原有或新 export_id、状态、下载链接 |
-| 导出查询 | GET /api/ap/exports/{export_id} |
-| 文件下载 | GET /api/ap/exports/{export_id}/files/{format}：仅 xlsx |
-| 完成通知 | 独立服务／接口，绑定 export_id 或拒绝决策，复用本地通知机制 |
+| 清单预览 | GET /api/ap/export-register：date_from/date_to/supplier/currency/only_unexported |
+| 合并导出 | POST /api/ap/export-batches：event_ids、only_unexported；核验并冻结成员，返回原有或新export_id |
+| 导出历史／查询 | GET /api/ap/export-batches；GET /api/ap/export-batches/{export_id} |
+| 显式恢复 | POST /api/ap/export-batches/{export_id}/retry；保持原成员与编号 |
+| 文件下载 | GET /api/ap/export-batches/{export_id}/files/xlsx；只读校验 |
+| 历史单票兼容 | POST /api/ap/exports；GET /api/ap/exports/{export_id}及/files/xlsx；不再是页面主入口 |
+| 完成通知 | GET /api/ap/outcomes/{review或batch}/{id}与POST其/notify供02认证调用；本地GET /api/ap/result-notifications/{kind}/{id}，POST其/retry或/check独立恢复 |
 
 接口数量以实际复用为准，不为了这张表增加无用端点。审核接口使用乐观并发；request_id 重用但请求内容不同返回冲突。404／409／422／服务失败语义明确。审批重放返回原决策，即使新 request_id 也不能再造事件。
 
@@ -169,9 +190,9 @@ Agent 不参与批准、金额纠错、最终导出决策。人工修改不自�
 1. **固定基线与迁移。** 保存备份和哈希，设计并记录审核状态、revision、自动批准阈值与门禁及导出幂等键。隔离旧库迁移通过；Phase01 任务／通知外键与原件不丢失。
 2. **审核后端和 Web。** 实现保存、重新校验、版本冲突、批准／拒绝；保留原件和提取初稿。先跑通修改错误字段后批准、拒绝和非法批准阻断。审核过程不新增模型调用。
 3. **自动批准与事件可靠交接。** 实现第5.2节的确定性分流及新01版本：低金额且无异常自动批准，其余转人工；两条分支共用决定事务。 决策和 outbox 同事务，真实向本地 Webhook 投递；模拟 n8n 不可用、响应丢失和接受后失败，显式重试不产生重复决策。
-4. **确定性 Excel 导出服务。** 先实现单批准快照的 .xlsx、下载和幂等；验证并发请求、写文件／落库中断、失败恢复与版本一致性。
+4. **确定性 Excel 导出服务。** 实现数据库清单、筛选、按币种汇总、明确选择的合并.xlsx和历史下载；验证集合幂等、增量可见性、并发、写文件／落库中断、失败恢复与批准版本一致性。
 5. **精简独立画布。** 新文件建议 `n8n_workflows/02_AP_review_export_v1.json`，实例 ID 建议 `APReviewExportV1`。保留01/v7入口，节点英语。导入、发布、凭据绑定和真实执行分别核验；不能以JSON存在宣称闭环完成。
-6. **通知与集中验收。** 本地 Mailpit 收到导出完成通知，链接正确；核对审核事件、唯一导出和通知数量。新样本只需少量，优先使用已有提取缓存和明确标注的模拟输入。
+6. **通知与集中验收。** 本地Mailpit收到对应审核结果／批次文件完成通知，链接正确；批次通知已通过schema 5独立账本关联，核对审核事件、批次、成员、文件和通知数量。新样本只需少量，优先使用已有提取缓存和明确标注的模拟输入。
 7. **收尾。** 保存日志、验证结果、字段映射、导入／运行步骤及交接。默认入口是否切换仅在验收通过后决定；未经用户要求不自动 Git commit／push。
 
 ## 10. 必测场景与验收证据
@@ -179,14 +200,15 @@ Agent 不参与批准、金额纠错、最终导出决策。人工修改不自�
 - 已有待审核记录经迁移仍能打开；旧01任务重放不会重置终态或人工字段。
 - EUR 9,999.99、10,000.00、10,000.01边界：前者在其余条件全部通过时自动批准，后两者必须人工；保存自动／人工决策来源。
 - 低金额但有缺失、金额矛盾、OCR／证据异常、重复候选、无法查重或人工修订的发票均转人工；非EUR不自动换算或批准。
-- 自动批准不产生待人工审核通知；自动与人工分支各真实生成一个可下载的.xlsx，重放均不重复导出。
+- 自动批准不产生待人工审核通知；自动与人工分支均进入清单，可选择两者生成同一份可下载.xlsx；相同集合重放返回原批次。
 - 用全新、无重复的合成样本验证自动分支；现有低金额重复样本应转人工，不能为了演示删除查重记录。
 - 自动决策与人工决策并发仅产生一个终态／事件；重启不自动批准历史pending记录。
+- 日期边界、供应商与币种筛选、全部／尚未导出模式、混合币种分别汇总；预览后新批准不进入旧选择，下次可见。旧单票记录和文件不变并计入已导出。
 - 修改错误字段、重新校验、批准，Excel内容等于批准快照，原稿不变；核对日期、金额类型、前导零、空值和公式注入样本。
 - OCR11人工核对并修正地址，来源为manual；不能伪造原始OCR证据。若其他金额公式仍未支持，批准仍须阻止。
 - 缺失必填项、错误日期／金额、未处理重复候选阻止批准；带理由拒绝后无导出。
 - pending／rejected／旧版本／伪造事件，即使直接调用导出API也不导出。
-- 两个过期页面或并发批准仅一份终态／事件；重复批准和事件重放仅一个逻辑导出包。
+- 两个过期页面或并发批准仅一份终态／事件；重复批准和事件重放不重复入列；同一选择集合的并发下载生成仅一个批次。
 - 审核完成后改变提取结果／来源重放不会更改已批准快照或文件。
 - n8n停止再恢复、事件接收后执行失败、返回响应丢失均可通过原event_id恢复。
 - 导出目录不可写／文件中断／文件丢失可诊断并恢复，同一export_id不产生重复业务记录。
@@ -194,12 +216,12 @@ Agent 不参与批准、金额纠错、最终导出决策。人工修改不自�
 - 重建后端／n8n后审核、事件、文件和通知仍存在，下载哈希一致。
 - Phase01既有69项回归作为基线：状态扩展需要更新旧测试期望时记录理由，不能删除有价值的幂等／限流测试来通过。
 
-每批记录预期与实得：输入发票数、审核决定数、待投递／已处理事件数、成功／失败／跳过数、唯一export_id数、文件数和通知数。分别统计自动批准／人工批准／转人工原因；一个逻辑导出对应一份.xlsx，不混淆邮件吞吐和模型吞吐。
+每批记录预期与实得：输入发票数、审核决定数、待投递／已处理事件数、成功／失败／跳过数、唯一批次export_id数、成员数、文件数和通知数。分别统计自动批准／人工批准／转人工原因；一个逻辑导出对应一份.xlsx，不混淆邮件吞吐和模型吞吐。
 
 交付日志必须分别列出：JSON解析、节点连线、实例导入、发布、凭据绑定、真实执行、Mock部分及未验证部分。单元测试故障注入不冒称实际服务故障；真实Excel导出不冒称第三方记账成功。
 
 ## 11. 停止条件与交接
 
-低金额无异常自动批准→事件→Excel导出，以及高金额／异常转人工→修改／批准→Excel导出，两条闭环都必须真实成功；拒绝／pending不导出、幂等、故障恢复和重启持久化通过，即可结束Phase02。金额自动批准不得留作可选或以后实现；复杂税务／调整公式保持转人工，外部记账平台不在计划内。
+低金额无异常自动批准→导出清单，以及高金额／异常转人工→修改／批准→导出清单，两条分支都必须真实成功，并通过筛选、选择与合并Excel下载闭环；独立02完成对应审核结果通知，不要求审批事件自动生成单票文件；拒绝／pending不导出、幂等、故障恢复和重启持久化通过，即可结束Phase02。金额自动批准不得留作可选或以后实现；复杂税务／调整公式保持转人工，外部记账平台不在计划内。
 
 本指南保存到 `logs&architechture/`；后续开发日志／验证／交接同目录，全部n8n JSON保存在 `n8n_workflows/`。更新 `handoff.md` 指向最新验收。若实际接口／默认审批策略变化，记录新决策与理由，不把建议接口当作既成实现。

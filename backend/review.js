@@ -52,7 +52,11 @@ function resolution(kind, id, title, previous) {
 }
 function render(data) {
   state = data; dirty = false;
-  byId('review-status').textContent = data.status === 'approved' ? 'Approved; export pending' : data.status === 'rejected' ? 'Rejected' : 'Pending review';
+  byId('review-status').textContent = data.status === 'approved' ? 'Approved; in export register' : data.status === 'rejected' ? 'Rejected' : 'Pending review';
+  byId('download-export').hidden = true;
+  byId('export-message').textContent = data.export ? `Export: ${data.export.status} · Attempts: ${data.export.attempts}/5 · ${data.export.last_error || 'No export error'}` : 'Approved invoices are available in the export register for combined download.';
+  if (data.export) loadExport(data.export.export_id);
+  if (data.event) window.showOutcomeNotification('review', data.event.event_id, byId('outcome-notification'));
   byId('version-detail').textContent = `Revision ${data.current_revision} · Analysis ${data.processing_attempt_id} · ${data.analysis_source} · ${data.reviewer}. Modified values and reasons are recorded in revision history.`;
   fields.forEach(input => {
     input.value = data.current_fields[input.dataset.field] ?? '';
@@ -116,6 +120,17 @@ byId('save-review').addEventListener('click', () => save());
 byId('adopt-review').addEventListener('click', () => save(true));
 for (const decision of ['approve', 'reject']) byId(decision + '-review').addEventListener('click', () => {
   if (dirty) return message('Save changes before deciding.');
-  perform(() => api('POST', {...version(), decision, request_id: crypto.randomUUID(), reason: byId('review-reason').value}), decision === 'approve' ? 'Approved; export pending. The decision and snapshot are saved.' : 'Rejected. No export will be created.');
+  perform(() => api('POST', {...version(), decision, request_id: crypto.randomUUID(), reason: byId('review-reason').value}), decision === 'approve' ? 'Approved; added to the export register. The decision and snapshot are saved.' : 'Rejected. No export will be created.');
 });
+async function loadExport(id) {
+  try {
+    const response = await fetch('/api/ap/exports/' + encodeURIComponent(id));
+    if (!response.ok) throw new Error('Could not load export status. Refresh to retry.');
+    const data = await response.json();
+    byId('export-message').textContent = `Export: ${data.status} · File: ${data.file_health} · Attempts: ${data.attempts}/${data.max_attempts} · ${data.last_error || 'No export error'}`;
+    byId('download-export').hidden = !data.download_url;
+    if (data.download_url) byId('download-export').href = data.download_url;
+    if (data.status === 'completed' && !data.download_url) byId('review-status').textContent = 'Approved; export needs recovery';
+  } catch (error) { byId('export-message').textContent = error.message; }
+}
 api('GET').then(data => { render(data); message(data.version_conflict ? 'Analysis changed. Compare the new analysis below, enter a reason, and explicitly accept it. Saved manual values are retained.' : 'Saved review loaded. Compare with the original.'); }).catch(error => message(error.message));

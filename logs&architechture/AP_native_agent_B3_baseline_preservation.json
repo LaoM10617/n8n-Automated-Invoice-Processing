@@ -1,0 +1,110 @@
+{
+  "tables": {
+    "invoices": {
+      "baseline_rows": 24,
+      "unchanged": true,
+      "changed": 0
+    },
+    "receipts": {
+      "baseline_rows": 169,
+      "unchanged": true,
+      "changed": 0
+    },
+    "processing_attempts": {
+      "baseline_rows": 98,
+      "unchanged": true,
+      "changed": 0
+    },
+    "notification_attempts": {
+      "baseline_rows": 10,
+      "unchanged": true,
+      "changed": 0
+    },
+    "email_outcomes": {
+      "baseline_rows": 127,
+      "unchanged": true,
+      "changed": 0
+    },
+    "document_reads": {
+      "baseline_rows": 0,
+      "unchanged": true,
+      "changed": 0
+    },
+    "intake_runs": {
+      "baseline_rows": 66,
+      "unchanged": true,
+      "changed": 0
+    },
+    "intake_stage_events": {
+      "baseline_rows": 290,
+      "unchanged": true,
+      "changed": 0
+    },
+    "review_tasks": {
+      "baseline_rows": 12,
+      "unchanged": true,
+      "changed": 0
+    },
+    "review_revisions": {
+      "baseline_rows": 13,
+      "unchanged": true,
+      "changed": 0
+    },
+    "review_events": {
+      "baseline_rows": 8,
+      "unchanged": true,
+      "changed": 0
+    },
+    "exports": {
+      "baseline_rows": 2,
+      "unchanged": true,
+      "changed": 0
+    },
+    "result_notifications": {
+      "baseline_rows": 0,
+      "unchanged": true,
+      "changed": 0
+    },
+    "result_notification_attempts": {
+      "baseline_rows": 0,
+      "unchanged": true,
+      "changed": 0
+    },
+    "review_requests": {
+      "baseline_rows": 5,
+      "unchanged": true,
+      "changed": 0
+    },
+    "export_batches": {
+      "baseline_rows": 4,
+      "unchanged": true,
+      "changed": 0
+    },
+    "export_batch_items": {
+      "baseline_rows": 8,
+      "unchanged": true,
+      "changed": 0
+    },
+    "outcome_notifications": {
+      "baseline_rows": 12,
+      "unchanged": true,
+      "changed": 0
+    },
+    "outcome_notification_attempts": {
+      "baseline_rows": 14,
+      "unchanged": true,
+      "changed": 0
+    },
+    "model_request_gate": {
+      "baseline_rows": 1,
+      "unchanged": false,
+      "changed": 1
+    },
+    "native_analysis": {
+      "baseline_rows": 0,
+      "unchanged": true,
+      "changed": 0
+    }
+  },
+  "original_and_export_files_unchanged": 30
+}

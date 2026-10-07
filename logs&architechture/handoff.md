@@ -1,4 +1,45 @@
+## Final delivery and rollback — 2026-10-07
+
+See [final delivery index](AP_unified_refactor_final_delivery.md) for layered acceptance, two English demo paths, recovery commands and remaining limits. Native → Stage A → original 01/02 → native receiver rollback passed with every business row and all 34 original/export files unchanged. Five isolated file-recovery/migration tests passed. Current native entry is restored; no new model calls. The final fresh paid end-to-end validation gap remains explicit. Earlier records below are historical.
+
+## Native Agent B3–B4 — 2026-10-07 (current runtime)
+
+Native canvas `J4xPbnTCAgYFVNzJ` is published and is now the recommended local demo entry. Upload: http://127.0.0.1:5678/form/ap-native-intake-b2-v2. Both backend event targets point only to its unique review and Excel receivers. Three real native/Python comparisons matched 39 fields within the user-approved 18-request budget. Review, Excel, local notices, replay and restart checks passed. The third native draft required explicit recovery; final commit wiring was verified with closed real drafts, not an additional fresh paid run. Stage A and old 01/02 remain explicit rollback choices. See [B3–B4 evidence and limits](AP_native_agent_B3_B4_log.md) and [demo/rollback instructions](AP_native_agent_demo_operations.md). All earlier runtime claims below are historical.
+
+## Native Agent B0–B2 implementation — 2026-10-07
+
+The user accepted the gateway cost after the initial B0 stop. A bounded Gemini gateway and B1 contracts are now deployed; 59 isolated regression tests passed. The actual installed n8n Agent sequence also passed a two-turn fake-transport probe. Candidate `J4xPbnTCAgYFVNzJ` has 36 nodes and passed SDK/connection checks. All four AI nodes have correct credential references. With explicit user authorization, both existing credential values were updated from local_key.txt; a live n8n metadata-only probe passed both checks (HTTP 200). The temporary probe is archived and local_key.txt is Git-ignored. Three tool expressions were repaired and verified with the installed expression interpreter. End-to-end candidate execution is pending. It is unpublished; no real provider calls or production native attempts were made. Stage A remains the live entry. See [implementation handoff](AP_native_agent_B0_B2_log.md) and [credential setup](AP_native_agent_credential_setup.md). The older B0 feasibility stop below is historical.
+
+## Unified canvas A3–A4 — 2026-10-07 (current runtime)
+
+The unified workflow `7xXB2pjXOE1EQ2bY` is published and is the recommended demo canvas. Upload: http://127.0.0.1:5678/form/ap-unified-intake-a2-v1. Review and batch events now target its two unique webhooks. A3 passed with labeled cached analyses, real local notifications, combined Excel, replay and restart checks; 44 targeted tests passed. Original 01/02 remain published and unchanged for rollback; do not run the same email batch through both versions. Native Agent migration remains pending. See [A3–A4 handoff](AP_unified_canvas_A3_A4_log.md). Earlier status sections below are historical.
+
+## Unified canvas A0–A2 — 2026-10-07 (unpublished candidate)
+
+A0 baseline and A1 business mapping are complete. Candidate `7xXB2pjXOE1EQ2bY` combines 01/02 on one canvas with the existing Python Agent: 23 execution nodes, 4 notes, 25 connections and 4 groups. Static validation and instance readback passed; no execution or publication. Original 01/02, backend event targets and business data remain unchanged. Before A3, extend the header privacy hook for both candidate event paths. See [A0–A2 log](AP_unified_canvas_A0_A2_log.md) for mapping, evidence, display warning and next steps. The deployed baseline below remains current.
+
+## Phase02 final integration — 2026-10-07 (current)
+
+The recommended intake is `APApprovalIntakeV9` (`/form/ap-approval-intake-v9`), followed by independent `APReviewExportV1`. Both are imported and published in the local instance; existing v7/v8 and historical workflows remain intact. Approval snapshots enter `/exports` immediately. The user selects a combined Excel download; 02 sends local Mailpit approval/rejection and completed-batch notifications without generating a workbook on every approval.
+
+Schema 5 adds a separate outcome notification ledger. Final acceptance, recovery instructions, evidence and precise mock limitations are in `phase02_final_log.md` and `phase02_final_verification.json`. Earlier sections below are historical snapshots where they conflict with this update.
+
 # Handoff — AP invoice test fixtures
+
+
+## 当前：导出清单与合并Excel（2026-10-07，替代原第7节主流程）
+
+用户已确认并实施：批准后自动进入数据库清单，`http://127.0.0.1:8000/exports`筛选／勾选后下载合并.xlsx；不是逐条append物理Excel，也不再由每票审批事件自动生成文件。日期按发票日期（含起止），供应商／币种筛选，按币种汇总；支持全部或未导出、500条上限、固定成员、集合幂等及历史恢复。旧单票文件／接口保留，审核页主入口改为Open export register。
+
+Schema 4已在线备份、隔离重复迁移、部署验证；旧表内容、原件和工作流哈希未变，仅新增1批次2成员。批次79ae549f-bc12-44be-9189-c4130a9f6744包含已有自动／人工批准样本，实际浏览器下载与服务器哈希一致，服务重建和重复请求仍为同一ID／哈希／attempts=1。全量174项通过，最终修复状态专项17项通过（175个不同测试）。无新增模型／决策／邮件／Git提交。
+
+详情及下一步以`phase02_export_register_log.md`、`phase02_export_register_verification.json`和修订后的原Phase02指南为准。**后续02接审批结果／清单可导出通知；合并文件通知应独立绑定batch_id，不能再沿用下面历史交接中的自动逐票Export Excel步骤。** 当前receiver未变，结果通知尚未实现，accepted仍不等于processed或文件下载。
+
+以下按时间保留，属于此前实现快照：
+
+## Phase02 section 7 implemented (2026-10-07)
+
+Snapshot-only Excel creation, verified download and bounded recovery are deployed. The review page has Generate / retry Excel and Download Excel; the backend separately authenticates and checks approval/event/revision before generating. Schema 3 adds export attempts; migration was rehearsed twice on a backed-up database with original rows/FKs preserved. 157 offline tests pass, including real subprocess exit before/after rename, concurrent identity, missing/corrupt file repair, literal formula-like text, currency precision, stale/rejected events and notification-failure independence. Existing automatic/manual synthetic approvals now have exactly two XLSX exports; replays and backend restart preserve IDs, hashes and attempts=1. All other business rows, originals and n8n files remain unchanged. See `phase02_step7_log.md`, `phase02_step7_verification.json`, `phase02_step7_tests.xml` and `phase02_excel_review.png`. No model calls, result notifications, external accounting or Git commit. Next: extend the independent 02 canvas to call the shared Excel service, then result notification/processed confirmation and integrated acceptance. The section-6 receiver is intentionally unchanged; accepted events are not prematurely marked processed.
 
 ## Phase02 section 6 implemented (2026-10-07)
 
@@ -194,3 +235,6 @@ Use the bundled Python at `C:/Users/13020/.cache/codex-runtimes/codex-primary-ru
 ## Next step and delivery semantics
 
 Use these fixtures in the future AP intake/extraction checks. For repeated delivery, reuse the original source identifier AND attachment identifier. An identical PDF with a new source identifier is a new receipt, not proof of repeated delivery. The manifest supplies matching sample upload IDs for 01/03 and a distinct upload ID for 04. Supplier+invoice number is the intended business-duplicate relationship, subject to the eventual backend policy. The normal fixtures still require manual approval under the current project design.
+## Native Agent B0 feasibility — 2026-10-07
+
+Stage A remains the active demo (`7xXB2pjXOE1EQ2bY`, version `fe01bad5-6a5d-46c6-8013-ccf3f846b565`). B0 inspection and an offline installed-client probe found that direct native Gemini lacks the required per-request spacing and exact request budget; the client defaults to six retries. A credential Host supports a proxy, but request-scoped controls and durable partial traces still require implementation. B0 has not passed the migration gate. B1 is a proposed contract only; B2 was not created. No provider calls or runtime changes were made. See [feasibility report](AP_native_agent_B0_feasibility_20261007.md) and [probe evidence](AP_native_agent_B0_verification.json). Discuss the proxy maintenance cost before continuing B1–B2; do not treat this as a completed migration.

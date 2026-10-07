@@ -100,15 +100,19 @@ class ReviewEvents:
         return self.read(event_id)
 
 
+def protect_event(request):
+    expected = os.environ.get('AP_REVIEW_EVENT_TOKEN', '')
+    supplied = request.headers.get('x-ap-event-token', '')
+    if not expected or not hmac.compare_digest(expected.encode(), supplied.encode()):
+        raise HTTPException(403, 'Event credential required.')
+
+
 def register_review_events(app, connect):
     service = ReviewEvents(connect)
 
     @app.get('/api/ap/review-events/{event_id}')
     def read(event_id: str, request: Request):
-        expected = os.environ.get('AP_REVIEW_EVENT_TOKEN', '')
-        supplied = request.headers.get('x-ap-event-token', '')
-        if not expected or not hmac.compare_digest(expected.encode(), supplied.encode()):
-            raise HTTPException(403, 'Event credential required.')
+        protect_event(request)
         return service.read(event_id)
 
     return service

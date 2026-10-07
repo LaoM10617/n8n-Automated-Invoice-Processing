@@ -1,0 +1,72 @@
+{
+  "date": "2026-10-07",
+  "provider_requests": 0,
+  "production_native_attempts": 0,
+  "backend_deployed": true,
+  "tests": {
+    "passed": 59,
+    "new_native_tests": 16,
+    "clock": "simulated; no real-provider wall-clock measurement",
+    "report": "AP_native_agent_B1_tests.xml"
+  },
+  "installed_sequence_probe": {
+    "fake_model_requests": 2,
+    "fake_tool_calls": 1,
+    "non_streaming": true,
+    "system_scope_preserved": true,
+    "nullable_output": true,
+    "n8n_engine_test": false
+  },
+  "candidate": {
+    "id": "J4xPbnTCAgYFVNzJ",
+    "active": false,
+    "nodes": 36,
+    "sdk_valid": true,
+    "connections_read_back": true,
+    "visual_inspected": true,
+    "credentials": "All four nodes bound; both credentials passed live n8n local metadata authentication (HTTP 200)",
+    "real_execution": false,
+    "tool_expression_probe": {
+      "passed": 3,
+      "old_error_reproduced": true
+    }
+  },
+  "stage_a": {
+    "id": "7xXB2pjXOE1EQ2bY",
+    "event_targets_changed": false
+  },
+  "backup": "data/baselines/native-agent-b0-b2-20261007",
+  "limits": [
+    "Google schema/field quality untested",
+    "Full native Agent engine execution not yet verified; metadata authentication verified",
+    "Cancellation without abort is closed at lease access or application restart",
+    "B3/B4 not performed"
+  ],
+  "credential_probe": {
+    "workflow_id": "LwT5i5GzfPXdzXDO",
+    "archived": true,
+    "header_auth_status": 200,
+    "gemini_key_status": 200,
+    "execution_data_retained": false,
+    "evidence": "Live editor: Workflow executed successfully; local metadata HTTP 200",
+    "screenshot": "AP_native_credential_probe_success.jpg",
+    "provider_generation_requests": 0
+  },
+  "credential_probe_history": [
+    {
+      "workflow_id": "z96BqJFhNt4mVjkF",
+      "archived": true,
+      "header_auth_status": 401,
+      "gemini_key_status": 401,
+      "execution_data_retained": false,
+      "evidence": "Live editor and local API access status; generation requests 0"
+    }
+  ],
+  "credential_update": {
+    "authorization": "Explicit user instruction to configure from local_key.txt",
+    "method": "Official n8n CLI; existing credential IDs retained",
+    "key_printed": false,
+    "temporary_import_removed": true,
+    "key_file_gitignored": true
+  }
+}

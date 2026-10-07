@@ -1,0 +1,689 @@
+{
+  "samples": [
+    {
+      "case": "text",
+      "invoice_id": "4ff2e34b-6dff-48d8-901c-e64a800fb9f4",
+      "attempt_id": 99,
+      "raw_extraction": {
+        "fields": {
+          "supplier_name": "Native Demo Supplies Ltd",
+          "supplier_address": "12 Sample Street, Berlin 10115",
+          "supplier_tax_id": "DE123456789",
+          "invoice_number": "NATIVE-B3-20261007-TEXT",
+          "invoice_date": "2026-10-07",
+          "due_date": "2026-10-21",
+          "currency": "EUR",
+          "net_amount": "100.00",
+          "tax_amount": "19.00",
+          "total_amount": "119.00",
+          "discount_amount": null,
+          "shipping_amount": null,
+          "has_adjustments": false
+        },
+        "evidence": [
+          {
+            "field": "supplier_name",
+            "page": 1,
+            "quote": "Native Demo Supplies Ltd"
+          },
+          {
+            "field": "supplier_address",
+            "page": 1,
+            "quote": "12 Sample Street, Berlin 10115"
+          },
+          {
+            "field": "supplier_tax_id",
+            "page": 1,
+            "quote": "DE123456789"
+          },
+          {
+            "field": "invoice_number",
+            "page": 1,
+            "quote": "NATIVE-B3-20261007-TEXT"
+          },
+          {
+            "field": "invoice_date",
+            "page": 1,
+            "quote": "2026-10-07"
+          },
+          {
+            "field": "due_date",
+            "page": 1,
+            "quote": "2026-10-21"
+          },
+          {
+            "field": "currency",
+            "page": 1,
+            "quote": "EUR"
+          },
+          {
+            "field": "net_amount",
+            "page": 1,
+            "quote": "100.00"
+          },
+          {
+            "field": "tax_amount",
+            "page": 1,
+            "quote": "19.00"
+          },
+          {
+            "field": "total_amount",
+            "page": 1,
+            "quote": "119.00"
+          }
+        ],
+        "uncertainties": []
+      },
+      "validated_fields": {
+        "supplier_name": "Native Demo Supplies Ltd",
+        "supplier_address": "12 Sample Street, Berlin 10115",
+        "supplier_tax_id": "DE123456789",
+        "invoice_number": "NATIVE-B3-20261007-TEXT",
+        "invoice_date": "2026-10-07",
+        "due_date": "2026-10-21",
+        "currency": "EUR",
+        "net_amount": "100.00",
+        "tax_amount": "19.00",
+        "total_amount": "119.00",
+        "discount_amount": null,
+        "shipping_amount": null,
+        "has_adjustments": false
+      },
+      "issues": [],
+      "agent_trace": {
+        "agent_version": "n8n-agent-gateway-v1",
+        "status": "completed",
+        "model_calls": [
+          {
+            "index": 1,
+            "status": "completed",
+            "started_at": 1791381062.3885972,
+            "request_sha256": "a667e6d2e86d8b6720563d7d1423166d310e39cdca7df4085ff63c6450eb0f0b",
+            "finished_at": 1791381063.481418,
+            "usage": {
+              "promptTokenCount": 1396,
+              "candidatesTokenCount": 18,
+              "totalTokenCount": 1414,
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 1396
+                }
+              ],
+              "serviceTier": "standard"
+            }
+          },
+          {
+            "index": 2,
+            "status": "completed",
+            "started_at": 1791381122.518108,
+            "request_sha256": "c62f7bbf9cddecb1623c79d81c4d958f2a0a299056bf8b11a5c44bf9b658041c",
+            "finished_at": 1791381124.5446014,
+            "usage": {
+              "promptTokenCount": 6601,
+              "candidatesTokenCount": 460,
+              "totalTokenCount": 7061,
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 6601
+                }
+              ],
+              "serviceTier": "standard"
+            }
+          }
+        ],
+        "tools": [
+          {
+            "tool": "read",
+            "started_at": 1791381063.5572665,
+            "status": "completed",
+            "arguments_sha256": "25e8fc02a92be0d06be057b2c723ccb8f8e8a7dc471a35d253e0b19e07188494",
+            "result_sha256": "6a5dffb467c199ce973f2dc208188922f68e93308089e38c902a3df588f5dd79"
+          }
+        ],
+        "read_pages": [
+          1
+        ]
+      },
+      "review_status_at_check": "approved",
+      "ocr_confidence": [
+        null
+      ],
+      "page_text": [
+        "SYNTHETIC DEMO INVOICE - NOT PAYABLE\nSupplier: Native Demo Supplies Ltd\nAddress: 12 Sample Street, Berlin 10115\nVAT ID: DE123456789\nInvoice number: NATIVE-B3-20261007-TEXT\nInvoice date: 2026-10-07\nDue date: 2026-10-21\nCurrency: EUR\nConsulting services\nNet amount: 100.00\nVAT amount: 19.00\nGrand total: 119.00\nEnd of invoice"
+      ]
+    },
+    {
+      "case": "scan",
+      "invoice_id": "13e7a901-c037-41b0-a84b-b246176848ca",
+      "attempt_id": 100,
+      "raw_extraction": {
+        "fields": {
+          "supplier_name": "Native Demo Supplies Ltd",
+          "supplier_address": "12 Sample Street, Berlin 10115",
+          "supplier_tax_id": "DE123456789",
+          "invoice_number": "NATIVE-B3-20261007-SCAN",
+          "invoice_date": "2026-10-07",
+          "due_date": "2026-10-21",
+          "currency": "EUR",
+          "net_amount": "10000.00",
+          "tax_amount": "1900.00",
+          "total_amount": "11900.00",
+          "discount_amount": null,
+          "shipping_amount": null,
+          "has_adjustments": false
+        },
+        "evidence": [
+          {
+            "field": "supplier_name",
+            "page": 1,
+            "quote": "Native Demo Supplies Ltd"
+          },
+          {
+            "field": "supplier_address",
+            "page": 1,
+            "quote": "12 Sample Street, Berlin 10115"
+          },
+          {
+            "field": "supplier_tax_id",
+            "page": 1,
+            "quote": "DE123456789"
+          },
+          {
+            "field": "invoice_number",
+            "page": 1,
+            "quote": "NATIVE-B3-20261007-SCAN"
+          },
+          {
+            "field": "invoice_date",
+            "page": 1,
+            "quote": "2026-10-07"
+          },
+          {
+            "field": "due_date",
+            "page": 1,
+            "quote": "2026-10-21"
+          },
+          {
+            "field": "currency",
+            "page": 1,
+            "quote": "EUR"
+          },
+          {
+            "field": "net_amount",
+            "page": 1,
+            "quote": "10000.00"
+          },
+          {
+            "field": "tax_amount",
+            "page": 1,
+            "quote": "1900.00"
+          },
+          {
+            "field": "total_amount",
+            "page": 1,
+            "quote": "11900.00"
+          }
+        ],
+        "uncertainties": []
+      },
+      "validated_fields": {
+        "supplier_name": "Native Demo Supplies Ltd",
+        "supplier_address": "12 Sample Street, Berlin 10115",
+        "supplier_tax_id": "DE123456789",
+        "invoice_number": "NATIVE-B3-20261007-SCAN",
+        "invoice_date": "2026-10-07",
+        "due_date": "2026-10-21",
+        "currency": "EUR",
+        "net_amount": "10000.00",
+        "tax_amount": "1900.00",
+        "total_amount": "11900.00",
+        "discount_amount": null,
+        "shipping_amount": null,
+        "has_adjustments": false
+      },
+      "issues": [],
+      "agent_trace": {
+        "agent_version": "n8n-agent-gateway-v1",
+        "status": "completed",
+        "model_calls": [
+          {
+            "index": 1,
+            "status": "completed",
+            "started_at": 1791381260.4990976,
+            "request_sha256": "a667e6d2e86d8b6720563d7d1423166d310e39cdca7df4085ff63c6450eb0f0b",
+            "finished_at": 1791381261.9975212,
+            "usage": {
+              "promptTokenCount": 1396,
+              "candidatesTokenCount": 18,
+              "totalTokenCount": 1414,
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 1396
+                }
+              ],
+              "serviceTier": "standard"
+            }
+          },
+          {
+            "index": 2,
+            "status": "completed",
+            "started_at": 1791381320.6143842,
+            "request_sha256": "4c43621035ad69e556f7c76757b60096d45ffe600473241dda9411c550a4839d",
+            "finished_at": 1791381322.9691312,
+            "usage": {
+              "promptTokenCount": 6195,
+              "candidatesTokenCount": 632,
+              "totalTokenCount": 6827,
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 6195
+                }
+              ],
+              "serviceTier": "standard"
+            }
+          }
+        ],
+        "tools": [
+          {
+            "tool": "read",
+            "started_at": 1791381262.0884674,
+            "status": "completed",
+            "arguments_sha256": "25e8fc02a92be0d06be057b2c723ccb8f8e8a7dc471a35d253e0b19e07188494",
+            "result_sha256": "d3a7f2c2a6fc9c9ae74a4e1b05952e5e67049451ab0f473653c69784834637fe"
+          }
+        ],
+        "read_pages": [
+          1
+        ]
+      },
+      "review_status_at_check": "pending",
+      "ocr_confidence": [
+        95.11
+      ],
+      "page_text": [
+        "SYNTHETIC DEMO INVOICE - NOT PAYABLE\n\nSupplier: Native Demo Supplies Ltd\n\nAddress: 12 Sample Street, Berlin 10115\n\nVAT ID: DE123456789\n\nInvoice number: NATIVE-B3-20261007-SCAN\n\nInvoice date: 2026-10-07\n\nDue date: 2026-10-21\n\nCurrency: EUR\n\nConsulting services\n\nNet amount: 10000.00\n\nVAT amount: 1900.00\n\nGrand total: 11900.00\n\nEnd of invoice"
+      ]
+    },
+    {
+      "case": "missing",
+      "invoice_id": "0a40d391-8fd0-4193-9081-851d595e4a3a",
+      "attempt_id": 103,
+      "raw_extraction": {
+        "fields": {
+          "supplier_name": "Native Demo Supplies Ltd",
+          "supplier_address": "12 Sample Street, Berlin 10115",
+          "supplier_tax_id": "DE123456789",
+          "invoice_number": "NATIVE-B3-20261007-MISSING",
+          "invoice_date": "2026-10-07",
+          "due_date": null,
+          "currency": "EUR",
+          "net_amount": "200.00",
+          "tax_amount": "38.00",
+          "total_amount": "238.00",
+          "discount_amount": null,
+          "shipping_amount": null,
+          "has_adjustments": false
+        },
+        "evidence": [
+          {
+            "field": "supplier_name",
+            "page": 1,
+            "quote": "Native Demo Supplies Ltd"
+          },
+          {
+            "field": "supplier_address",
+            "page": 1,
+            "quote": "12 Sample Street, Berlin 10115"
+          },
+          {
+            "field": "supplier_tax_id",
+            "page": 1,
+            "quote": "DE123456789"
+          },
+          {
+            "field": "invoice_number",
+            "page": 1,
+            "quote": "NATIVE-B3-20261007-MISSING"
+          },
+          {
+            "field": "invoice_date",
+            "page": 1,
+            "quote": "2026-10-07"
+          },
+          {
+            "field": "currency",
+            "page": 1,
+            "quote": "EUR"
+          },
+          {
+            "field": "net_amount",
+            "page": 1,
+            "quote": "200.00"
+          },
+          {
+            "field": "tax_amount",
+            "page": 1,
+            "quote": "38.00"
+          },
+          {
+            "field": "total_amount",
+            "page": 1,
+            "quote": "238.00"
+          }
+        ],
+        "uncertainties": []
+      },
+      "validated_fields": {
+        "supplier_name": "Native Demo Supplies Ltd",
+        "supplier_address": "12 Sample Street, Berlin 10115",
+        "supplier_tax_id": "DE123456789",
+        "invoice_number": "NATIVE-B3-20261007-MISSING",
+        "invoice_date": "2026-10-07",
+        "due_date": null,
+        "currency": "EUR",
+        "net_amount": "200.00",
+        "tax_amount": "38.00",
+        "total_amount": "238.00",
+        "discount_amount": null,
+        "shipping_amount": null,
+        "has_adjustments": false
+      },
+      "issues": [
+        {
+          "code": "MISSING_FIELD",
+          "field": "due_date",
+          "message": "due_date is not available from the document."
+        }
+      ],
+      "agent_trace": {
+        "agent_version": "n8n-agent-gateway-v1",
+        "status": "completed",
+        "model_calls": [
+          {
+            "index": 1,
+            "status": "completed",
+            "started_at": 1791382565.9551573,
+            "request_sha256": "a667e6d2e86d8b6720563d7d1423166d310e39cdca7df4085ff63c6450eb0f0b",
+            "finished_at": 1791382566.8799944,
+            "usage": {
+              "promptTokenCount": 1396,
+              "candidatesTokenCount": 18,
+              "totalTokenCount": 1414,
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 1396
+                }
+              ],
+              "serviceTier": "standard"
+            }
+          },
+          {
+            "index": 2,
+            "status": "completed",
+            "started_at": 1791382626.1198714,
+            "request_sha256": "6a6119d09c47df0a89197a70107471f495d6c3fc5034df937f408ad16e7386fe",
+            "finished_at": 1791382628.4340813,
+            "usage": {
+              "promptTokenCount": 6241,
+              "candidatesTokenCount": 571,
+              "totalTokenCount": 6812,
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 6241
+                }
+              ],
+              "serviceTier": "standard"
+            }
+          }
+        ],
+        "tools": [
+          {
+            "tool": "read",
+            "started_at": 1791382566.9841146,
+            "status": "completed",
+            "arguments_sha256": "25e8fc02a92be0d06be057b2c723ccb8f8e8a7dc471a35d253e0b19e07188494",
+            "result_sha256": "31d2cc1cb483eefccf3b5454443c5eec847ce469324764211935b13063929b95"
+          }
+        ],
+        "read_pages": [
+          1
+        ]
+      },
+      "review_status_at_check": "pending",
+      "ocr_confidence": [
+        null
+      ],
+      "page_text": [
+        "SYNTHETIC DEMO INVOICE - NOT PAYABLE\nSupplier: Native Demo Supplies Ltd\nAddress: 12 Sample Street, Berlin 10115\nVAT ID: DE123456789\nInvoice number: NATIVE-B3-20261007-MISSING\nInvoice date: 2026-10-07\nCurrency: EUR\nConsulting services\nNet amount: 200.00\nVAT amount: 38.00\nGrand total: 238.00\nEnd of invoice"
+      ]
+    }
+  ],
+  "failed_attempts_preserved": [
+    {
+      "attempt_id": 101,
+      "error_code": "NATIVE_EXECUTION_ABORTED",
+      "agent_trace": {
+        "agent_version": "n8n-agent-gateway-v1",
+        "status": "failed",
+        "model_calls": [
+          {
+            "index": 1,
+            "status": "completed",
+            "started_at": 1791381380.721278,
+            "request_sha256": "a667e6d2e86d8b6720563d7d1423166d310e39cdca7df4085ff63c6450eb0f0b",
+            "finished_at": 1791381381.8130114,
+            "usage": {
+              "promptTokenCount": 1396,
+              "candidatesTokenCount": 18,
+              "totalTokenCount": 1414,
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 1396
+                }
+              ],
+              "serviceTier": "standard"
+            }
+          },
+          {
+            "index": 2,
+            "status": "completed",
+            "started_at": 1791381440.81367,
+            "request_sha256": "ea8f631df9fbf93b87d209063be8d767f850e2f7fe35f339b036edc3691ef1b7",
+            "finished_at": 1791381443.3649142,
+            "usage": {
+              "promptTokenCount": 1447,
+              "candidatesTokenCount": 18,
+              "totalTokenCount": 1465,
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 1447
+                }
+              ],
+              "serviceTier": "standard"
+            }
+          },
+          {
+            "index": 3,
+            "status": "completed",
+            "started_at": 1791381500.9358432,
+            "request_sha256": "56bc91c43d0d69f47989330cba01c9c6e2eb392e4afe048796293ad919dd379a",
+            "finished_at": 1791381501.972466,
+            "usage": {
+              "promptTokenCount": 1498,
+              "candidatesTokenCount": 18,
+              "totalTokenCount": 1516,
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 1498
+                }
+              ],
+              "serviceTier": "standard"
+            }
+          }
+        ],
+        "tools": [],
+        "read_pages": [],
+        "error_code": "NATIVE_EXECUTION_ABORTED"
+      }
+    },
+    {
+      "attempt_id": 102,
+      "error_code": "NATIVE_EXECUTION_ABORTED",
+      "agent_trace": {
+        "agent_version": "n8n-agent-gateway-v1",
+        "status": "failed",
+        "model_calls": [
+          {
+            "index": 1,
+            "status": "completed",
+            "started_at": 1791381675.5329406,
+            "request_sha256": "a667e6d2e86d8b6720563d7d1423166d310e39cdca7df4085ff63c6450eb0f0b",
+            "finished_at": 1791381683.8567514,
+            "usage": {
+              "promptTokenCount": 1396,
+              "candidatesTokenCount": 18,
+              "totalTokenCount": 1414,
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 1396
+                }
+              ],
+              "serviceTier": "standard"
+            }
+          },
+          {
+            "index": 2,
+            "status": "completed",
+            "started_at": 1791381735.6639209,
+            "request_sha256": "ef755cdc0e4d16fca3ad3db3ba495b081963f00a941dd6fbefe317fad8ef0c12",
+            "finished_at": 1791381749.1056705,
+            "usage": {
+              "promptTokenCount": 1448,
+              "candidatesTokenCount": 18,
+              "totalTokenCount": 1466,
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 1448
+                }
+              ],
+              "serviceTier": "standard"
+            }
+          },
+          {
+            "index": 3,
+            "status": "completed",
+            "started_at": 1791381795.7443507,
+            "request_sha256": "18210ee75565025697431fb295e627c372fd30bfe7189c878b6265a738fdf4f3",
+            "finished_at": 1791381797.2689698,
+            "usage": {
+              "promptTokenCount": 1500,
+              "candidatesTokenCount": 18,
+              "totalTokenCount": 1518,
+              "promptTokensDetails": [
+                {
+                  "modality": "TEXT",
+                  "tokenCount": 1500
+                }
+              ],
+              "serviceTier": "standard"
+            }
+          }
+        ],
+        "tools": [],
+        "read_pages": [],
+        "error_code": "NATIVE_EXECUTION_ABORTED"
+      }
+    }
+  ],
+  "native_model_requests": 12,
+  "request_gaps_seconds": [
+    60.12951064109802,
+    137.98098969459534,
+    60.11528658866882,
+    60.10689377784729,
+    60.09239196777344,
+    60.12217330932617,
+    174.5970973968506,
+    60.130980253219604,
+    60.080429792404175,
+    770.2108066082001,
+    60.164714097976685
+  ],
+  "all_39_fields_match": true,
+  "evidence_grounding_passed": true,
+  "outcomes": [
+    {
+      "source_id": "native-b3-text-20261007",
+      "attachment_id": "attachment_0",
+      "status": "decision_ready",
+      "invoice_id": "4ff2e34b-6dff-48d8-901c-e64a800fb9f4"
+    },
+    {
+      "source_id": "native-b3-multi-20261007",
+      "attachment_id": "attachment_0",
+      "status": "review_ready",
+      "invoice_id": "13e7a901-c037-41b0-a84b-b246176848ca"
+    },
+    {
+      "source_id": "native-b3-multi-20261007",
+      "attachment_id": "attachment_1",
+      "status": "intake_failed",
+      "invoice_id": null
+    },
+    {
+      "source_id": "native-b3-multi-20261007",
+      "attachment_id": "attachment_2",
+      "status": "processing_failed",
+      "invoice_id": "0a40d391-8fd0-4193-9081-851d595e4a3a"
+    },
+    {
+      "source_id": "native-b3-multi-fixed-20261007",
+      "attachment_id": "attachment_0",
+      "status": "review_ready",
+      "invoice_id": "13e7a901-c037-41b0-a84b-b246176848ca"
+    },
+    {
+      "source_id": "native-b3-multi-fixed-20261007",
+      "attachment_id": "attachment_1",
+      "status": "intake_failed",
+      "invoice_id": null
+    },
+    {
+      "source_id": "native-b3-multi-fixed-20261007",
+      "attachment_id": "attachment_2",
+      "status": "processing_failed",
+      "invoice_id": "0a40d391-8fd0-4193-9081-851d595e4a3a"
+    },
+    {
+      "source_id": "native-b3-context-20261007",
+      "attachment_id": "attachment_0",
+      "status": "review_ready",
+      "invoice_id": "13e7a901-c037-41b0-a84b-b246176848ca"
+    },
+    {
+      "source_id": "native-b3-context-20261007",
+      "attachment_id": "attachment_1",
+      "status": "intake_failed",
+      "invoice_id": null
+    },
+    {
+      "source_id": "native-b3-context-20261007",
+      "attachment_id": "attachment_2",
+      "status": "review_ready",
+      "invoice_id": "0a40d391-8fd0-4193-9081-851d595e4a3a"
+    }
+  ],
+  "fault_tests": "30 passed plus 1 real subprocess interruption test; simulated provider faults",
+  "historical_ocr11": "Not rerun; historical address grounding limitation is not claimed resolved."
+}

@@ -1,3 +1,29 @@
+## Final delivery and rollback — 2026-10-07
+
+See [final delivery index](AP_unified_refactor_final_delivery.md) for layered acceptance, two English demo paths, recovery commands and remaining limits. Native → Stage A → original 01/02 → native receiver rollback passed with every business row and all 34 original/export files unchanged. Five isolated file-recovery/migration tests passed. Current native entry is restored; no new model calls. The final fresh paid end-to-end validation gap remains explicit. Earlier records below are historical.
+
+## Native Agent B3–B4 — 2026-10-07 (current runtime)
+
+Native canvas `J4xPbnTCAgYFVNzJ` is published and is now the recommended local demo entry. Upload: http://127.0.0.1:5678/form/ap-native-intake-b2-v2. Both backend event targets point only to its unique review and Excel receivers. Three real native/Python comparisons matched 39 fields within the user-approved 18-request budget. Review, Excel, local notices, replay and restart checks passed. The third native draft required explicit recovery; final commit wiring was verified with closed real drafts, not an additional fresh paid run. Stage A and old 01/02 remain explicit rollback choices. See [B3–B4 evidence and limits](AP_native_agent_B3_B4_log.md) and [demo/rollback instructions](AP_native_agent_demo_operations.md). All earlier runtime claims below are historical.
+
+## Unified canvas A3–A4 — 2026-10-07 (current runtime)
+
+The unified workflow `7xXB2pjXOE1EQ2bY` is published and is the recommended demo canvas. Upload: http://127.0.0.1:5678/form/ap-unified-intake-a2-v1. Review and batch events now target its two unique webhooks. A3 passed with labeled cached analyses, real local notifications, combined Excel, replay and restart checks; 44 targeted tests passed. Original 01/02 remain published and unchanged for rollback; do not run the same email batch through both versions. Native Agent migration remains pending. See [A3–A4 handoff](AP_unified_canvas_A3_A4_log.md). Earlier status sections below are historical.
+
+## Unified canvas A0–A2 — 2026-10-07 (unpublished candidate)
+
+A0 baseline and A1 business mapping are complete. Candidate `7xXB2pjXOE1EQ2bY` combines 01/02 on one canvas with the existing Python Agent: 23 execution nodes, 4 notes, 25 connections and 4 groups. Static validation and instance readback passed; no execution or publication. Original 01/02, backend event targets and business data remain unchanged. Before A3, extend the header privacy hook for both candidate event paths. See [A0–A2 log](AP_unified_canvas_A0_A2_log.md) for mapping, evidence, display warning and next steps. The deployed baseline below remains current.
+
+## Planned refactor — 2026-10-07
+
+User-approved direction: combine 01 and 02 into one readable business canvas with independent event entries, then migrate analysis from the Python Agent to a real n8n AI Agent. Durable backend state, deterministic approval, user-selected combined Excel exports and notification recovery remain required. See AP_unified_canvas_native_agent_implementation_guide_zh.md for stages, acceptance and rollback. A0–A2 now has an unpublished candidate; runtime migration and native Agent migration remain pending. Phase03 remains deferred.
+
+## Phase02 final integration — 2026-10-07 (current deployed baseline)
+
+The recommended intake is `APApprovalIntakeV9` (`/form/ap-approval-intake-v9`), followed by independent `APReviewExportV1`. Both are imported and published in the local instance; existing v7/v8 and historical workflows remain intact. Approval snapshots enter `/exports` immediately. The user selects a combined Excel download; 02 sends local Mailpit approval/rejection and completed-batch notifications without generating a workbook on every approval.
+
+Schema 5 adds a separate outcome notification ledger. Final acceptance, recovery instructions, evidence and precise mock limitations are in `phase02_final_log.md` and `phase02_final_verification.json`. Earlier sections below are historical snapshots where they conflict with this update.
+
 Current update (2026-10-06): Phase01 analysis now uses a real Python LangChain Agent through APAgentIntakeV7. OCR, evidence grounding, amount rules and state changes stay deterministic. v5/v6 files are historical; see phase01_refactor_log.md and phase01_agent_verification.json for runtime evidence and quality limits.
 
 Current implementation update (2026-10-06): Phase 01 steps 6–8 are verified. Upload v4 and manual readonly Gmail intake share the backend, attachment child and persistent Mailpit notification status. Five real external test emails, local representative/100-message cached batches, replay and container persistence passed. Review remains pending/read-only. See log_2026-10-06_step06_08_acceptance.md; older unimplemented statements below are historical.

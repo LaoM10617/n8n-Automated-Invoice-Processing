@@ -10,6 +10,7 @@ import urllib.request
 from pydantic import BaseModel, ConfigDict, ValidationError
 
 from backend.document_text import ProcessingError
+from backend.model_gate import current_gate
 
 
 _request_lock = threading.Lock()
@@ -20,6 +21,8 @@ def reserve_model_request():
     """Fail fast rather than queue or automatically retry paid model calls."""
     global _next_request_at
     interval = max(60.1, float(os.environ.get('AP_LLM_MIN_INTERVAL_SECONDS', '60')))
+    if current_gate.get() is not None:
+        return current_gate.get().reserve(interval)
     with _request_lock:
         now = time.monotonic()
         if now < _next_request_at:
@@ -29,6 +32,8 @@ def reserve_model_request():
 
 def wait_for_model_cooldown():
     """Compact synchronous stages wait locally, never retry a provider request."""
+    if current_gate.get() is not None:
+        return current_gate.get().wait()
     with _request_lock:
         remaining = max(0, _next_request_at - time.monotonic())
     if remaining > 65:

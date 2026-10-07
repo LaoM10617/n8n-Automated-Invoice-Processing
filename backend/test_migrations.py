@@ -37,7 +37,7 @@ def snapshot(db):
 
 def test_preserves_legacy_rows_foreign_keys_and_repeat(legacy):
     before = legacy.execute('SELECT * FROM review_tasks').fetchall()
-    assert migrate(legacy) == 2
+    assert migrate(legacy) == 5
     assert legacy.execute('SELECT review_id,invoice_id,status,created_attempt_id,created_at FROM review_tasks').fetchall() == before
     assert legacy.execute('SELECT current_revision,extraction_attempt_id FROM review_tasks').fetchone() == (0, 1)
     assert legacy.execute('SELECT * FROM notification_attempts').fetchall() == [('notification', 'review')]

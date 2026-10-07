@@ -1,0 +1,536 @@
+{
+  "fixture_source": "synthetic_saved_analysis_no_model",
+  "records": [
+    {
+      "case": "auto",
+      "invoice_id": "81a9bcfc-ff58-43fe-90ef-8ec128962694",
+      "attempt_id": 96,
+      "source_id": "unified-a3-auto",
+      "stored_name": "81a9bcfc-ff58-43fe-90ef-8ec128962694.pdf",
+      "is_mock_analysis": true
+    },
+    {
+      "case": "manual",
+      "invoice_id": "6870f4df-b874-4786-af20-82590ca9e409",
+      "attempt_id": 97,
+      "source_id": "unified-a3-manual",
+      "stored_name": "6870f4df-b874-4786-af20-82590ca9e409.pdf",
+      "is_mock_analysis": true
+    },
+    {
+      "case": "reject",
+      "invoice_id": "0d06e690-7cfd-4741-917e-33ecee70bcdc",
+      "attempt_id": 98,
+      "source_id": "unified-a3-reject",
+      "stored_name": "0d06e690-7cfd-4741-917e-33ecee70bcdc.pdf",
+      "is_mock_analysis": true
+    }
+  ],
+  "uploads": {
+    "auto": {
+      "contract_version": "ap-stage-v1",
+      "run_id": "d59bbfa7-136b-4c3f-ad7b-aefdcf59860b",
+      "source": {
+        "source_type": "upload",
+        "source_namespace": "n8n-ap-upload-v1",
+        "source_id": "unified-a3-auto",
+        "attachment_id": "0",
+        "batch_id": null,
+        "case_id": null
+      },
+      "stage": "validate",
+      "outcome": "decision_ready",
+      "receipt_id": "352657c2-4143-4524-bbcb-8a25c6be12de",
+      "invoice_id": "81a9bcfc-ff58-43fe-90ef-8ec128962694",
+      "analysis_run_id": 96,
+      "review_id": "928c778f-19fe-44d0-a697-282d09349a76",
+      "review_url": "http://127.0.0.1:8000/reviews/81a9bcfc-ff58-43fe-90ef-8ec128962694",
+      "issue_codes": [],
+      "error_code": null,
+      "retryable": false,
+      "notification_status": "not_started",
+      "extractor": "python_langchain_agent",
+      "analysis_cached": true,
+      "analysis_source": "synthetic_saved_analysis_no_model",
+      "review_status": "approved",
+      "approval_method": "automatic",
+      "event_id": "b8288784-b667-414a-a4e9-ff850726e9fc",
+      "event_delivery_status": "processed",
+      "event_delivery_error": null,
+      "formSubmittedText": "Decision: approved. Export register: http://127.0.0.1:8000/exports. Outcome delivery: processed"
+    },
+    "manual": {
+      "contract_version": "ap-stage-v1",
+      "run_id": "0646d53e-59f9-4ab8-8ff1-2b97b3eb5957",
+      "source": {
+        "source_type": "upload",
+        "source_namespace": "n8n-ap-upload-v1",
+        "source_id": "unified-a3-manual",
+        "attachment_id": "0",
+        "batch_id": null,
+        "case_id": null
+      },
+      "stage": "validate",
+      "outcome": "decision_ready",
+      "receipt_id": "5eb94a69-ea6d-4ce1-a3da-66d6142a6a27",
+      "invoice_id": "6870f4df-b874-4786-af20-82590ca9e409",
+      "analysis_run_id": 97,
+      "review_id": "3b09b93a-3ab4-4940-a065-14129b55b5c1",
+      "review_url": "http://127.0.0.1:8000/reviews/6870f4df-b874-4786-af20-82590ca9e409",
+      "issue_codes": [
+        "UNSUPPORTED_EXTRACTION"
+      ],
+      "error_code": null,
+      "retryable": false,
+      "notification_status": "not_started",
+      "extractor": "python_langchain_agent",
+      "analysis_cached": true,
+      "analysis_source": "synthetic_saved_analysis_no_model",
+      "review_status": "approved",
+      "approval_method": "manual",
+      "event_id": "00c5bd81-bbd5-4f3c-9343-5cf9bac364d9",
+      "event_delivery_status": "processed",
+      "event_delivery_error": null,
+      "formSubmittedText": "Decision: approved. Export register: http://127.0.0.1:8000/exports. Outcome delivery: processed"
+    },
+    "reject": {
+      "contract_version": "ap-stage-v1",
+      "run_id": "0570549c-805f-41b4-8521-acbd7f4f6c54",
+      "source": {
+        "source_type": "upload",
+        "source_namespace": "n8n-ap-upload-v1",
+        "source_id": "unified-a3-reject",
+        "attachment_id": "0",
+        "batch_id": null,
+        "case_id": null
+      },
+      "stage": "validate",
+      "outcome": "decision_ready",
+      "receipt_id": "71913996-ecce-4a50-8437-850da19ee62a",
+      "invoice_id": "0d06e690-7cfd-4741-917e-33ecee70bcdc",
+      "analysis_run_id": 98,
+      "review_id": "30a9a65d-be8f-4716-949a-e71db599a512",
+      "review_url": "http://127.0.0.1:8000/reviews/0d06e690-7cfd-4741-917e-33ecee70bcdc",
+      "issue_codes": [
+        "TOTAL_MISMATCH"
+      ],
+      "error_code": null,
+      "retryable": false,
+      "notification_status": "not_started",
+      "extractor": "python_langchain_agent",
+      "analysis_cached": true,
+      "analysis_source": "synthetic_saved_analysis_no_model",
+      "review_status": "rejected",
+      "approval_method": "manual",
+      "event_id": "c20009bc-01a1-485d-9623-806a328a3dcd",
+      "event_delivery_status": "processed",
+      "event_delivery_error": null,
+      "formSubmittedText": "Decision: rejected. Export register: http://127.0.0.1:8000/exports. Outcome delivery: processed"
+    }
+  },
+  "decisions": {
+    "manual": {
+      "status": "approved",
+      "current_revision": 2,
+      "processing_attempt_id": 97,
+      "approval_method": "manual",
+      "event": {
+        "event_id": "00c5bd81-bbd5-4f3c-9343-5cf9bac364d9",
+        "event_type": "approved",
+        "status": "processed",
+        "attempts": 1,
+        "last_error": null,
+        "last_attempt_at": "2026-10-07T12:20:22.248231+00:00",
+        "accepted_at": "2026-10-07T12:20:22.248231+00:00",
+        "processed_at": "2026-10-07T12:20:22.538827+00:00"
+      }
+    },
+    "reject": {
+      "status": "rejected",
+      "current_revision": 2,
+      "processing_attempt_id": 98,
+      "approval_method": "manual",
+      "event": {
+        "event_id": "c20009bc-01a1-485d-9623-806a328a3dcd",
+        "event_type": "rejected",
+        "status": "pending",
+        "attempts": 0,
+        "last_error": null,
+        "last_attempt_at": null,
+        "accepted_at": null,
+        "processed_at": null
+      }
+    }
+  },
+  "smtp_failure": {
+    "notification_id": "3e8bdb16-4280-4bef-9871-761d1f14bcf9",
+    "event_id": "c20009bc-01a1-485d-9623-806a328a3dcd",
+    "export_id": null,
+    "category": "review_rejected",
+    "status": "failed",
+    "attempts": 1,
+    "message_id": "<ap-3e8bdb16-4280-4bef-9871-761d1f14bcf9-1@example.invalid>",
+    "last_error": "SMTP_CONNECTION_FAILED",
+    "delivery_status": "pending",
+    "delivery_attempts": 0,
+    "delivery_at": null,
+    "delivery_error": null,
+    "created_at": "2026-10-07T12:20:39.105Z",
+    "updated_at": "2026-10-07T12:20:43.348734+00:00",
+    "kind": "review",
+    "id": "c20009bc-01a1-485d-9623-806a328a3dcd",
+    "max_attempts": 5
+  },
+  "batch": {
+    "export_id": "66dc78c7-dd03-4e2f-a211-a38c8f210426",
+    "selection_hash": "809cc2be8ae9c200fd3313330ad3831f58651ac5327724b57542e9c07355154f",
+    "mapping_version": "invoice-excel-v1",
+    "only_unexported": 0,
+    "status": "completed",
+    "attempts": 1,
+    "file_path": "exports/batches/66dc78c7-dd03-4e2f-a211-a38c8f210426.xlsx",
+    "file_sha256": "6bdb2616ca49dec757a7a632805d3f7a43974731b8ee5c491c7e640a352be42d",
+    "last_error": null,
+    "created_at": "2026-10-07T12:21:54.706Z",
+    "updated_at": "2026-10-07T12:21:54.900819+00:00",
+    "max_attempts": 5,
+    "download_url": "/api/ap/export-batches/66dc78c7-dd03-4e2f-a211-a38c8f210426/files/xlsx",
+    "file_health": "verified",
+    "row_count": 2,
+    "members": [
+      {
+        "invoice_id": "6870f4df-b874-4786-af20-82590ca9e409",
+        "review_revision": 2
+      },
+      {
+        "invoice_id": "81a9bcfc-ff58-43fe-90ef-8ec128962694",
+        "review_revision": 1
+      }
+    ]
+  },
+  "live_backend_mixed_attachments": [
+    {
+      "run_id": "3af73df6-18d3-4786-a077-7409c018e4e8",
+      "source": {
+        "source_type": "email",
+        "source_namespace": "unified-a3-synthetic-email",
+        "source_id": "one-message",
+        "attachment_id": "good",
+        "batch_id": "unified-a3-mixed",
+        "case_id": "mixed"
+      },
+      "outcome": "decision_ready",
+      "error_code": null,
+      "receipt_id": "f1f42ec1-8988-4ec9-98cd-d99d5a0184c2",
+      "invoice_id": "81a9bcfc-ff58-43fe-90ef-8ec128962694"
+    },
+    {
+      "run_id": "f3299bc0-4a54-4851-a133-f8d7d3dc64aa",
+      "source": {
+        "source_type": "email",
+        "source_namespace": "unified-a3-synthetic-email",
+        "source_id": "one-message",
+        "attachment_id": "broken",
+        "batch_id": "unified-a3-mixed",
+        "case_id": "mixed"
+      },
+      "outcome": "failed",
+      "error_code": "HTTP_422",
+      "receipt_id": null,
+      "invoice_id": null
+    },
+    {
+      "run_id": "5ebd9414-105c-44b9-b0b0-34ab9f93e1fd",
+      "source": {
+        "source_type": "email",
+        "source_namespace": "unified-a3-synthetic-email",
+        "source_id": "one-message",
+        "attachment_id": "unsupported",
+        "batch_id": "unified-a3-mixed",
+        "case_id": "mixed"
+      },
+      "outcome": "skipped",
+      "error_code": "UNSUPPORTED_ATTACHMENT",
+      "receipt_id": null,
+      "invoice_id": null
+    },
+    {
+      "run_id": "2f0b7d28-54f8-4a35-98da-e3f339484aea",
+      "source": {
+        "source_type": "email",
+        "source_namespace": "unified-a3-synthetic-email",
+        "source_id": "one-message",
+        "attachment_id": "after-error",
+        "batch_id": "unified-a3-mixed",
+        "case_id": "mixed"
+      },
+      "outcome": "decision_ready",
+      "error_code": null,
+      "receipt_id": "5074e830-86bf-4fbb-9bcf-8c76b614260e",
+      "invoice_id": "81a9bcfc-ff58-43fe-90ef-8ec128962694"
+    }
+  ],
+  "live_form_invalid_files": [
+    {
+      "run_id": "7d7f6fa8-43ad-45ea-99e5-590ec9097cec",
+      "outcome": "failed",
+      "error_code": "HTTP_422",
+      "formSubmittedText": "Result: failed. HTTP_422"
+    },
+    {
+      "run_id": "05814eeb-46f8-460e-b937-f7e267e6236f",
+      "outcome": "skipped",
+      "error_code": "UNSUPPORTED_ATTACHMENT",
+      "formSubmittedText": "Result: skipped. UNSUPPORTED_ATTACHMENT"
+    }
+  ],
+  "durable_snapshot": {
+    "events": [
+      {
+        "event_id": "b8288784-b667-414a-a4e9-ff850726e9fc",
+        "event_type": "approved",
+        "status": "processed",
+        "attempts": 1,
+        "last_error": null,
+        "last_attempt_at": "2026-10-07T12:19:05.918641+00:00",
+        "accepted_at": "2026-10-07T12:19:05.918641+00:00",
+        "processed_at": "2026-10-07T12:19:06.283780+00:00"
+      },
+      {
+        "event_id": "00c5bd81-bbd5-4f3c-9343-5cf9bac364d9",
+        "event_type": "approved",
+        "status": "processed",
+        "attempts": 1,
+        "last_error": null,
+        "last_attempt_at": "2026-10-07T12:20:22.248231+00:00",
+        "accepted_at": "2026-10-07T12:20:22.248231+00:00",
+        "processed_at": "2026-10-07T12:20:22.538827+00:00"
+      },
+      {
+        "event_id": "c20009bc-01a1-485d-9623-806a328a3dcd",
+        "event_type": "rejected",
+        "status": "processed",
+        "attempts": 1,
+        "last_error": null,
+        "last_attempt_at": "2026-10-07T12:20:39.138940+00:00",
+        "accepted_at": "2026-10-07T12:20:39.138940+00:00",
+        "processed_at": "2026-10-07T12:21:31.874279+00:00"
+      }
+    ],
+    "notices": [
+      {
+        "notification_id": "49889b5c-5339-4a8b-a4d4-88e04332ef3a",
+        "event_id": "b8288784-b667-414a-a4e9-ff850726e9fc",
+        "export_id": null,
+        "category": "review_approved",
+        "status": "sent",
+        "attempts": 1,
+        "message_id": "<ap-49889b5c-5339-4a8b-a4d4-88e04332ef3a-1@example.invalid>",
+        "last_error": null,
+        "delivery_status": "processed",
+        "delivery_attempts": 0,
+        "delivery_at": null,
+        "delivery_error": null,
+        "created_at": "2026-10-07T12:19:05.875Z",
+        "updated_at": "2026-10-07T12:19:06.283780+00:00",
+        "kind": "review",
+        "id": "b8288784-b667-414a-a4e9-ff850726e9fc",
+        "max_attempts": 5
+      },
+      {
+        "notification_id": "c2122887-56be-40ca-bfce-861674e54f2f",
+        "event_id": "00c5bd81-bbd5-4f3c-9343-5cf9bac364d9",
+        "export_id": null,
+        "category": "review_approved",
+        "status": "sent",
+        "attempts": 1,
+        "message_id": "<ap-c2122887-56be-40ca-bfce-861674e54f2f-1@example.invalid>",
+        "last_error": null,
+        "delivery_status": "processed",
+        "delivery_attempts": 0,
+        "delivery_at": null,
+        "delivery_error": null,
+        "created_at": "2026-10-07T12:20:22.200Z",
+        "updated_at": "2026-10-07T12:20:22.538827+00:00",
+        "kind": "review",
+        "id": "00c5bd81-bbd5-4f3c-9343-5cf9bac364d9",
+        "max_attempts": 5
+      },
+      {
+        "notification_id": "3e8bdb16-4280-4bef-9871-761d1f14bcf9",
+        "event_id": "c20009bc-01a1-485d-9623-806a328a3dcd",
+        "export_id": null,
+        "category": "review_rejected",
+        "status": "sent",
+        "attempts": 2,
+        "message_id": "<ap-3e8bdb16-4280-4bef-9871-761d1f14bcf9-2@example.invalid>",
+        "last_error": null,
+        "delivery_status": "processed",
+        "delivery_attempts": 0,
+        "delivery_at": null,
+        "delivery_error": null,
+        "created_at": "2026-10-07T12:20:39.105Z",
+        "updated_at": "2026-10-07T12:21:31.874279+00:00",
+        "kind": "review",
+        "id": "c20009bc-01a1-485d-9623-806a328a3dcd",
+        "max_attempts": 5
+      },
+      {
+        "notification_id": "2925953a-b84b-4f33-a56f-7768e0e8b31a",
+        "event_id": null,
+        "export_id": "66dc78c7-dd03-4e2f-a211-a38c8f210426",
+        "category": "batch_completed",
+        "status": "sent",
+        "attempts": 1,
+        "message_id": "<ap-2925953a-b84b-4f33-a56f-7768e0e8b31a-1@example.invalid>",
+        "last_error": null,
+        "delivery_status": "processed",
+        "delivery_attempts": 1,
+        "delivery_at": "2026-10-07T12:21:55.099776+00:00",
+        "delivery_error": null,
+        "created_at": "2026-10-07T12:21:55.043Z",
+        "updated_at": "2026-10-07T12:21:55.441439+00:00",
+        "kind": "batch",
+        "id": "66dc78c7-dd03-4e2f-a211-a38c8f210426",
+        "max_attempts": 5
+      }
+    ],
+    "batch": {
+      "export_id": "66dc78c7-dd03-4e2f-a211-a38c8f210426",
+      "selection_hash": "809cc2be8ae9c200fd3313330ad3831f58651ac5327724b57542e9c07355154f",
+      "mapping_version": "invoice-excel-v1",
+      "only_unexported": 0,
+      "status": "completed",
+      "attempts": 1,
+      "file_path": "exports/batches/66dc78c7-dd03-4e2f-a211-a38c8f210426.xlsx",
+      "file_sha256": "6bdb2616ca49dec757a7a632805d3f7a43974731b8ee5c491c7e640a352be42d",
+      "last_error": null,
+      "created_at": "2026-10-07T12:21:54.706Z",
+      "updated_at": "2026-10-07T12:21:54.900819+00:00",
+      "max_attempts": 5,
+      "download_url": "/api/ap/export-batches/66dc78c7-dd03-4e2f-a211-a38c8f210426/files/xlsx",
+      "file_health": "verified",
+      "row_count": 2,
+      "members": [
+        {
+          "invoice_id": "6870f4df-b874-4786-af20-82590ca9e409",
+          "review_revision": 2
+        },
+        {
+          "invoice_id": "81a9bcfc-ff58-43fe-90ef-8ec128962694",
+          "review_revision": 1
+        }
+      ]
+    },
+    "counts": {
+      "invoices": 24,
+      "receipts": 169,
+      "processing_attempts": 98,
+      "notification_attempts": 10,
+      "email_outcomes": 127,
+      "document_reads": 0,
+      "intake_runs": 66,
+      "intake_stage_events": 290,
+      "review_tasks": 12,
+      "review_revisions": 13,
+      "review_events": 8,
+      "exports": 2,
+      "result_notifications": 0,
+      "result_notification_attempts": 0,
+      "review_requests": 5,
+      "export_batches": 4,
+      "export_batch_items": 8,
+      "outcome_notifications": 12,
+      "outcome_notification_attempts": 14
+    }
+  },
+  "event_replay_http": [
+    {
+      "path": "ap-unified-review-a2-v1",
+      "unauthenticated": 403,
+      "authenticated": 202
+    },
+    {
+      "path": "ap-unified-review-a2-v1",
+      "unauthenticated": 403,
+      "authenticated": 202
+    },
+    {
+      "path": "ap-unified-review-a2-v1",
+      "unauthenticated": 403,
+      "authenticated": 202
+    },
+    {
+      "path": "ap-unified-excel-a2-v1",
+      "unauthenticated": 403,
+      "authenticated": 202
+    }
+  ],
+  "restart_replay_unchanged": true,
+  "baseline_rows_files_backend_and_old_json_preserved": true,
+  "mailpit_delivery_checks": [
+    {
+      "notification_id": "49889b5c-5339-4a8b-a4d4-88e04332ef3a",
+      "messages": 1
+    },
+    {
+      "notification_id": "c2122887-56be-40ca-bfce-861674e54f2f",
+      "messages": 1
+    },
+    {
+      "notification_id": "3e8bdb16-4280-4bef-9871-761d1f14bcf9",
+      "messages": 1
+    },
+    {
+      "notification_id": "2925953a-b84b-4f33-a56f-7768e0e8b31a",
+      "messages": 1
+    }
+  ],
+  "targeted_tests": {
+    "tests": "44",
+    "errors": "0",
+    "failures": "0",
+    "skipped": "0"
+  },
+  "final_workflow_file_sha256": "00f259926f83c4c6e99eb0a69d41067896353fe3bdfdcff556f2e809493c5974",
+  "browser_download_sha256": "6bdb2616ca49dec757a7a632805d3f7a43974731b8ee5c491c7e640a352be42d",
+  "privacy_scan": {
+    "payload_rows": 32,
+    "credential_found": false,
+    "redacted_existing_probes": false
+  },
+  "retention_change_rejected_and_not_applied": true,
+  "runtime_targets": {
+    "AP_REVIEW_EVENT_URL": "http://n8n:5678/webhook/ap-unified-review-a2-v1",
+    "AP_BATCH_EVENT_URL": "http://n8n:5678/webhook/ap-unified-excel-a2-v1"
+  },
+  "initial_live_outcomes": [
+    {
+      "invoice_id": "81a9bcfc-ff58-43fe-90ef-8ec128962694",
+      "run_id": "d768afe1-9dd3-4283-a864-95a69f6fc8b6",
+      "outcome": "decision_ready",
+      "review_status": "approved",
+      "approval_method": "automatic",
+      "analysis_cached": true,
+      "analysis_source": "synthetic_saved_analysis_no_model"
+    },
+    {
+      "invoice_id": "6870f4df-b874-4786-af20-82590ca9e409",
+      "run_id": "97b6e8bc-fd38-45aa-9c65-54ae01db1446",
+      "outcome": "review_ready",
+      "review_status": "pending",
+      "approval_method": null,
+      "analysis_cached": true,
+      "analysis_source": "synthetic_saved_analysis_no_model"
+    },
+    {
+      "invoice_id": "0d06e690-7cfd-4741-917e-33ecee70bcdc",
+      "run_id": "95c3e865-1d40-4046-b41f-440e4a679614",
+      "outcome": "review_ready",
+      "review_status": "pending",
+      "approval_method": null,
+      "analysis_cached": true,
+      "analysis_source": "synthetic_saved_analysis_no_model"
+    }
+  ]
+}

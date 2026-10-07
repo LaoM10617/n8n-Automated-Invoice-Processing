@@ -17,7 +17,9 @@ services:
       - "127.0.0.1:8000:8000"
     environment:
       AP_DATA_DIR: /data/ap
-      AP_REVIEW_EVENT_URL: http://n8n:5678/webhook/ap-review-events-v1
+      AP_REVIEW_EVENT_URL: http://n8n:5678/webhook/ap-native-review-b2-v2
+      AP_BATCH_EVENT_URL: http://n8n:5678/webhook/ap-native-excel-b2-v2
+      AP_OUTCOME_AUTODISPATCH: "1"
       AP_REVIEW_EVENT_TOKEN: ${AP_REVIEW_EVENT_TOKEN:-}
       AP_PUBLIC_BASE_URL: ${AP_PUBLIC_BASE_URL:-http://127.0.0.1:8000}
       AP_LLM_BASE_URL: ${AP_LLM_BASE_URL:-}

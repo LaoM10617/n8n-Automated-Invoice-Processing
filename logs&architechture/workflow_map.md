@@ -1,3 +1,35 @@
+## Final delivery and rollback — 2026-10-07
+
+See [final delivery index](AP_unified_refactor_final_delivery.md) for layered acceptance, two English demo paths, recovery commands and remaining limits. Native → Stage A → original 01/02 → native receiver rollback passed with every business row and all 34 original/export files unchanged. Five isolated file-recovery/migration tests passed. Current native entry is restored; no new model calls. The final fresh paid end-to-end validation gap remains explicit. Earlier records below are historical.
+
+## Native Agent B3–B4 — 2026-10-07 (current runtime)
+
+Native canvas `J4xPbnTCAgYFVNzJ` is published and is now the recommended local demo entry. Upload: http://127.0.0.1:5678/form/ap-native-intake-b2-v2. Both backend event targets point only to its unique review and Excel receivers. Three real native/Python comparisons matched 39 fields within the user-approved 18-request budget. Review, Excel, local notices, replay and restart checks passed. The third native draft required explicit recovery; final commit wiring was verified with closed real drafts, not an additional fresh paid run. Stage A and old 01/02 remain explicit rollback choices. See [B3–B4 evidence and limits](AP_native_agent_B3_B4_log.md) and [demo/rollback instructions](AP_native_agent_demo_operations.md). All earlier runtime claims below are historical.
+
+## Native Agent candidate B2 — 2026-10-07
+
+Unpublished candidate `J4xPbnTCAgYFVNzJ` adds a real n8n Agent with three scoped read-only tools and a bounded Gemini gateway. Backend contracts are deployed and 59 isolated tests passed. Credential binding and live n8n local metadata authentication passed. Full native Agent engine execution and real model quality remain for B3. Stage A remains the live demo, and backend event targets are unchanged. See [B0–B2 implementation](AP_native_agent_B0_B2_log.md).
+
+## Unified canvas A3–A4 — 2026-10-07 (current runtime)
+
+The unified workflow `7xXB2pjXOE1EQ2bY` is published and is the recommended demo canvas. Upload: http://127.0.0.1:5678/form/ap-unified-intake-a2-v1. Review and batch events now target its two unique webhooks. A3 passed with labeled cached analyses, real local notifications, combined Excel, replay and restart checks; 44 targeted tests passed. Original 01/02 remain published and unchanged for rollback; do not run the same email batch through both versions. Native Agent migration remains pending. See [A3–A4 handoff](AP_unified_canvas_A3_A4_log.md). Earlier status sections below are historical.
+
+## Unified canvas A0–A2 — 2026-10-07 (unpublished candidate)
+
+A0 baseline and A1 business mapping are complete. Candidate `7xXB2pjXOE1EQ2bY` combines 01/02 on one canvas with the existing Python Agent: 23 execution nodes, 4 notes, 25 connections and 4 groups. Static validation and instance readback passed; no execution or publication. Original 01/02, backend event targets and business data remain unchanged. Before A3, extend the header privacy hook for both candidate event paths. See [A0–A2 log](AP_unified_canvas_A0_A2_log.md) for mapping, evidence, display warning and next steps. The deployed baseline below remains current.
+
+## Planned unified canvas and native Agent migration — 2026-10-07
+
+The user has approved the direction of combining 01 and 02 into one business-facing canvas while retaining separate event entries and durable backend state. First unify the canvas with the existing Python Agent; then migrate document analysis to a real n8n AI Agent after verifying request controls, evidence, caching and traces. See [implementation plan](AP_unified_canvas_native_agent_implementation_guide_zh.md). This supersedes the earlier requirement to keep 01 and 02 on separate canvases for future implementation. An unpublished candidate has now been created under A0–A2; backend and deployed workflows remain unchanged. Phase03 is deferred.
+
+## Phase02 final integration — 2026-10-07 (current deployed baseline)
+
+The recommended intake is `APApprovalIntakeV9` (`/form/ap-approval-intake-v9`), followed by independent `APReviewExportV1`. Both are imported and published in the local instance; existing v7/v8 and historical workflows remain intact. Approval snapshots enter `/exports` immediately. The user selects a combined Excel download; 02 sends local Mailpit approval/rejection and completed-batch notifications without generating a workbook on every approval.
+
+Schema 5 adds a separate outcome notification ledger. Final acceptance, recovery instructions, evidence and precise mock limitations are in `phase02_final_log.md` and `phase02_final_verification.json`. Earlier sections below are historical snapshots where they conflict with this update.
+
+Current decision (2026-10-07, export-register revision): Approval immediately exposes its immutable snapshot in the database-backed export register. Web /exports filters/previews/selects records and downloads one combined Excel batch with frozen membership. The independent 02 receiver still receives and reloads review events; subsequent integration should notify approval/register availability, not automatically generate one file per approval. Batch-file notifications require a separate batch association and remain planned. Existing single files, v7 and all workflow JSON remain unchanged. See phase02_export_register_log.md and the revised Phase02 guide. Earlier maps below are historical and superseded where they imply automatic per-invoice export.
+
 Current update (2026-10-07): Opt-in APApprovalIntakeV8 adds deterministic automatic approval or pending human review. Web edits/decisions save immutable revisions and pending events; both approval paths share the same decision transaction. Event delivery, workflow02 and Excel generation are not yet connected. v7 remains available. See phase02_review_log.md; the manual-only map below describes the earlier design.
 
 Current update (2026-10-06): Phase01 analysis now uses a real Python LangChain Agent through APAgentIntakeV7. OCR, evidence grounding, amount rules and state changes stay deterministic. v5/v6 files are historical; see phase01_refactor_log.md and phase01_agent_verification.json for runtime evidence and quality limits.

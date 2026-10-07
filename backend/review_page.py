@@ -36,7 +36,7 @@ def render_review(invoice, task):
         notice = '<div class="alert">Processing changed after this task was created. Compare the bound review with the latest analysis before deciding.</div>'
     return f'''<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Invoice review · {safe(fields.get('invoice_number') or invoice['invoice_id'])}</title><script src="/static/review.js" defer></script>
+<title>Invoice review · {safe(fields.get('invoice_number') or invoice['invoice_id'])}</title><script src="/static/outcome_notifications.js" defer></script><script src="/static/review.js" defer></script>
 <style>
 :root{{color-scheme:light;--ink:#183044;--muted:#586979;--line:#d4dee5;--paper:#fff;--bg:#edf2f5;--accent:#126b70}}
 *{{box-sizing:border-box}}body{{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 "Segoe UI",Arial,sans-serif}}
@@ -65,7 +65,9 @@ input,select,textarea,button{{font:inherit;max-width:100%;padding:8px;border:1px
 <p><label for="review-reason">Change or decision reason</label><textarea id="review-reason" maxlength="2000"></textarea></p>
 <button id="save-review" disabled>Save changes</button><button id="approve-review" disabled>Approve</button><button id="reject-review" disabled>Reject</button>
 <button id="adopt-review" hidden>Accept latest analysis</button>
-<p class="meta">Approval creates a saved decision; export delivery is not connected yet. No payment occurs.</p>
+<p class="meta">Approval adds the saved snapshot to the export register. Select invoices there to download a combined Excel file; no accounting submission or payment occurs.</p>
+<a href="/exports">Open export register</a>
+<a id="download-export" hidden>Download earlier single-invoice Excel</a><p id="export-message" class="meta"></p><div id="outcome-notification"></div>
 <details id="latest-analysis" hidden><summary>New analysis to compare</summary><pre style="white-space:pre-wrap;overflow-wrap:anywhere"></pre></details></section>
 <section><details><summary>Saved revision history and manual sources</summary><pre id="review-history" style="white-space:pre-wrap;overflow-wrap:anywhere"></pre></details></section>
 <section><h2>Machine exceptions (preserved) <small>({len(issues)})</small></h2>{issue_html}</section>

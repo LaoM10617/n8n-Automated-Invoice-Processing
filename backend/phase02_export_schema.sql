@@ -1,0 +1,1 @@
+ALTER TABLE exports ADD COLUMN attempts INTEGER NOT NULL DEFAULT 0 CHECK(attempts >= 0);

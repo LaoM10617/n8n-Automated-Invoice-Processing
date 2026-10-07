@@ -1,3 +1,9 @@
+## Phase02 final integration — 2026-10-07 (current)
+
+The recommended intake is `APApprovalIntakeV9` (`/form/ap-approval-intake-v9`), followed by independent `APReviewExportV1`. Both are imported and published in the local instance; existing v7/v8 and historical workflows remain intact. Approval snapshots enter `/exports` immediately. The user selects a combined Excel download; 02 sends local Mailpit approval/rejection and completed-batch notifications without generating a workbook on every approval.
+
+Schema 5 adds a separate outcome notification ledger. Final acceptance, recovery instructions, evidence and precise mock limitations are in `phase02_final_log.md` and `phase02_final_verification.json`. Earlier sections below are historical snapshots where they conflict with this update.
+
 Current update (2026-10-06): Phase01 analysis now uses a real Python LangChain Agent through APAgentIntakeV7. OCR, evidence grounding, amount rules and state changes stay deterministic. v5/v6 files are historical; see phase01_refactor_log.md and phase01_agent_verification.json for runtime evidence and quality limits.
 
 Current implementation update (2026-10-06): Phase 01 steps 6–8 are verified. Upload v4 and manual readonly Gmail intake share the backend, attachment child and persistent Mailpit notification status. Five real external test emails, local representative/100-message cached batches, replay and container persistence passed. Review remains pending/read-only. See log_2026-10-06_step06_08_acceptance.md; older unimplemented statements below are historical.

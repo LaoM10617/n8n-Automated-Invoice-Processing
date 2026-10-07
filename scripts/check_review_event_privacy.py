@@ -20,7 +20,7 @@ let input=''; process.stdin.on('data',c=>input+=c); process.stdin.on('end',()=>{
    db.run("UPDATE execution_data SET data=replace(data,?,?) WHERE executionId IN (SELECT id FROM execution_entity WHERE workflowId=?)",[token,'[REDACTED]','APReviewEventsV1']);
    db.run('COMMIT');
   }
-  db.all('SELECT d.data FROM execution_data d JOIN execution_entity e ON e.id=d.executionId WHERE e.workflowId=?',['APReviewEventsV1'],(err,rows)=>{
+  db.all('SELECT d.data FROM execution_data d JOIN execution_entity e ON e.id=d.executionId WHERE e.workflowId IN (?,?,?,?,?)',['APReviewEventsV1','APReviewExportV1','APApprovalIntakeV9','7xXB2pjXOE1EQ2bY','J4xPbnTCAgYFVNzJ'],(err,rows)=>{
    if(err) throw err;
    console.log(JSON.stringify({payload_rows:rows.length,credential_found:rows.some(r=>r.data.includes(token)),redacted_existing_probes:redact}));
    db.close();

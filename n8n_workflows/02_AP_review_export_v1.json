@@ -1,0 +1,328 @@
+{
+  "id": "APReviewExportV1",
+  "name": "02_AP_Review_Export_v1",
+  "active": false,
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1",
+    "saveDataSuccessExecution": "none",
+    "saveDataErrorExecution": "none",
+    "saveManualExecutions": false,
+    "saveExecutionProgress": false
+  },
+  "nodes": [
+    {
+      "id": "64194bee-f203-47f0-8226-d4deceda366f",
+      "name": "Review Decision Received",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        100
+      ],
+      "webhookId": "81bd4917-e2d1-4d05-b3ba-c9768a00ad30",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "APReviewEventLocalV1",
+          "name": "AP review event local header"
+        }
+      },
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "ap-review-export-v1",
+        "authentication": "headerAuth",
+        "responseMode": "onReceived",
+        "options": {
+          "responseCode": {
+            "values": {
+              "responseCode": 202
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "1af44582-0c0e-45f3-915e-5fa5149488b4",
+      "name": "Load Current Decision",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        300,
+        100
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "APReviewEventLocalV1",
+          "name": "AP review event local header"
+        }
+      },
+      "parameters": {
+        "method": "GET",
+        "url": "={{ 'http://python-api:8000/api/ap/outcomes/review/' + encodeURIComponent($json.body.event_id) }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {
+          "timeout": 15000
+        }
+      }
+    },
+    {
+      "name": "Approved or Rejected?",
+      "id": "e422bb59-a892-4880-9bda-91f88d016f5f",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        600,
+        100
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "1f6e4792-18b4-4b04-b8a8-fcea517e4597",
+              "leftValue": "={{ $json.category === 'review_approved' }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "151cdb70-8419-4090-a401-a2b907334782",
+      "name": "Notify Approval and Register",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        920,
+        0
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "APReviewEventLocalV1",
+          "name": "AP review event local header"
+        }
+      },
+      "parameters": {
+        "method": "POST",
+        "url": "={{ 'http://python-api:8000/api/ap/outcomes/' + $json.kind + '/' + encodeURIComponent($json.id) + '/notify' }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {
+          "timeout": 15000
+        }
+      }
+    },
+    {
+      "id": "e6fdf0ca-486c-4101-911a-99a7834b7b3a",
+      "name": "Notify Rejection",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        920,
+        220
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "APReviewEventLocalV1",
+          "name": "AP review event local header"
+        }
+      },
+      "parameters": {
+        "method": "POST",
+        "url": "={{ 'http://python-api:8000/api/ap/outcomes/' + $json.kind + '/' + encodeURIComponent($json.id) + '/notify' }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {
+          "timeout": 15000
+        }
+      }
+    },
+    {
+      "id": "69548017-e268-4bae-a5a8-56d7ace26b9e",
+      "name": "Excel Batch Ready",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        510
+      ],
+      "webhookId": "6e6f6c5b-7fb0-4240-be33-a80d0503cd30",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "APReviewEventLocalV1",
+          "name": "AP review event local header"
+        }
+      },
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "ap-batch-export-v1",
+        "authentication": "headerAuth",
+        "responseMode": "onReceived",
+        "options": {
+          "responseCode": {
+            "values": {
+              "responseCode": 202
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "142ec64b-9962-4b86-8ad1-1e54b8669ce5",
+      "name": "Verify Saved Excel Batch",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        300,
+        510
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "APReviewEventLocalV1",
+          "name": "AP review event local header"
+        }
+      },
+      "parameters": {
+        "method": "GET",
+        "url": "={{ 'http://python-api:8000/api/ap/outcomes/batch/' + encodeURIComponent($json.body.export_id) }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {
+          "timeout": 15000
+        }
+      }
+    },
+    {
+      "id": "637fd18b-1b15-4e14-9d6b-1afe857f0335",
+      "name": "Notify Excel Download",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        600,
+        510
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "APReviewEventLocalV1",
+          "name": "AP review event local header"
+        }
+      },
+      "parameters": {
+        "method": "POST",
+        "url": "={{ 'http://python-api:8000/api/ap/outcomes/' + $json.kind + '/' + encodeURIComponent($json.id) + '/notify' }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {
+          "timeout": 15000
+        }
+      }
+    },
+    {
+      "id": "48293056-aba8-4dbc-a714-20cb3112d2ce",
+      "name": "Decision and Export Contract",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -40,
+        -240
+      ],
+      "parameters": {
+        "content": "## Independent outcome workflow\nReview decisions and completed Excel batches have separate entries. Read authoritative state from Python before routing. Approved snapshots are already in the Web export register; approval does not automatically create a file. Users preview/select/download combined Excel, then receive a batch download notice.",
+        "width": 1250,
+        "height": 220
+      }
+    },
+    {
+      "id": "36584676-81e6-44b6-871f-2ffe8a001295",
+      "name": "Recovery and Local Scope",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -40,
+        750
+      ],
+      "parameters": {
+        "content": "## Durable recovery; local demonstration only\nHeader credentials and the Compose privacy hook are required on both webhook paths. HTTP 202 is acceptance, not business completion. Python persists bounded transport/SMTP attempts; uncertain SMTP sends require Mailpit Message-ID reconciliation, never blind resend. Only confirmed notification delivery completes the review event. Notification failure never reapproves or regenerates Excel. No external mail, accounting submission or payment.",
+        "width": 1250,
+        "height": 220
+      }
+    }
+  ],
+  "connections": {
+    "Review Decision Received": {
+      "main": [
+        [
+          {
+            "node": "Load Current Decision",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Load Current Decision": {
+      "main": [
+        [
+          {
+            "node": "Approved or Rejected?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Approved or Rejected?": {
+      "main": [
+        [
+          {
+            "node": "Notify Approval and Register",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Notify Rejection",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Excel Batch Ready": {
+      "main": [
+        [
+          {
+            "node": "Verify Saved Excel Batch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Verify Saved Excel Batch": {
+      "main": [
+        [
+          {
+            "node": "Notify Excel Download",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
+}

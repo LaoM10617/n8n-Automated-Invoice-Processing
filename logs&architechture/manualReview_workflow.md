@@ -1,4 +1,24 @@
-当前实现（2026-10-07）：Web修改／重新校验／批准／拒绝与确定性自动批准已经实现，两条分支共用不可变快照和事务内待投递事件。独立02、事件网络投递和Excel生成尚未连接。当前选定持久化outbox，不采用Wait回调；下文模板讨论作为历史背景。详见phase02_review_log.md。
+## Phase02 final integration — 2026-10-07 (current)
+
+The recommended intake is `APApprovalIntakeV9` (`/form/ap-approval-intake-v9`), followed by independent `APReviewExportV1`. Both are imported and published in the local instance; existing v7/v8 and historical workflows remain intact. Approval snapshots enter `/exports` immediately. The user selects a combined Excel download; 02 sends local Mailpit approval/rejection and completed-batch notifications without generating a workbook on every approval.
+
+Schema 5 adds a separate outcome notification ledger. Final acceptance, recovery instructions, evidence and precise mock limitations are in `phase02_final_log.md` and `phase02_final_verification.json`. Earlier sections below are historical snapshots where they conflict with this update.
+
+当前实现（2026-10-07，导出清单修订）：批准后立即查询到不可变快照；用户打开 `/exports`，按发票日期／供应商／币种筛选并勾选，下载一份合并Excel。数据库为权威数据源，不逐条写物理工作簿；历史单票文件保持兼容。详细契约见phase_02_AP_review_export_implementation_guide_zh.md第7节，验证见phase02_export_register_log.md。
+
+当前业务连接：
+
+```text
+Automatic / manual approval → Persist decision + snapshot + outbox
+                              ├─ Export register → Preview / select → Download combined Excel
+                              └─ Review event → Independent 02 → Reload decision → Outcome notification (planned)
+```
+
+02当前仅完成鉴权接收与回读后端，尚未接入结果通知；accepted不代表processed，也不代表用户导出了文件。后续02发送“可在清单导出”的审批结果通知，不能按每票事件自动生成Excel。批次文件完成通知应独立绑定batch/export_id。保留outbox恢复，不使用Wait回调。
+
+---
+
+以下为被替代的历史模板讨论，不能作为当前实施要求（逐票自动导出已由用户明确选择的合并下载替代）：
 
 **二、人工审核结果与导出：独立工作流**
 

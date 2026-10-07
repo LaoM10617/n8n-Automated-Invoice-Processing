@@ -1,0 +1,51 @@
+{
+  "unchangedExecutableParametersCredentialsAndConnections": true,
+  "original01and02Unchanged": true,
+  "workflowId": "7xXB2pjXOE1EQ2bY",
+  "versionId": "fe01bad5-6a5d-46c6-8013-ccf3f846b565",
+  "activeVersionId": "fe01bad5-6a5d-46c6-8013-ccf3f846b565",
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": true,
+    "timezone": "Europe/Berlin",
+    "saveExecutionProgress": false,
+    "saveManualExecutions": false,
+    "saveDataErrorExecution": "none",
+    "saveDataSuccessExecution": "none",
+    "callerPolicy": "workflowsFromSameOwner",
+    "binaryMode": "separate"
+  },
+  "pinnedTests": [
+    {
+      "case": "automatic",
+      "executionId": "449",
+      "status": "success"
+    },
+    {
+      "case": "manual_replay",
+      "executionId": "450",
+      "status": "success"
+    },
+    {
+      "case": "review",
+      "executionId": "451",
+      "status": "success"
+    },
+    {
+      "case": "skip",
+      "executionId": "452",
+      "status": "success"
+    },
+    {
+      "case": "failure",
+      "executionId": "453",
+      "status": "success"
+    }
+  ],
+  "multiAttachmentPinnedTest": {
+    "executionId": "461",
+    "status": "success"
+  },
+  "manualHistoryUnavailable": true
+}
