@@ -2,6 +2,7 @@
 
 import hashlib
 from contextlib import closing
+from datetime import datetime, timezone
 import io
 import json
 import os
@@ -16,10 +17,15 @@ from fastapi.responses import FileResponse, JSONResponse, HTMLResponse, Response
 from PIL import Image, UnidentifiedImageError
 from pypdf import PdfReader
 
-from backend.document_text import ProcessingError, QUALITY_VERSION, ocr_available, read_pages
-from backend.extraction import extract_fields, grounded_fields, model_configured
-from backend.validation import duplicate_candidates, validate
+from backend.document_text import ocr_available, read_pages
+from backend.extraction import model_configured
+from backend.invoice_agent import extract_fields
+from backend.validation import duplicate_candidates
 from backend.review_page import render_review
+from backend.notifications import register_notifications
+from backend.email_receipts import register_email_receipts
+from backend.document_stages import DocumentStages
+from backend.intake_stages import register_intake_stages
 
 MAX_BYTES = 20 * 1024 * 1024
 
@@ -97,7 +103,18 @@ def create_app(data_dir: Path | None = None) -> FastAPI:
             );
         ''')
         # This demo runs one application worker. Preserve interrupted attempts for audit.
-        db.execute("UPDATE processing_attempts SET status='failed', error_code='PROCESS_INTERRUPTED', error_message='Application restarted during processing.' WHERE status='processing'")
+        for attempt in db.execute("SELECT attempt_id,result_json FROM processing_attempts WHERE status='processing'").fetchall():
+            result = json.loads(attempt['result_json'] or '{}')
+            trace = result.get('agent_trace')
+            if trace:
+                trace.update(status='interrupted', error_code='PROCESS_INTERRUPTED',
+                             interrupted_at=datetime.now(timezone.utc).isoformat())
+                for call in trace.get('model_calls', []):
+                    if call.get('status') == 'running':
+                        # The provider may have completed; do not claim success or retry it.
+                        call['status'] = 'unknown'
+            db.execute("UPDATE processing_attempts SET status='failed',result_json=?,error_code='PROCESS_INTERRUPTED',error_message='Application restarted during processing.' WHERE attempt_id=?",
+                       (json.dumps(result), attempt['attempt_id']))
         db.commit()
 
     app = FastAPI(title='AP Intake Demo', version='0.1.0')
@@ -266,52 +283,14 @@ def create_app(data_dir: Path | None = None) -> FastAPI:
             'Cache-Control': 'no-store', 'X-Content-Type-Options': 'nosniff',
             'Content-Security-Policy': "default-src 'none'; style-src 'unsafe-inline'; img-src 'self'; frame-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'self'"})
 
+    stages = DocumentStages(connect, invoice_row, get_invoice, originals,
+                            lambda path, media: read_pages(path, media), lambda pages: extract_fields(pages))
+
     @app.post('/api/ap/invoices/{invoice_id}/process')
     def process(invoice_id: str):
-        row = invoice_row(invoice_id)
-        with closing(connect()) as db:
-            db.execute('BEGIN IMMEDIATE')
-            previous = db.execute('SELECT * FROM processing_attempts WHERE invoice_id=? ORDER BY attempt_id DESC LIMIT 1', (invoice_id,)).fetchone()
-            cached_config = json.loads(previous['result_json']) if previous and previous['result_json'] else {}
-            if (previous and previous['status'] == 'processed'
-                    and cached_config.get('pipeline_version') == 'step4-layout-v1'
-                    and cached_config.get('model') == os.environ.get('AP_LLM_MODEL')
-                    and cached_config.get('model_base_url') == os.environ.get('AP_LLM_BASE_URL')):
-                db.rollback()
-                return get_invoice(invoice_id)
-            if previous and previous['status'] == 'processing':
-                db.rollback()
-                raise HTTPException(409, 'Invoice processing is already in progress.')
-            cursor = db.execute("INSERT INTO processing_attempts(invoice_id,status) VALUES(?,'processing')", (invoice_id,))
-            attempt_id = cursor.lastrowid
-            db.commit()
-        result = {'pipeline_version': 'step4-layout-v1', 'model': os.environ.get('AP_LLM_MODEL'),
-                  'model_base_url': os.environ.get('AP_LLM_BASE_URL'), 'pages': []}
-        try:
-            cached = json.loads(previous['result_json']) if previous and previous['result_json'] else {}
-            cached_pages = cached.get('pages') or []
-            result['pages'] = cached_pages if cached_pages and all(p.get('quality_rule') == QUALITY_VERSION for p in cached_pages) else read_pages(originals / row['stored_name'], row['media_type'])
-            result['raw_extraction'] = extract_fields(result['pages'])
-            grounded, evidence_issues = grounded_fields(result['raw_extraction'], result['pages'])
-            result['fields'], issues, result['arithmetic_check'] = validate(grounded)
-            issues.extend(evidence_issues)
-            for uncertainty in result['raw_extraction']['uncertainties']:
-                issues.append({'code': 'EXTRACTION_UNCERTAINTY', 'field': 'document', 'message': uncertainty})
-            for page in result['pages']:
-                if page['ocr_confidence'] is not None and page['ocr_confidence'] < 80:
-                    issues.append({'code': 'OCR_LOW_CONFIDENCE', 'field': f"page_{page['page']}", 'message': 'OCR word confidence is low; compare with the original.'})
-            result['validation_issues'] = issues
-            with closing(connect()) as db:
-                db.execute("UPDATE processing_attempts SET status='processed',result_json=? WHERE attempt_id=?", (json.dumps(result), attempt_id))
-                db.commit()
-        except Exception as exc:
-            error = exc if isinstance(exc, ProcessingError) else ProcessingError('PROCESSING_FAILED', 'Processing failed; inspect backend diagnostics.')
-            with closing(connect()) as db:
-                db.execute("UPDATE processing_attempts SET status='failed',result_json=?,error_code=?,error_message=? WHERE attempt_id=?", (json.dumps(result), error.code, str(error), attempt_id))
-                db.commit()
-            status = 429 if error.code in ('MODEL_LOCAL_RATE_LIMIT', 'MODEL_RATE_LIMITED') else (503 if error.code in ('MODEL_NOT_CONFIGURED', 'OCR_DEPENDENCY_MISSING', 'ORIGINAL_UNAVAILABLE') else 502)
-            raise HTTPException(status,
-                                {'code': error.code, 'message': str(error), 'invoice_id': invoice_id}) from exc
-        return get_invoice(invoice_id)
+        return stages.process(invoice_id)
 
+    notifications = register_notifications(app, connect, get_invoice)
+    save_outcome = register_email_receipts(app, connect)
+    register_intake_stages(app, connect, intake, stages, create_review_task, notifications, save_outcome)
     return app

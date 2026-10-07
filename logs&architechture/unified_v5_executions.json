@@ -1,0 +1,388 @@
+[
+  {
+    "id": 407,
+    "status": "canceled",
+    "mode": "webhook",
+    "started_at": "2026-10-06 20:37:24.700",
+    "stopped_at": "2026-10-06 20:40:45.239",
+    "messages": [],
+    "summary": [],
+    "error": "The execution was cancelled manually"
+  },
+  {
+    "id": 408,
+    "status": "success",
+    "mode": "manual",
+    "started_at": "2026-10-06 20:38:05.167",
+    "stopped_at": "2026-10-06 20:38:52.939",
+    "messages": [
+      {
+        "provider_message_id": "1a112e07928275fb",
+        "smtp_message_id": "<AM9P190MB15710A63E93D08BD2346ED86E2952@AM9P190MB1571.EURP190.PROD.OUTLOOK.COM>",
+        "case_subject": "[AP-DEMO][phase01-connect-001][mixed]",
+        "attachment_keys": [
+          "attachment_0",
+          "attachment_1",
+          "attachment_2"
+        ]
+      },
+      {
+        "provider_message_id": "1a112e0004b7b16b",
+        "smtp_message_id": "<AM9P190MB1571FF6FD431CEF726D5707DE2952@AM9P190MB1571.EURP190.PROD.OUTLOOK.COM>",
+        "case_subject": "[AP-DEMO][phase01-connect-001][invalid]",
+        "attachment_keys": [
+          "attachment_0"
+        ]
+      },
+      {
+        "provider_message_id": "1a112df5e8cf3ac5",
+        "smtp_message_id": "<AM9P190MB1571674162CCB4F22A465AC0E2952@AM9P190MB1571.EURP190.PROD.OUTLOOK.COM>",
+        "case_subject": "[AP-DEMO][phase01-connect-001][no-attachments]",
+        "attachment_keys": []
+      },
+      {
+        "provider_message_id": "1a112d9b5a4ac7d9",
+        "smtp_message_id": "<AM9P190MB15716312913DD65BD1B4F761E2952@AM9P190MB1571.EURP190.PROD.OUTLOOK.COM>",
+        "case_subject": "[AP-DEMO][phase01-connect-001][multi]",
+        "attachment_keys": [
+          "attachment_0",
+          "attachment_1"
+        ]
+      },
+      {
+        "provider_message_id": "1a112d8327e7aa23",
+        "smtp_message_id": "<AM9P190MB1571F3356A51BDE5B3BB1960E2952@AM9P190MB1571.EURP190.PROD.OUTLOOK.COM>",
+        "case_subject": "[AP-DEMO][phase01-connect-001][single]",
+        "attachment_keys": [
+          "attachment_0"
+        ]
+      }
+    ],
+    "summary": [
+      {
+        "source_type": "email",
+        "source_namespace": "gmail:ap-test-inbox",
+        "source_id": "1a112e07928275fb",
+        "attachment_id": "attachment_0",
+        "batch_id": "phase01-connect-001",
+        "case_id": "mixed",
+        "status": "review_ready",
+        "reason_code": "PENDING_REVIEW",
+        "receipt_id": "511a7737-115e-415d-a510-c4ae832a5257",
+        "invoice_id": "1771e496-d925-4832-a504-fbcb96eba30e",
+        "review_url": "http://127.0.0.1:8000/reviews/1771e496-d925-4832-a504-fbcb96eba30e",
+        "notification_status": "sent"
+      },
+      {
+        "source_type": "email",
+        "source_namespace": "gmail:ap-test-inbox",
+        "source_id": "1a112e07928275fb",
+        "attachment_id": "attachment_1",
+        "batch_id": "phase01-connect-001",
+        "case_id": "mixed",
+        "status": "intake_failed",
+        "reason_code": "HTTP_422",
+        "receipt_id": null,
+        "invoice_id": null,
+        "review_url": null,
+        "notification_status": "not_started"
+      },
+      {
+        "source_type": "email",
+        "source_namespace": "gmail:ap-test-inbox",
+        "source_id": "1a112e07928275fb",
+        "attachment_id": "attachment_2",
+        "batch_id": "phase01-connect-001",
+        "case_id": "mixed",
+        "status": "skipped",
+        "reason_code": "UNSUPPORTED_ATTACHMENT",
+        "receipt_id": null,
+        "invoice_id": null,
+        "review_url": null,
+        "notification_status": "not_started"
+      },
+      {
+        "source_type": "email",
+        "source_namespace": "gmail:ap-test-inbox",
+        "source_id": "1a112e0004b7b16b",
+        "attachment_id": "attachment_0",
+        "batch_id": "phase01-connect-001",
+        "case_id": "invalid",
+        "status": "intake_failed",
+        "reason_code": "HTTP_422",
+        "receipt_id": null,
+        "invoice_id": null,
+        "review_url": null,
+        "notification_status": "not_started"
+      },
+      {
+        "source_type": "email",
+        "source_namespace": "gmail:ap-test-inbox",
+        "source_id": "1a112df5e8cf3ac5",
+        "attachment_id": "none",
+        "batch_id": "phase01-connect-001",
+        "case_id": "no-attachments",
+        "status": "skipped",
+        "reason_code": "NO_ATTACHMENTS",
+        "receipt_id": null,
+        "invoice_id": null,
+        "review_url": null,
+        "notification_status": "not_started"
+      },
+      {
+        "source_type": "email",
+        "source_namespace": "gmail:ap-test-inbox",
+        "source_id": "1a112d9b5a4ac7d9",
+        "attachment_id": "attachment_0",
+        "batch_id": "phase01-connect-001",
+        "case_id": "multi",
+        "status": "review_ready",
+        "reason_code": "PENDING_REVIEW",
+        "receipt_id": "bd169a39-a27a-4b75-816a-ff0e63b137e6",
+        "invoice_id": "1771e496-d925-4832-a504-fbcb96eba30e",
+        "review_url": "http://127.0.0.1:8000/reviews/1771e496-d925-4832-a504-fbcb96eba30e",
+        "notification_status": "sent"
+      },
+      {
+        "source_type": "email",
+        "source_namespace": "gmail:ap-test-inbox",
+        "source_id": "1a112d9b5a4ac7d9",
+        "attachment_id": "attachment_1",
+        "batch_id": "phase01-connect-001",
+        "case_id": "multi",
+        "status": "review_ready",
+        "reason_code": "PENDING_REVIEW",
+        "receipt_id": "c7192eb2-15cc-4d73-9116-a20c7d3ef7f1",
+        "invoice_id": "41608a73-1043-48ec-9482-bd84bc6fc2ee",
+        "review_url": "http://127.0.0.1:8000/reviews/41608a73-1043-48ec-9482-bd84bc6fc2ee",
+        "notification_status": "sent"
+      },
+      {
+        "source_type": "email",
+        "source_namespace": "gmail:ap-test-inbox",
+        "source_id": "1a112d8327e7aa23",
+        "attachment_id": "attachment_0",
+        "batch_id": "phase01-connect-001",
+        "case_id": "single",
+        "status": "review_ready",
+        "reason_code": "PENDING_REVIEW",
+        "receipt_id": "970aca9b-bed6-4d31-8c29-5e2964a2e581",
+        "invoice_id": "1771e496-d925-4832-a504-fbcb96eba30e",
+        "review_url": "http://127.0.0.1:8000/reviews/1771e496-d925-4832-a504-fbcb96eba30e",
+        "notification_status": "sent"
+      }
+    ],
+    "error": null
+  },
+  {
+    "id": 409,
+    "status": "success",
+    "mode": "webhook",
+    "started_at": "2026-10-06 20:41:14.737",
+    "stopped_at": "2026-10-06 20:41:15.258",
+    "messages": [],
+    "summary": [
+      {
+        "source_type": "upload",
+        "source_namespace": "n8n-ap-upload-v1",
+        "source_id": "unified-v5-upload-001",
+        "attachment_id": "0",
+        "status": "review_ready",
+        "reason_code": "PENDING_REVIEW",
+        "receipt_id": "5de4b559-0bd4-4574-97c6-5e31211187cd",
+        "invoice_id": "1771e496-d925-4832-a504-fbcb96eba30e",
+        "review_url": "http://127.0.0.1:8000/reviews/1771e496-d925-4832-a504-fbcb96eba30e",
+        "notification_status": "sent"
+      }
+    ],
+    "error": null
+  },
+  {
+    "id": 410,
+    "status": "success",
+    "mode": "webhook",
+    "started_at": "2026-10-06 20:41:15.347",
+    "stopped_at": "2026-10-06 20:41:15.765",
+    "messages": [],
+    "summary": [
+      {
+        "source_type": "upload",
+        "source_namespace": "n8n-ap-upload-v1",
+        "source_id": "unified-v5-upload-001",
+        "attachment_id": "0",
+        "status": "review_ready",
+        "reason_code": "PENDING_REVIEW",
+        "receipt_id": "5de4b559-0bd4-4574-97c6-5e31211187cd",
+        "invoice_id": "1771e496-d925-4832-a504-fbcb96eba30e",
+        "review_url": "http://127.0.0.1:8000/reviews/1771e496-d925-4832-a504-fbcb96eba30e",
+        "notification_status": "sent"
+      }
+    ],
+    "error": null
+  },
+  {
+    "id": 411,
+    "status": "success",
+    "mode": "manual",
+    "started_at": "2026-10-06 20:41:24.970",
+    "stopped_at": "2026-10-06 20:41:32.318",
+    "messages": [
+      {
+        "provider_message_id": "1a112e07928275fb",
+        "smtp_message_id": "<AM9P190MB15710A63E93D08BD2346ED86E2952@AM9P190MB1571.EURP190.PROD.OUTLOOK.COM>",
+        "case_subject": "[AP-DEMO][phase01-connect-001][mixed]",
+        "attachment_keys": [
+          "attachment_0",
+          "attachment_1",
+          "attachment_2"
+        ]
+      },
+      {
+        "provider_message_id": "1a112e0004b7b16b",
+        "smtp_message_id": "<AM9P190MB1571FF6FD431CEF726D5707DE2952@AM9P190MB1571.EURP190.PROD.OUTLOOK.COM>",
+        "case_subject": "[AP-DEMO][phase01-connect-001][invalid]",
+        "attachment_keys": [
+          "attachment_0"
+        ]
+      },
+      {
+        "provider_message_id": "1a112df5e8cf3ac5",
+        "smtp_message_id": "<AM9P190MB1571674162CCB4F22A465AC0E2952@AM9P190MB1571.EURP190.PROD.OUTLOOK.COM>",
+        "case_subject": "[AP-DEMO][phase01-connect-001][no-attachments]",
+        "attachment_keys": []
+      },
+      {
+        "provider_message_id": "1a112d9b5a4ac7d9",
+        "smtp_message_id": "<AM9P190MB15716312913DD65BD1B4F761E2952@AM9P190MB1571.EURP190.PROD.OUTLOOK.COM>",
+        "case_subject": "[AP-DEMO][phase01-connect-001][multi]",
+        "attachment_keys": [
+          "attachment_0",
+          "attachment_1"
+        ]
+      },
+      {
+        "provider_message_id": "1a112d8327e7aa23",
+        "smtp_message_id": "<AM9P190MB1571F3356A51BDE5B3BB1960E2952@AM9P190MB1571.EURP190.PROD.OUTLOOK.COM>",
+        "case_subject": "[AP-DEMO][phase01-connect-001][single]",
+        "attachment_keys": [
+          "attachment_0"
+        ]
+      }
+    ],
+    "summary": [
+      {
+        "source_type": "email",
+        "source_namespace": "gmail:ap-test-inbox",
+        "source_id": "1a112e07928275fb",
+        "attachment_id": "attachment_0",
+        "batch_id": "phase01-connect-001",
+        "case_id": "mixed",
+        "status": "review_ready",
+        "reason_code": "PENDING_REVIEW",
+        "receipt_id": "511a7737-115e-415d-a510-c4ae832a5257",
+        "invoice_id": "1771e496-d925-4832-a504-fbcb96eba30e",
+        "review_url": "http://127.0.0.1:8000/reviews/1771e496-d925-4832-a504-fbcb96eba30e",
+        "notification_status": "sent"
+      },
+      {
+        "source_type": "email",
+        "source_namespace": "gmail:ap-test-inbox",
+        "source_id": "1a112e07928275fb",
+        "attachment_id": "attachment_1",
+        "batch_id": "phase01-connect-001",
+        "case_id": "mixed",
+        "status": "intake_failed",
+        "reason_code": "HTTP_422",
+        "receipt_id": null,
+        "invoice_id": null,
+        "review_url": null,
+        "notification_status": "not_started"
+      },
+      {
+        "source_type": "email",
+        "source_namespace": "gmail:ap-test-inbox",
+        "source_id": "1a112e07928275fb",
+        "attachment_id": "attachment_2",
+        "batch_id": "phase01-connect-001",
+        "case_id": "mixed",
+        "status": "skipped",
+        "reason_code": "UNSUPPORTED_ATTACHMENT",
+        "receipt_id": null,
+        "invoice_id": null,
+        "review_url": null,
+        "notification_status": "not_started"
+      },
+      {
+        "source_type": "email",
+        "source_namespace": "gmail:ap-test-inbox",
+        "source_id": "1a112e0004b7b16b",
+        "attachment_id": "attachment_0",
+        "batch_id": "phase01-connect-001",
+        "case_id": "invalid",
+        "status": "intake_failed",
+        "reason_code": "HTTP_422",
+        "receipt_id": null,
+        "invoice_id": null,
+        "review_url": null,
+        "notification_status": "not_started"
+      },
+      {
+        "source_type": "email",
+        "source_namespace": "gmail:ap-test-inbox",
+        "source_id": "1a112df5e8cf3ac5",
+        "attachment_id": "none",
+        "batch_id": "phase01-connect-001",
+        "case_id": "no-attachments",
+        "status": "skipped",
+        "reason_code": "NO_ATTACHMENTS",
+        "receipt_id": null,
+        "invoice_id": null,
+        "review_url": null,
+        "notification_status": "not_started"
+      },
+      {
+        "source_type": "email",
+        "source_namespace": "gmail:ap-test-inbox",
+        "source_id": "1a112d9b5a4ac7d9",
+        "attachment_id": "attachment_0",
+        "batch_id": "phase01-connect-001",
+        "case_id": "multi",
+        "status": "review_ready",
+        "reason_code": "PENDING_REVIEW",
+        "receipt_id": "bd169a39-a27a-4b75-816a-ff0e63b137e6",
+        "invoice_id": "1771e496-d925-4832-a504-fbcb96eba30e",
+        "review_url": "http://127.0.0.1:8000/reviews/1771e496-d925-4832-a504-fbcb96eba30e",
+        "notification_status": "sent"
+      },
+      {
+        "source_type": "email",
+        "source_namespace": "gmail:ap-test-inbox",
+        "source_id": "1a112d9b5a4ac7d9",
+        "attachment_id": "attachment_1",
+        "batch_id": "phase01-connect-001",
+        "case_id": "multi",
+        "status": "review_ready",
+        "reason_code": "PENDING_REVIEW",
+        "receipt_id": "c7192eb2-15cc-4d73-9116-a20c7d3ef7f1",
+        "invoice_id": "41608a73-1043-48ec-9482-bd84bc6fc2ee",
+        "review_url": "http://127.0.0.1:8000/reviews/41608a73-1043-48ec-9482-bd84bc6fc2ee",
+        "notification_status": "sent"
+      },
+      {
+        "source_type": "email",
+        "source_namespace": "gmail:ap-test-inbox",
+        "source_id": "1a112d8327e7aa23",
+        "attachment_id": "attachment_0",
+        "batch_id": "phase01-connect-001",
+        "case_id": "single",
+        "status": "review_ready",
+        "reason_code": "PENDING_REVIEW",
+        "receipt_id": "970aca9b-bed6-4d31-8c29-5e2964a2e581",
+        "invoice_id": "1771e496-d925-4832-a504-fbcb96eba30e",
+        "review_url": "http://127.0.0.1:8000/reviews/1771e496-d925-4832-a504-fbcb96eba30e",
+        "notification_status": "sent"
+      }
+    ],
+    "error": null
+  }
+]

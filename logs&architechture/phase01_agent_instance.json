@@ -1,0 +1,14 @@
+{
+  "json_parsed": true,
+  "nodes_match": true,
+  "connections_match": true,
+  "instance_imported": true,
+  "published": true,
+  "credential_bound": {
+    "gmailOAuth2": {
+      "id": "SGOORT8HCIJeyC72",
+      "name": "Gmail account"
+    }
+  },
+  "execution_nodes": 14
+}

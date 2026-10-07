@@ -1,0 +1,556 @@
+{
+  "tests": 61,
+  "offline_agent_tests": 5,
+  "attempts": [
+    {
+      "attempt_id": 85,
+      "invoice_id": "1771e496-d925-4832-a504-fbcb96eba30e",
+      "status": "processed",
+      "trace": {
+        "agent_version": "langchain-invoice-v1",
+        "analysis_signature": "32ed03df7cb5745d91bb2b318547ac88fa16305e59c1dfc5962a83d4e7eaedaa",
+        "provider": "gemini_native",
+        "status": "completed",
+        "started_at": "2026-10-06T21:19:35.390373+00:00",
+        "model_calls": [
+          {
+            "index": 1,
+            "started_at": "2026-10-06T21:19:35.498538+00:00",
+            "status": "completed",
+            "finished_at": "2026-10-06T21:19:36.566248+00:00",
+            "usage": [
+              {
+                "input_tokens": 1025,
+                "output_tokens": 18,
+                "total_tokens": 1043,
+                "input_token_details": {
+                  "cache_read": 0
+                }
+              }
+            ]
+          },
+          {
+            "index": 2,
+            "started_at": "2026-10-06T21:20:35.497133+00:00",
+            "status": "completed",
+            "finished_at": "2026-10-06T21:20:38.238831+00:00",
+            "usage": [
+              {
+                "input_tokens": 15784,
+                "output_tokens": 531,
+                "total_tokens": 16315,
+                "input_token_details": {
+                  "cache_read": 0
+                }
+              }
+            ]
+          }
+        ],
+        "tools": [
+          {
+            "tool": "read_invoice_page",
+            "arguments": {
+              "page_numbers": [
+                1
+              ]
+            },
+            "at": "2026-10-06T21:19:36.668780+00:00",
+            "result_sha256": "ee70e7b6af0bfd6fb74ebfa2421ca30118639a17b98ce520bb69bcd4eb802b7b"
+          }
+        ],
+        "max_model_calls": 3,
+        "max_tool_calls": 6,
+        "finished_at": "2026-10-06T21:20:38.302171+00:00",
+        "pages_read": [
+          1
+        ]
+      },
+      "field_changes": {
+        "supplier_address": {
+          "before": "12 Amberleaf Park\nWillowmere",
+          "after": null
+        }
+      },
+      "issue_codes": [
+        "UNSUPPORTED_EXTRACTION",
+        "UNSUPPORTED_EXTRACTION",
+        "UNSUPPORTED_EXTRACTION",
+        "UNSUPPORTED_EXTRACTION",
+        "EXTRACTION_UNCERTAINTY"
+      ]
+    },
+    {
+      "attempt_id": 86,
+      "invoice_id": "41608a73-1043-48ec-9482-bd84bc6fc2ee",
+      "status": "failed",
+      "trace": {
+        "agent_version": "langchain-invoice-v1",
+        "analysis_signature": "32ed03df7cb5745d91bb2b318547ac88fa16305e59c1dfc5962a83d4e7eaedaa",
+        "provider": "gemini_native",
+        "status": "failed",
+        "started_at": "2026-10-06T21:21:35.493923+00:00",
+        "model_calls": [
+          {
+            "index": 1,
+            "started_at": "2026-10-06T21:21:35.562466+00:00",
+            "status": "completed",
+            "finished_at": "2026-10-06T21:21:36.427898+00:00",
+            "usage": [
+              {
+                "input_tokens": 1026,
+                "output_tokens": 18,
+                "total_tokens": 1044,
+                "input_token_details": {
+                  "cache_read": 0
+                }
+              }
+            ]
+          },
+          {
+            "index": 2,
+            "started_at": "2026-10-06T21:22:35.560298+00:00",
+            "status": "completed",
+            "finished_at": "2026-10-06T21:22:37.094198+00:00",
+            "usage": [
+              {
+                "input_tokens": 17962,
+                "output_tokens": 20,
+                "total_tokens": 17982,
+                "input_token_details": {
+                  "cache_read": 0
+                }
+              }
+            ]
+          },
+          {
+            "index": 3,
+            "started_at": "2026-10-06T21:23:35.556661+00:00",
+            "status": "completed",
+            "finished_at": "2026-10-06T21:23:37.497959+00:00",
+            "usage": [
+              {
+                "input_tokens": 18057,
+                "output_tokens": 26,
+                "total_tokens": 18083,
+                "input_token_details": {
+                  "cache_read": 0
+                }
+              }
+            ]
+          }
+        ],
+        "tools": [
+          {
+            "tool": "read_invoice_page",
+            "arguments": {
+              "page_numbers": [
+                1
+              ]
+            },
+            "at": "2026-10-06T21:21:36.514671+00:00",
+            "result_sha256": "2dadd1b239f326858da2f80525bc89e8fc875ed07c54ab5680a7d0b359691d12"
+          },
+          {
+            "tool": "find_field_evidence",
+            "arguments": {
+              "query": "Richardson-Davis"
+            },
+            "at": "2026-10-06T21:22:37.157694+00:00",
+            "result_sha256": "013e0b84f62f88173f93e53ae23e3ce7ffc1a192f0a304872ee7f391f03c5960"
+          },
+          {
+            "tool": "find_field_evidence",
+            "arguments": {
+              "query": "INV70628258"
+            },
+            "at": "2026-10-06T21:23:37.612768+00:00",
+            "result_sha256": "248359093ed361b8171a3a726751d44e01b6e874f14b037697a452f336b3f7f6"
+          }
+        ],
+        "max_model_calls": 3,
+        "max_tool_calls": 6,
+        "error_code": "AGENT_MODEL_LIMIT",
+        "finished_at": "2026-10-06T21:23:37.683542+00:00"
+      },
+      "field_changes": {},
+      "issue_codes": []
+    },
+    {
+      "attempt_id": 87,
+      "invoice_id": "1771e496-d925-4832-a504-fbcb96eba30e",
+      "status": "processed",
+      "trace": {
+        "agent_version": "langchain-invoice-v2",
+        "analysis_signature": "00f8acb9f1774c6f6fe10df5412be8664101ad12c64a999873ef7c89bcb1cda4",
+        "provider": "gemini_native",
+        "status": "completed",
+        "started_at": "2026-10-06T21:24:52.364499+00:00",
+        "model_calls": [
+          {
+            "index": 1,
+            "started_at": "2026-10-06T21:24:52.458447+00:00",
+            "status": "completed",
+            "finished_at": "2026-10-06T21:24:53.520953+00:00",
+            "usage": [
+              {
+                "input_tokens": 1106,
+                "output_tokens": 18,
+                "total_tokens": 1124,
+                "input_token_details": {
+                  "cache_read": 0
+                }
+              }
+            ]
+          },
+          {
+            "index": 2,
+            "started_at": "2026-10-06T21:25:52.555259+00:00",
+            "status": "completed",
+            "finished_at": "2026-10-06T21:25:54.950547+00:00",
+            "usage": [
+              {
+                "input_tokens": 15865,
+                "output_tokens": 524,
+                "total_tokens": 16389,
+                "input_token_details": {
+                  "cache_read": 0
+                }
+              }
+            ]
+          }
+        ],
+        "tools": [
+          {
+            "tool": "read_invoice_page",
+            "arguments": {
+              "page_numbers": [
+                1
+              ]
+            },
+            "at": "2026-10-06T21:24:53.598917+00:00",
+            "result_sha256": "ee70e7b6af0bfd6fb74ebfa2421ca30118639a17b98ce520bb69bcd4eb802b7b"
+          }
+        ],
+        "max_model_calls": 3,
+        "max_tool_calls": 6,
+        "finished_at": "2026-10-06T21:25:55.038983+00:00",
+        "pages_read": [
+          1
+        ]
+      },
+      "field_changes": {
+        "supplier_tax_id": {
+          "before": null,
+          "after": "INV-A-202610-001"
+        }
+      },
+      "issue_codes": [
+        "AMOUNT_AMBIGUOUS_OR_INVALID",
+        "AMOUNT_AMBIGUOUS_OR_INVALID"
+      ]
+    },
+    {
+      "attempt_id": 88,
+      "invoice_id": "41608a73-1043-48ec-9482-bd84bc6fc2ee",
+      "status": "processed",
+      "trace": {
+        "agent_version": "langchain-invoice-v2",
+        "analysis_signature": "00f8acb9f1774c6f6fe10df5412be8664101ad12c64a999873ef7c89bcb1cda4",
+        "provider": "gemini_native",
+        "status": "completed",
+        "started_at": "2026-10-06T21:26:52.652903+00:00",
+        "model_calls": [
+          {
+            "index": 1,
+            "started_at": "2026-10-06T21:26:52.745130+00:00",
+            "status": "completed",
+            "finished_at": "2026-10-06T21:26:53.852386+00:00",
+            "usage": [
+              {
+                "input_tokens": 1107,
+                "output_tokens": 18,
+                "total_tokens": 1125,
+                "input_token_details": {
+                  "cache_read": 0
+                }
+              }
+            ]
+          },
+          {
+            "index": 2,
+            "started_at": "2026-10-06T21:27:52.840784+00:00",
+            "status": "completed",
+            "finished_at": "2026-10-06T21:27:54.103632+00:00",
+            "usage": [
+              {
+                "input_tokens": 18043,
+                "output_tokens": 20,
+                "total_tokens": 18063,
+                "input_token_details": {
+                  "cache_read": 0
+                }
+              }
+            ]
+          },
+          {
+            "index": 3,
+            "started_at": "2026-10-06T21:28:52.937334+00:00",
+            "status": "completed",
+            "finished_at": "2026-10-06T21:28:55.760482+00:00",
+            "usage": [
+              {
+                "input_tokens": 17983,
+                "output_tokens": 491,
+                "total_tokens": 18474,
+                "input_token_details": {
+                  "cache_read": 0
+                }
+              }
+            ]
+          }
+        ],
+        "tools": [
+          {
+            "tool": "read_invoice_page",
+            "arguments": {
+              "page_numbers": [
+                1
+              ]
+            },
+            "at": "2026-10-06T21:26:54.002102+00:00",
+            "result_sha256": "2dadd1b239f326858da2f80525bc89e8fc875ed07c54ab5680a7d0b359691d12"
+          },
+          {
+            "tool": "find_field_evidence",
+            "arguments": {
+              "query": "Richardson-Davis"
+            },
+            "at": "2026-10-06T21:27:54.198550+00:00",
+            "result_sha256": "013e0b84f62f88173f93e53ae23e3ce7ffc1a192f0a304872ee7f391f03c5960"
+          }
+        ],
+        "max_model_calls": 3,
+        "max_tool_calls": 6,
+        "finished_at": "2026-10-06T21:28:55.856159+00:00",
+        "pages_read": [
+          1
+        ]
+      },
+      "field_changes": {
+        "supplier_address": {
+          "before": "6479 Smith East Camerontown, AS 38212 US",
+          "after": null
+        },
+        "supplier_tax_id": {
+          "before": null,
+          "after": "Causeway"
+        }
+      },
+      "issue_codes": [
+        "AMOUNT_AMBIGUOUS_OR_INVALID",
+        "TOTAL_EQUATION_REVIEW",
+        "UNSUPPORTED_EXTRACTION",
+        "EXTRACTION_UNCERTAINTY"
+      ]
+    },
+    {
+      "attempt_id": 89,
+      "invoice_id": "1771e496-d925-4832-a504-fbcb96eba30e",
+      "status": "processed",
+      "trace": {
+        "agent_version": "langchain-invoice-v3",
+        "analysis_signature": "debedc038a4004d0c98941519696fe2d291c681934e8f23ee224a7248d1cd68e",
+        "provider": "gemini_native",
+        "status": "completed",
+        "started_at": "2026-10-06T21:29:54.562220+00:00",
+        "model_calls": [
+          {
+            "index": 1,
+            "started_at": "2026-10-06T21:29:54.666544+00:00",
+            "status": "completed",
+            "finished_at": "2026-10-06T21:29:55.870224+00:00",
+            "usage": [
+              {
+                "input_tokens": 1245,
+                "output_tokens": 18,
+                "total_tokens": 1263,
+                "input_token_details": {
+                  "cache_read": 0
+                }
+              }
+            ]
+          },
+          {
+            "index": 2,
+            "started_at": "2026-10-06T21:30:54.763962+00:00",
+            "status": "completed",
+            "finished_at": "2026-10-06T21:30:56.897530+00:00",
+            "usage": [
+              {
+                "input_tokens": 16004,
+                "output_tokens": 479,
+                "total_tokens": 16483,
+                "input_token_details": {
+                  "cache_read": 0
+                }
+              }
+            ]
+          }
+        ],
+        "tools": [
+          {
+            "tool": "read_invoice_page",
+            "arguments": {
+              "page_numbers": [
+                1
+              ]
+            },
+            "at": "2026-10-06T21:29:55.945662+00:00",
+            "result_sha256": "ee70e7b6af0bfd6fb74ebfa2421ca30118639a17b98ce520bb69bcd4eb802b7b"
+          }
+        ],
+        "max_model_calls": 3,
+        "max_tool_calls": 6,
+        "finished_at": "2026-10-06T21:30:56.999231+00:00",
+        "pages_read": [
+          1
+        ]
+      },
+      "field_changes": {},
+      "issue_codes": []
+    },
+    {
+      "attempt_id": 90,
+      "invoice_id": "41608a73-1043-48ec-9482-bd84bc6fc2ee",
+      "status": "processed",
+      "trace": {
+        "agent_version": "langchain-invoice-v3",
+        "analysis_signature": "debedc038a4004d0c98941519696fe2d291c681934e8f23ee224a7248d1cd68e",
+        "provider": "gemini_native",
+        "status": "completed",
+        "started_at": "2026-10-06T21:31:54.861497+00:00",
+        "model_calls": [
+          {
+            "index": 1,
+            "started_at": "2026-10-06T21:31:54.943908+00:00",
+            "status": "completed",
+            "finished_at": "2026-10-06T21:31:55.982009+00:00",
+            "usage": [
+              {
+                "input_tokens": 1246,
+                "output_tokens": 18,
+                "total_tokens": 1264,
+                "input_token_details": {
+                  "cache_read": 0
+                }
+              }
+            ]
+          },
+          {
+            "index": 2,
+            "started_at": "2026-10-06T21:32:55.042624+00:00",
+            "status": "completed",
+            "finished_at": "2026-10-06T21:32:56.508166+00:00",
+            "usage": [
+              {
+                "input_tokens": 18182,
+                "output_tokens": 20,
+                "total_tokens": 18202,
+                "input_token_details": {
+                  "cache_read": 0
+                }
+              }
+            ]
+          },
+          {
+            "index": 3,
+            "started_at": "2026-10-06T21:33:55.138623+00:00",
+            "status": "completed",
+            "finished_at": "2026-10-06T21:33:57.666563+00:00",
+            "usage": [
+              {
+                "input_tokens": 18114,
+                "output_tokens": 489,
+                "total_tokens": 18603,
+                "input_token_details": {
+                  "cache_read": 0
+                }
+              }
+            ]
+          }
+        ],
+        "tools": [
+          {
+            "tool": "read_invoice_page",
+            "arguments": {
+              "page_numbers": [
+                1
+              ]
+            },
+            "at": "2026-10-06T21:31:56.094863+00:00",
+            "result_sha256": "2dadd1b239f326858da2f80525bc89e8fc875ed07c54ab5680a7d0b359691d12"
+          },
+          {
+            "tool": "find_field_evidence",
+            "arguments": {
+              "query": "Richardson-Davis"
+            },
+            "at": "2026-10-06T21:32:56.718472+00:00",
+            "result_sha256": "013e0b84f62f88173f93e53ae23e3ce7ffc1a192f0a304872ee7f391f03c5960"
+          }
+        ],
+        "max_model_calls": 3,
+        "max_tool_calls": 6,
+        "finished_at": "2026-10-06T21:33:57.860170+00:00",
+        "pages_read": [
+          1
+        ]
+      },
+      "field_changes": {
+        "supplier_address": {
+          "before": "6479 Smith East Camerontown, AS 38212 US",
+          "after": null
+        }
+      },
+      "issue_codes": [
+        "TOTAL_EQUATION_REVIEW",
+        "UNSUPPORTED_EXTRACTION",
+        "EXTRACTION_UNCERTAINTY",
+        "EXTRACTION_UNCERTAINTY"
+      ]
+    }
+  ],
+  "counts": {
+    "invoices": {
+      "before": 16,
+      "after": 16
+    },
+    "receipts": {
+      "before": 159,
+      "after": 159
+    },
+    "processing_attempts": {
+      "before": 84,
+      "after": 90
+    },
+    "review_tasks": {
+      "before": 4,
+      "after": 4
+    },
+    "notification_attempts": {
+      "before": 5,
+      "after": 5
+    }
+  },
+  "historical_workflows_and_originals_unchanged": true,
+  "final_agent_version": "langchain-invoice-v3",
+  "final_model_calls": 5,
+  "all_diagnostic_model_calls": 15,
+  "final_min_request_gap_seconds": 60.095999,
+  "final_quality_limit": "OCR11 full address is present in the raw draft but rejected by unchanged contiguous-text grounding; validated address is null. This is not full field parity.",
+  "unchanged_components": {
+    "document_text.py": true,
+    "validation.py": true
+  },
+  "mailpit_messages": 116
+}

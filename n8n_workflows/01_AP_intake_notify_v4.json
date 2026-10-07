@@ -1,0 +1,618 @@
+{
+  "id": "APIntakeNotifyV4",
+  "name": "01_AP_Intake_Notify_v4",
+  "nodes": [
+    {
+      "id": "d33120fd-6a7a-48be-b42e-96dd6a3b472a",
+      "name": "Upload Invoice",
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        240
+      ],
+      "parameters": {
+        "path": "ap-intake-notify-v4",
+        "formTitle": "AP Invoice Intake and Review",
+        "formDescription": "Store an invoice, create a pending read-only review and notify the local Mailpit inbox. Reuse Upload ID for retries.",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Upload ID",
+              "fieldType": "text",
+              "requiredField": true,
+              "placeholder": "e.g. ap-upload-001"
+            },
+            {
+              "fieldLabel": "Invoice File",
+              "fieldType": "file",
+              "multipleFiles": false,
+              "acceptFileTypes": ".pdf,.jpg,.jpeg,.png",
+              "requiredField": true
+            }
+          ]
+        },
+        "responseMode": "responseNode",
+        "options": {
+          "buttonLabel": "Store invoice",
+          "appendAttribution": false
+        }
+      },
+      "webhookId": "2833ec26-2235-4b64-afc6-48b639b731a2"
+    },
+    {
+      "id": "a13e06cb-5d88-48a8-85d4-eb07baf2c669",
+      "name": "Normalize Upload",
+      "type": "n8n-nodes-base.code",
+      "position": [
+        280,
+        240
+      ],
+      "parameters": {
+        "jsCode": "const item = $input.first();\nconst keys = Object.keys(item.binary || {});\nif (keys.length !== 1) throw new Error('Upload exactly one file.');\nconst sourceId = String(item.json['Upload ID'] || '').trim();\nif (!sourceId || sourceId.length > 200) throw new Error('Upload ID must contain 1 to 200 characters.');\nreturn [{json: {direction: 'AP', source_type: 'upload', source_namespace: 'n8n-ap-upload-v1', source_id: sourceId, attachment_id: '0'}, binary: {data: item.binary[keys[0]]}}];"
+      },
+      "typeVersion": 2
+    },
+    {
+      "id": "efa75d18-c25e-417c-8831-6f3b880ecf51",
+      "name": "Store Original and Register Intake",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        560,
+        240
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "http://python-api:8000/api/ap/intakes",
+        "sendBody": true,
+        "contentType": "multipart-form-data",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "parameterType": "formBinaryData",
+              "name": "file",
+              "inputDataFieldName": "data"
+            },
+            {
+              "name": "source_type",
+              "value": "={{ $json.source_type }}"
+            },
+            {
+              "name": "source_namespace",
+              "value": "={{ $json.source_namespace }}"
+            },
+            {
+              "name": "source_id",
+              "value": "={{ $json.source_id }}"
+            },
+            {
+              "name": "attachment_id",
+              "value": "={{ $json.attachment_id }}"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 30000,
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "neverError": true,
+              "responseFormat": "json"
+            }
+          }
+        }
+      },
+      "typeVersion": 4.2
+    },
+    {
+      "id": "1021ab90-d2c1-4900-9f09-8eadca1c0aa1",
+      "name": "Format Intake Result",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3280,
+        240
+      ],
+      "parameters": {
+        "jsCode": "const intake=$('Store Original and Register Intake').first().json;\nconst saved=intake.body || {};\nconst current=$input.first().json;\nlet review={};try {review=$('Create Review Task').first().json.body || {};} catch {}\nconst ready=review.review_status==='pending';\nconst result=current.body || {};\nconst notification=result.status || 'not_started';\nconst message=ready ? `Invoice stored. Review pending. Open review: ${review.review_url} . Notification: ${notification}. This page is read-only.` : `Review not ready. HTTP ${current.statusCode}. Existing records are retained; retry the same Upload ID after resolving the error.`;\nreturn [{json:{formSubmittedText:message,review_url:ready?review.review_url:null,invoice_id:saved.invoice_id,notification_status:notification}}];"
+      }
+    },
+    {
+      "id": "7a87a7cf-0299-466d-b250-86982bef4ba4",
+      "name": "Show Intake Result",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        3520,
+        240
+      ],
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {}
+      }
+    },
+    {
+      "id": "d7979075-8fc9-4751-9c8b-f04e6df535ff",
+      "name": "Scope and Template Provenance",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        0,
+        -100
+      ],
+      "parameters": {
+        "width": 1720,
+        "height": 250,
+        "content": "## Step 6: local review notification\nDerived from preserved v3 and the original email template. Python persists notification claims and results independently of review tasks. n8n sends SMTP only to local Mailpit. Sent/sending/unknown claims are skipped; definite failure can be retried. SMTP uncertainty requires reconciliation before retry. No approval, rejection, export or payment. This export is inactive; see the runbook for actual instance verification."
+      }
+    },
+    {
+      "id": "c1380588-5eae-4a18-9645-f00781d91cf9",
+      "name": "Intake Accepted",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        800,
+        240
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "1f6e4792-18b4-4b04-b8a8-fcea517e4597",
+              "leftValue": "={{ Boolean($json.body && $json.body.invoice_id && ($json.statusCode === 200 || $json.statusCode === 201)) }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "4b535f55-cd1b-49e8-9146-1cb0aeb7a92b",
+      "name": "Extract Validate and Check Duplicates",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        1060,
+        140
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "={{ 'http://python-api:8000/api/ap/invoices/' + $json.body.invoice_id + '/process' }}",
+        "options": {
+          "timeout": 180000,
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "neverError": true,
+              "responseFormat": "json"
+            }
+          }
+        }
+      },
+      "typeVersion": 4.2
+    },
+    {
+      "id": "a9bf00b5-f810-4ce6-baf6-4f87344db789",
+      "name": "Processing Completed",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        1320,
+        140
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "1f6e4792-18b4-4b04-b8a8-fcea517e4597",
+              "leftValue": "={{ Boolean($json.statusCode === 200 && $json.body && $json.body.processing_status === 'processed') }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "6b8a71b7-718a-462b-a767-b274261953df",
+      "name": "Create Review Task",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        1580,
+        40
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "={{ 'http://python-api:8000/api/ap/invoices/' + $json.body.invoice_id + '/review-task' }}",
+        "options": {
+          "timeout": 30000,
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "neverError": true,
+              "responseFormat": "json"
+            }
+          }
+        }
+      },
+      "typeVersion": 4.2
+    },
+    {
+      "id": "79e42b71-3280-4bcc-ac5b-06df7fa9b6c8",
+      "name": "Review Ready",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        1820,
+        20
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "1f6e4792-18b4-4b04-b8a8-fcea517e4597",
+              "leftValue": "={{ Boolean($json.body && $json.body.review_status === 'pending' && [200,201].includes($json.statusCode)) }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "48024489-d20e-49ab-a5a2-ed068c7f7c5f",
+      "name": "Claim Notification",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2060,
+        20
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "={{ 'http://python-api:8000/api/ap/invoices/' + $json.body.invoice_id + '/notifications/claim' }}",
+        "options": {
+          "timeout": 30000,
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "neverError": true,
+              "responseFormat": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "9d7dc2f4-e37f-4809-8523-28e36a5d4830",
+      "name": "Send Required",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        2300,
+        20
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "1f6e4792-18b4-4b04-b8a8-fcea517e4597",
+              "leftValue": "={{ Boolean($json.statusCode === 200 && $json.body && $json.body.send_required) }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "a83f624c-70e6-47d7-a53e-c5ca5e0269d4",
+      "name": "Send Local Review Email",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        2540,
+        -60
+      ],
+      "parameters": {
+        "fromEmail": "ap-review@example.invalid",
+        "toEmail": "reviewer@example.invalid",
+        "subject": "={{ $json.body.subject }}",
+        "emailFormat": "text",
+        "text": "={{ $json.body.text }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "credentials": {
+        "smtp": {
+          "id": "APLocalMailpitSMTP",
+          "name": "AP Local Mailpit"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "id": "8a415f89-0fa8-46c1-8a85-0db5a614680a",
+      "name": "Classify SMTP Result",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2780,
+        -60
+      ],
+      "parameters": {
+        "jsCode": "const r=$input.first().json;\nconst claim=$('Claim Notification').first().json.body;\nconst error=String(r.error || '');\nconst sent=Boolean(r.messageId && (r.accepted || []).includes('reviewer@example.invalid'));\nconst definite=/ECONNREFUSED|ENOTFOUND|EAI_AGAIN|Invalid login|No recipients defined/.test(error);\nreturn [{json:{notification_id:claim.notification_id,status:sent?'sent':definite?'failed':'unknown',message_id:sent?r.messageId:null,error_code:sent?null:definite?'SMTP_CONNECTION_FAILED':'SMTP_DELIVERY_UNCERTAIN'}}];"
+      }
+    },
+    {
+      "id": "5985a961-2023-4fd8-b530-42105a8365eb",
+      "name": "Record Notification Result",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        3020,
+        -60
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "={{ 'http://python-api:8000/api/ap/notifications/' + $json.notification_id + '/result' }}",
+        "options": {
+          "timeout": 30000,
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "neverError": true,
+              "responseFormat": "json"
+            }
+          }
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ {status:$json.status,message_id:$json.message_id,error_code:$json.error_code} }}"
+      }
+    }
+  ],
+  "connections": {
+    "Upload Invoice": {
+      "main": [
+        [
+          {
+            "node": "Normalize Upload",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalize Upload": {
+      "main": [
+        [
+          {
+            "node": "Store Original and Register Intake",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Store Original and Register Intake": {
+      "main": [
+        [
+          {
+            "node": "Intake Accepted",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Intake Accepted": {
+      "main": [
+        [
+          {
+            "node": "Extract Validate and Check Duplicates",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Format Intake Result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Validate and Check Duplicates": {
+      "main": [
+        [
+          {
+            "node": "Processing Completed",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format Intake Result": {
+      "main": [
+        [
+          {
+            "node": "Show Intake Result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Processing Completed": {
+      "main": [
+        [
+          {
+            "node": "Create Review Task",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Format Intake Result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Review Task": {
+      "main": [
+        [
+          {
+            "node": "Review Ready",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Review Ready": {
+      "main": [
+        [
+          {
+            "node": "Claim Notification",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Format Intake Result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Claim Notification": {
+      "main": [
+        [
+          {
+            "node": "Send Required",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Required": {
+      "main": [
+        [
+          {
+            "node": "Send Local Review Email",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Format Intake Result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Local Review Email": {
+      "main": [
+        [
+          {
+            "node": "Classify SMTP Result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Classify SMTP Result": {
+      "main": [
+        [
+          {
+            "node": "Record Notification Result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Record Notification Result": {
+      "main": [
+        [
+          {
+            "node": "Format Intake Result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Europe/Berlin",
+    "saveDataSuccessExecution": "all",
+    "saveDataErrorExecution": "all"
+  },
+  "active": false,
+  "pinData": {}
+}

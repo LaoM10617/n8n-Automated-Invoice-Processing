@@ -1,0 +1,176 @@
+{
+  "before": {
+    "receipts": 158,
+    "review_tasks": 4,
+    "notification_attempts": 5,
+    "processing_attempts": 84
+  },
+  "after": {
+    "receipts": 159,
+    "review_tasks": 4,
+    "notification_attempts": 5,
+    "processing_attempts": 84
+  },
+  "batch": {
+    "batch_id": "phase01-connect-001",
+    "messages": 5,
+    "receipts": 4,
+    "unique_invoices": 2,
+    "review_tasks": 2,
+    "failed_items": 2,
+    "skipped_items": 2,
+    "outcomes": [
+      {
+        "source_namespace": "gmail:ap-test-inbox",
+        "source_id": "1a112d8327e7aa23",
+        "attachment_id": "attachment_0",
+        "batch_id": "phase01-connect-001",
+        "case_id": "single",
+        "status": "review_ready",
+        "reason_code": "PENDING_REVIEW",
+        "receipt_id": "970aca9b-bed6-4d31-8c29-5e2964a2e581",
+        "invoice_id": "1771e496-d925-4832-a504-fbcb96eba30e",
+        "updated_at": "2026-10-06T20:41:32.283Z"
+      },
+      {
+        "source_namespace": "gmail:ap-test-inbox",
+        "source_id": "1a112d9b5a4ac7d9",
+        "attachment_id": "attachment_0",
+        "batch_id": "phase01-connect-001",
+        "case_id": "multi",
+        "status": "review_ready",
+        "reason_code": "PENDING_REVIEW",
+        "receipt_id": "bd169a39-a27a-4b75-816a-ff0e63b137e6",
+        "invoice_id": "1771e496-d925-4832-a504-fbcb96eba30e",
+        "updated_at": "2026-10-06T20:41:30.253Z"
+      },
+      {
+        "source_namespace": "gmail:ap-test-inbox",
+        "source_id": "1a112d9b5a4ac7d9",
+        "attachment_id": "attachment_1",
+        "batch_id": "phase01-connect-001",
+        "case_id": "multi",
+        "status": "review_ready",
+        "reason_code": "PENDING_REVIEW",
+        "receipt_id": "c7192eb2-15cc-4d73-9116-a20c7d3ef7f1",
+        "invoice_id": "41608a73-1043-48ec-9482-bd84bc6fc2ee",
+        "updated_at": "2026-10-06T20:41:31.196Z"
+      },
+      {
+        "source_namespace": "gmail:ap-test-inbox",
+        "source_id": "1a112df5e8cf3ac5",
+        "attachment_id": "none",
+        "batch_id": "phase01-connect-001",
+        "case_id": "no-attachments",
+        "status": "skipped",
+        "reason_code": "NO_ATTACHMENTS",
+        "receipt_id": null,
+        "invoice_id": null,
+        "updated_at": "2026-10-06T20:41:29.404Z"
+      },
+      {
+        "source_namespace": "gmail:ap-test-inbox",
+        "source_id": "1a112e0004b7b16b",
+        "attachment_id": "attachment_0",
+        "batch_id": "phase01-connect-001",
+        "case_id": "invalid",
+        "status": "intake_failed",
+        "reason_code": "HTTP_422",
+        "receipt_id": null,
+        "invoice_id": null,
+        "updated_at": "2026-10-06T20:41:29.330Z"
+      },
+      {
+        "source_namespace": "gmail:ap-test-inbox",
+        "source_id": "1a112e07928275fb",
+        "attachment_id": "attachment_0",
+        "batch_id": "phase01-connect-001",
+        "case_id": "mixed",
+        "status": "review_ready",
+        "reason_code": "PENDING_REVIEW",
+        "receipt_id": "511a7737-115e-415d-a510-c4ae832a5257",
+        "invoice_id": "1771e496-d925-4832-a504-fbcb96eba30e",
+        "updated_at": "2026-10-06T20:41:28.963Z"
+      },
+      {
+        "source_namespace": "gmail:ap-test-inbox",
+        "source_id": "1a112e07928275fb",
+        "attachment_id": "attachment_1",
+        "batch_id": "phase01-connect-001",
+        "case_id": "mixed",
+        "status": "intake_failed",
+        "reason_code": "HTTP_422",
+        "receipt_id": null,
+        "invoice_id": null,
+        "updated_at": "2026-10-06T20:41:29.122Z"
+      },
+      {
+        "source_namespace": "gmail:ap-test-inbox",
+        "source_id": "1a112e07928275fb",
+        "attachment_id": "attachment_2",
+        "batch_id": "phase01-connect-001",
+        "case_id": "mixed",
+        "status": "skipped",
+        "reason_code": "UNSUPPORTED_ATTACHMENT",
+        "receipt_id": null,
+        "invoice_id": null,
+        "updated_at": "2026-10-06T20:41:29.198Z"
+      }
+    ],
+    "tasks": [
+      {
+        "review_id": "ed3992fb-d12b-48bb-82c2-f4ae4a162e8e",
+        "invoice_id": "1771e496-d925-4832-a504-fbcb96eba30e",
+        "status": "pending"
+      },
+      {
+        "review_id": "2fb3d0be-830f-4844-8ab3-084a8fc7cce8",
+        "invoice_id": "41608a73-1043-48ec-9482-bd84bc6fc2ee",
+        "status": "pending"
+      }
+    ],
+    "notifications": [
+      {
+        "notification_id": "e75af276-0e7d-4834-bec1-d66802879b99",
+        "invoice_id": "1771e496-d925-4832-a504-fbcb96eba30e",
+        "status": "sent",
+        "message_id": "<59173c3a-393e-7546-02f9-9eb3b36f8430@example.invalid>",
+        "error_code": null
+      },
+      {
+        "notification_id": "23c2df67-9c3e-4eb2-9065-f5256e43bf1e",
+        "invoice_id": "41608a73-1043-48ec-9482-bd84bc6fc2ee",
+        "status": "failed",
+        "message_id": null,
+        "error_code": "SMTP_CONNECTION_FAILED"
+      },
+      {
+        "notification_id": "69c47bda-a2fe-4669-b9ee-654f3023a589",
+        "invoice_id": "41608a73-1043-48ec-9482-bd84bc6fc2ee",
+        "status": "sent",
+        "message_id": "<e9b840b2-6c56-8a18-befe-38fd32b48b82@example.invalid>",
+        "error_code": null
+      }
+    ],
+    "notification_scope": "All attempts for linked invoices, including earlier batches; not new-email count."
+  },
+  "runtime_published": true,
+  "runtime_version": "412efecf-8538-480b-b5d4-8bc00ba4ff22",
+  "json_export_inactive": true,
+  "inline_node_count": 37,
+  "credentials": [
+    {
+      "node": "Send Local Review Email",
+      "types": [
+        "smtp"
+      ]
+    },
+    {
+      "node": "Get many messages",
+      "types": [
+        "gmailOAuth2"
+      ]
+    }
+  ],
+  "layout_only_final_publish": true
+}

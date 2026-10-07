@@ -1,0 +1,26 @@
+[
+  {
+    "id": "APEmailAttachmentV1",
+    "name": "01_AP_Email_Attachment_v1",
+    "active": 1,
+    "activeVersionId": "e4734d91-8d1e-4daa-9005-2859de96a9a4"
+  },
+  {
+    "id": "APGmailIntakeV1",
+    "name": "01_AP_Gmail_Intake_v1",
+    "active": 0,
+    "activeVersionId": null
+  },
+  {
+    "id": "APIntakeNotifyV4",
+    "name": "01_AP_Intake_Notify_v4",
+    "active": 1,
+    "activeVersionId": "98251470-e70f-4b65-aa58-ced5a59429e1"
+  },
+  {
+    "id": "APLocalEmailBridgeV1",
+    "name": "01_AP_Local_Email_Bridge_v1",
+    "active": 1,
+    "activeVersionId": "e640b9a0-2c37-4084-94f2-3b00920e687d"
+  }
+]

@@ -1,0 +1,63 @@
+{
+  "before": {
+    "counts": {
+      "invoices": 16,
+      "receipts": 158,
+      "review_tasks": 4,
+      "notification_attempts": 5,
+      "email_outcomes": 123,
+      "processing_attempts": 84
+    },
+    "notification_status_counts": [
+      [
+        "failed",
+        1
+      ],
+      [
+        "sent",
+        4
+      ]
+    ],
+    "mailpit_messages": 115,
+    "original_sha256": {
+      "41608a73-1043-48ec-9482-bd84bc6fc2ee": "c06af902df0418f3502a36fb9d82b1043c1cef092b8eb2872d5193cc99eaaac9",
+      "1771e496-d925-4832-a504-fbcb96eba30e": "22ee9eda8098da9a542af6410e323fb12251a913deaeb32fa9a2098e98a4f030"
+    }
+  },
+  "after": {
+    "counts": {
+      "invoices": 16,
+      "receipts": 158,
+      "review_tasks": 4,
+      "notification_attempts": 5,
+      "email_outcomes": 123,
+      "processing_attempts": 84
+    },
+    "notification_status_counts": [
+      [
+        "failed",
+        1
+      ],
+      [
+        "sent",
+        4
+      ]
+    ],
+    "mailpit_messages": 115,
+    "original_sha256": {
+      "41608a73-1043-48ec-9482-bd84bc6fc2ee": "c06af902df0418f3502a36fb9d82b1043c1cef092b8eb2872d5193cc99eaaac9",
+      "1771e496-d925-4832-a504-fbcb96eba30e": "22ee9eda8098da9a542af6410e323fb12251a913deaeb32fa9a2098e98a4f030"
+    }
+  },
+  "unchanged": true,
+  "health": {
+    "status": "ok",
+    "capabilities": {
+      "intake": true,
+      "extraction": true,
+      "ocr": true,
+      "review": true,
+      "review_decisions": false
+    }
+  }
+}

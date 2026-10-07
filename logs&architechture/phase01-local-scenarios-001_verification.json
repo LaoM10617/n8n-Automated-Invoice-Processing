@@ -1,0 +1,221 @@
+{
+  "batch_id": "phase01-local-scenarios-001",
+  "messages": 9,
+  "receipts": 7,
+  "unique_invoices": 4,
+  "review_tasks": 4,
+  "failed_items": 2,
+  "skipped_items": 3,
+  "outcomes": [
+    {
+      "source_namespace": "mailpit:ap-test-inbox",
+      "source_id": "6Qgdffwq2mU3ajX5htFihm",
+      "attachment_id": "attachment_0",
+      "batch_id": "phase01-local-scenarios-001",
+      "case_id": "invalid-pdf",
+      "status": "intake_failed",
+      "reason_code": "HTTP_422",
+      "receipt_id": null,
+      "invoice_id": null,
+      "updated_at": "2026-10-06T20:02:50.614Z"
+    },
+    {
+      "source_namespace": "mailpit:ap-test-inbox",
+      "source_id": "EsV7FVGRTcWnh7awJuFoT5",
+      "attachment_id": "attachment_0",
+      "batch_id": "phase01-local-scenarios-001",
+      "case_id": "multi",
+      "status": "review_ready",
+      "reason_code": "PENDING_REVIEW",
+      "receipt_id": "29c57ed7-8843-4319-ac76-cce43ba5b14c",
+      "invoice_id": "1771e496-d925-4832-a504-fbcb96eba30e",
+      "updated_at": "2026-10-06T20:02:48.475Z"
+    },
+    {
+      "source_namespace": "mailpit:ap-test-inbox",
+      "source_id": "EsV7FVGRTcWnh7awJuFoT5",
+      "attachment_id": "attachment_1",
+      "batch_id": "phase01-local-scenarios-001",
+      "case_id": "multi",
+      "status": "review_ready",
+      "reason_code": "PENDING_REVIEW",
+      "receipt_id": "3d89cd7a-ac11-4b77-8228-19a4d90c30d4",
+      "invoice_id": "41608a73-1043-48ec-9482-bd84bc6fc2ee",
+      "updated_at": "2026-10-06T20:02:49.226Z"
+    },
+    {
+      "source_namespace": "mailpit:ap-test-inbox",
+      "source_id": "FWrZV54bmWf4UhVUkvnBhh",
+      "attachment_id": "attachment_0",
+      "batch_id": "phase01-local-scenarios-001",
+      "case_id": "mixed",
+      "status": "intake_failed",
+      "reason_code": "HTTP_422",
+      "receipt_id": null,
+      "invoice_id": null,
+      "updated_at": "2026-10-06T20:02:50.912Z"
+    },
+    {
+      "source_namespace": "mailpit:ap-test-inbox",
+      "source_id": "FWrZV54bmWf4UhVUkvnBhh",
+      "attachment_id": "attachment_1",
+      "batch_id": "phase01-local-scenarios-001",
+      "case_id": "mixed",
+      "status": "review_ready",
+      "reason_code": "PENDING_REVIEW",
+      "receipt_id": "c573889f-8179-44b5-b799-a48671746fbc",
+      "invoice_id": "1771e496-d925-4832-a504-fbcb96eba30e",
+      "updated_at": "2026-10-06T20:02:51.688Z"
+    },
+    {
+      "source_namespace": "mailpit:ap-test-inbox",
+      "source_id": "FWrZV54bmWf4UhVUkvnBhh",
+      "attachment_id": "attachment_2",
+      "batch_id": "phase01-local-scenarios-001",
+      "case_id": "mixed",
+      "status": "skipped",
+      "reason_code": "UNSUPPORTED_ATTACHMENT",
+      "receipt_id": null,
+      "invoice_id": null,
+      "updated_at": "2026-10-06T20:02:51.937Z"
+    },
+    {
+      "source_namespace": "mailpit:ap-test-inbox",
+      "source_id": "Jk5CD2Tke6UMvx6uPiyRz8",
+      "attachment_id": "attachment_0",
+      "batch_id": "phase01-local-scenarios-001",
+      "case_id": "single",
+      "status": "review_ready",
+      "reason_code": "PENDING_REVIEW",
+      "receipt_id": "cd799d84-67d8-46db-8251-02cbe0a43a22",
+      "invoice_id": "1771e496-d925-4832-a504-fbcb96eba30e",
+      "updated_at": "2026-10-06T20:02:47.732Z"
+    },
+    {
+      "source_namespace": "mailpit:ap-test-inbox",
+      "source_id": "MjKW9SJTxUN35argjDA72d",
+      "attachment_id": "attachment_0",
+      "batch_id": "phase01-local-scenarios-001",
+      "case_id": "business-duplicate",
+      "status": "review_ready",
+      "reason_code": "PENDING_REVIEW",
+      "receipt_id": "4854829f-e780-49ef-9c8c-e520d29ccbf0",
+      "invoice_id": "528eac97-c831-4b19-9329-e0347a8536f8",
+      "updated_at": "2026-10-06T20:02:52.582Z"
+    },
+    {
+      "source_namespace": "mailpit:ap-test-inbox",
+      "source_id": "QyxqCqKbZDk9qnSBgC37Xw",
+      "attachment_id": "attachment_0",
+      "batch_id": "phase01-local-scenarios-001",
+      "case_id": "amount-mismatch",
+      "status": "review_ready",
+      "reason_code": "PENDING_REVIEW",
+      "receipt_id": "8b3a47a5-7809-4528-bab3-0a5187f1bc30",
+      "invoice_id": "fa48d0e9-1aa4-4221-9b70-65e5ee4e2604",
+      "updated_at": "2026-10-06T20:02:53.268Z"
+    },
+    {
+      "source_namespace": "mailpit:ap-test-inbox",
+      "source_id": "cu5KZnBQE3HdzFCG8Ycvqx",
+      "attachment_id": "attachment_0",
+      "batch_id": "phase01-local-scenarios-001",
+      "case_id": "same-file-new-mail",
+      "status": "review_ready",
+      "reason_code": "PENDING_REVIEW",
+      "receipt_id": "1c9e33fe-8a30-4297-9819-b9b0d7839122",
+      "invoice_id": "1771e496-d925-4832-a504-fbcb96eba30e",
+      "updated_at": "2026-10-06T20:02:49.940Z"
+    },
+    {
+      "source_namespace": "mailpit:ap-test-inbox",
+      "source_id": "kHEB47S8vgxUPADuiBb8CW",
+      "attachment_id": "none",
+      "batch_id": "phase01-local-scenarios-001",
+      "case_id": "no-attachments",
+      "status": "skipped",
+      "reason_code": "NO_ATTACHMENTS",
+      "receipt_id": null,
+      "invoice_id": null,
+      "updated_at": "2026-10-06T20:02:50.187Z"
+    },
+    {
+      "source_namespace": "mailpit:ap-test-inbox",
+      "source_id": "mRQPicmDrKc9CAndimdRVn",
+      "attachment_id": "attachment_0",
+      "batch_id": "phase01-local-scenarios-001",
+      "case_id": "unsupported",
+      "status": "skipped",
+      "reason_code": "UNSUPPORTED_ATTACHMENT",
+      "receipt_id": null,
+      "invoice_id": null,
+      "updated_at": "2026-10-06T20:02:50.386Z"
+    }
+  ],
+  "tasks": [
+    {
+      "review_id": "ed3992fb-d12b-48bb-82c2-f4ae4a162e8e",
+      "invoice_id": "1771e496-d925-4832-a504-fbcb96eba30e",
+      "status": "pending"
+    },
+    {
+      "review_id": "2fb3d0be-830f-4844-8ab3-084a8fc7cce8",
+      "invoice_id": "41608a73-1043-48ec-9482-bd84bc6fc2ee",
+      "status": "pending"
+    },
+    {
+      "review_id": "7b10de7e-0798-4c92-8d86-0bcad1c8b41a",
+      "invoice_id": "fa48d0e9-1aa4-4221-9b70-65e5ee4e2604",
+      "status": "pending"
+    },
+    {
+      "review_id": "d8b625a5-c1f7-441a-94ac-1fafe27f4bc6",
+      "invoice_id": "528eac97-c831-4b19-9329-e0347a8536f8",
+      "status": "pending"
+    }
+  ],
+  "notifications": [
+    {
+      "notification_id": "e75af276-0e7d-4834-bec1-d66802879b99",
+      "invoice_id": "1771e496-d925-4832-a504-fbcb96eba30e",
+      "status": "sent",
+      "message_id": "<59173c3a-393e-7546-02f9-9eb3b36f8430@example.invalid>",
+      "error_code": null
+    },
+    {
+      "notification_id": "23c2df67-9c3e-4eb2-9065-f5256e43bf1e",
+      "invoice_id": "41608a73-1043-48ec-9482-bd84bc6fc2ee",
+      "status": "failed",
+      "message_id": null,
+      "error_code": "SMTP_CONNECTION_FAILED"
+    },
+    {
+      "notification_id": "69c47bda-a2fe-4669-b9ee-654f3023a589",
+      "invoice_id": "41608a73-1043-48ec-9482-bd84bc6fc2ee",
+      "status": "sent",
+      "message_id": "<e9b840b2-6c56-8a18-befe-38fd32b48b82@example.invalid>",
+      "error_code": null
+    },
+    {
+      "notification_id": "7f156789-7364-40c9-a606-4a0fa725bb39",
+      "invoice_id": "528eac97-c831-4b19-9329-e0347a8536f8",
+      "status": "sent",
+      "message_id": "<f149893a-3159-9397-1652-c122791932c2@example.invalid>",
+      "error_code": null
+    },
+    {
+      "notification_id": "fc663149-5b27-48e6-86bd-8b715611738a",
+      "invoice_id": "fa48d0e9-1aa4-4221-9b70-65e5ee4e2604",
+      "status": "sent",
+      "message_id": "<323d01c6-d1ef-6762-d13b-821e0fead551@example.invalid>",
+      "error_code": null
+    }
+  ],
+  "notification_scope": "All attempts for linked invoices, including earlier batches; not new-email count.",
+  "processing_seconds": 6.718,
+  "send_seconds": 1.344,
+  "transport": "local_mailpit_smtp_not_gmail",
+  "smtp_messages_sent": 9,
+  "expected_valid_attachments": 7,
+  "expected_rejected_attachments": 2
+}

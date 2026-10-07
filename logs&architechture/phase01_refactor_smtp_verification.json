@@ -1,0 +1,149 @@
+{
+  "scope": "isolated database, real baseline extraction cache, real loopback Mailpit SMTP",
+  "runs": [
+    {
+      "phase": "stopped",
+      "result": {
+        "contract_version": "ap-stage-v1",
+        "run_id": "8260e44f-bb69-447a-96e8-f7712701e648",
+        "source": {
+          "source_type": "upload",
+          "source_namespace": "isolated-refactor-probe",
+          "source_id": "mailpit-retry",
+          "attachment_id": "0",
+          "batch_id": null,
+          "case_id": null
+        },
+        "stage": "notify",
+        "outcome": "review_ready",
+        "receipt_id": "b706d3ce-749f-4427-914c-fac2de182947",
+        "invoice_id": "1771e496-d925-4832-a504-fbcb96eba30e",
+        "analysis_run_id": 82,
+        "review_id": "f0a30be4-885a-40fb-a572-0ed38d40c637",
+        "review_url": "http://127.0.0.1:8000/reviews/1771e496-d925-4832-a504-fbcb96eba30e",
+        "issue_codes": [],
+        "error_code": "SMTP_CONNECTION_FAILED",
+        "retryable": true,
+        "notification_status": "failed",
+        "extractor": "direct_structured_extraction_not_agent"
+      },
+      "attempts": [
+        {
+          "notification_id": "fca80fb9-511f-4862-9967-7370450cda75",
+          "invoice_id": "1771e496-d925-4832-a504-fbcb96eba30e",
+          "review_id": "f0a30be4-885a-40fb-a572-0ed38d40c637",
+          "status": "failed",
+          "message_id": null,
+          "error_code": "SMTP_CONNECTION_FAILED",
+          "created_at": "2026-10-06T21:04:26.780Z",
+          "updated_at": "2026-10-06T21:04:28.827Z"
+        }
+      ]
+    },
+    {
+      "phase": "recovered",
+      "result": {
+        "contract_version": "ap-stage-v1",
+        "run_id": "8260e44f-bb69-447a-96e8-f7712701e648",
+        "source": {
+          "source_type": "upload",
+          "source_namespace": "isolated-refactor-probe",
+          "source_id": "mailpit-retry",
+          "attachment_id": "0",
+          "batch_id": null,
+          "case_id": null
+        },
+        "stage": "notify",
+        "outcome": "review_ready",
+        "receipt_id": "b706d3ce-749f-4427-914c-fac2de182947",
+        "invoice_id": "1771e496-d925-4832-a504-fbcb96eba30e",
+        "analysis_run_id": 82,
+        "review_id": "f0a30be4-885a-40fb-a572-0ed38d40c637",
+        "review_url": "http://127.0.0.1:8000/reviews/1771e496-d925-4832-a504-fbcb96eba30e",
+        "issue_codes": [],
+        "error_code": null,
+        "retryable": false,
+        "notification_status": "sent",
+        "extractor": "direct_structured_extraction_not_agent"
+      },
+      "attempts": [
+        {
+          "notification_id": "fca80fb9-511f-4862-9967-7370450cda75",
+          "invoice_id": "1771e496-d925-4832-a504-fbcb96eba30e",
+          "review_id": "f0a30be4-885a-40fb-a572-0ed38d40c637",
+          "status": "failed",
+          "message_id": null,
+          "error_code": "SMTP_CONNECTION_FAILED",
+          "created_at": "2026-10-06T21:04:26.780Z",
+          "updated_at": "2026-10-06T21:04:28.827Z"
+        },
+        {
+          "notification_id": "dbdeba0e-9859-47fb-aaff-3004dd7f8ef9",
+          "invoice_id": "1771e496-d925-4832-a504-fbcb96eba30e",
+          "review_id": "f0a30be4-885a-40fb-a572-0ed38d40c637",
+          "status": "sent",
+          "message_id": "<179132068304.24512.820780577223308243@example.invalid>",
+          "error_code": null,
+          "created_at": "2026-10-06T21:04:43.033Z",
+          "updated_at": "2026-10-06T21:04:43.242Z"
+        }
+      ]
+    },
+    {
+      "phase": "replay",
+      "result": {
+        "contract_version": "ap-stage-v1",
+        "run_id": "8260e44f-bb69-447a-96e8-f7712701e648",
+        "source": {
+          "source_type": "upload",
+          "source_namespace": "isolated-refactor-probe",
+          "source_id": "mailpit-retry",
+          "attachment_id": "0",
+          "batch_id": null,
+          "case_id": null
+        },
+        "stage": "notify",
+        "outcome": "review_ready",
+        "receipt_id": "b706d3ce-749f-4427-914c-fac2de182947",
+        "invoice_id": "1771e496-d925-4832-a504-fbcb96eba30e",
+        "analysis_run_id": 82,
+        "review_id": "f0a30be4-885a-40fb-a572-0ed38d40c637",
+        "review_url": "http://127.0.0.1:8000/reviews/1771e496-d925-4832-a504-fbcb96eba30e",
+        "issue_codes": [],
+        "error_code": null,
+        "retryable": false,
+        "notification_status": "sent",
+        "extractor": "direct_structured_extraction_not_agent"
+      },
+      "attempts": [
+        {
+          "notification_id": "fca80fb9-511f-4862-9967-7370450cda75",
+          "invoice_id": "1771e496-d925-4832-a504-fbcb96eba30e",
+          "review_id": "f0a30be4-885a-40fb-a572-0ed38d40c637",
+          "status": "failed",
+          "message_id": null,
+          "error_code": "SMTP_CONNECTION_FAILED",
+          "created_at": "2026-10-06T21:04:26.780Z",
+          "updated_at": "2026-10-06T21:04:28.827Z"
+        },
+        {
+          "notification_id": "dbdeba0e-9859-47fb-aaff-3004dd7f8ef9",
+          "invoice_id": "1771e496-d925-4832-a504-fbcb96eba30e",
+          "review_id": "f0a30be4-885a-40fb-a572-0ed38d40c637",
+          "status": "sent",
+          "message_id": "<179132068304.24512.820780577223308243@example.invalid>",
+          "error_code": null,
+          "created_at": "2026-10-06T21:04:43.033Z",
+          "updated_at": "2026-10-06T21:04:43.242Z"
+        }
+      ]
+    }
+  ],
+  "mailpit": {
+    "message_id": "EicHe6kFH3o7gHcDPQCgnZ",
+    "matching_messages": 1,
+    "total_messages": 116,
+    "review_url_matches": true,
+    "review_http_status": 200
+  }
+}

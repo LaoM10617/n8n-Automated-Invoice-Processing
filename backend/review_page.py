@@ -1,6 +1,7 @@
 """Read-only review surface. All invoice-provided text is HTML escaped."""
 
 from html import escape
+import json
 
 
 def render_review(invoice, task):
@@ -26,6 +27,8 @@ def render_review(invoice, task):
     sources = ''.join(f'<tr><td>{safe(r["source_type"])}</td><td>{safe(r["original_filename"])}</td><td>{safe(r["source_id"])}</td></tr>' for r in invoice['receipts'])
     evidence = (result.get('raw_extraction') or {}).get('evidence', [])
     evidence_html = ''.join(f'<li><strong>{safe(e["field"])}</strong> · Page {safe(e["page"])}<blockquote>{safe(e["quote"])}</blockquote></li>' for e in evidence)
+    trace = result.get('agent_trace')
+    trace_html = safe(json.dumps(trace, indent=2)) if trace else 'Legacy extraction: no agent execution trace.'
     notice = ''
     if invoice['processing_status'] != 'processed':
         notice = '<div class="alert">Current processing is incomplete. This task remains pending; no approval has occurred.</div>'
@@ -54,6 +57,7 @@ table{{border-collapse:collapse;width:100%;table-layout:fixed}}th,td{{text-align
 <div><section><h2>Extracted fields</h2><p class="meta">Missing or incomplete text may not trigger a rule exception. Check addresses against the original.</p><table>{rows}</table></section>
 <section><h2>Exceptions to review <small>({len(issues)})</small></h2>{issue_html}</section>
 <section><h2>Possible duplicates <small>({len(invoice['duplicate_candidates'])})</small></h2>{candidates}</section>
+<section><details><summary>Analysis agent execution</summary><p class="meta">Saved execution trace. Reopening or replaying cached analysis does not make new model calls. No model reasoning is stored.</p><pre style="white-space:pre-wrap;overflow-wrap:anywhere">{trace_html}</pre></details></section>
 <section><details><summary>Extraction evidence</summary><ul class="issues">{evidence_html or '<li>No evidence available.</li>'}</ul></details></section>
 <section><details><summary>Receipt history and record details</summary><table><thead><tr><th>Source</th><th>File</th><th>Source ID</th></tr></thead><tbody>{sources}</tbody></table>
 <p class="meta">Invoice: {safe(invoice['invoice_id'])}<br>Review task: {safe(task['review_id'])}<br>Created: {safe(task['created_at'])}<br>Processing: {safe(invoice['processing_status'])}<br>Model: {safe(result.get('model'))}<br>Attempt: {safe(invoice['processing_attempt_id'])}</p></details></section></div></div>

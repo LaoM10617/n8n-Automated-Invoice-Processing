@@ -1,0 +1,34 @@
+{
+  "attempts_before": 90,
+  "attempts_after": 90,
+  "both_agent_results_reused": true,
+  "new_model_calls": 0,
+  "upload_result": {
+    "contract_version": "ap-stage-v1",
+    "run_id": "0610970a-2853-40d9-aa15-a6c6f114a78b",
+    "source": {
+      "source_type": "upload",
+      "source_namespace": "n8n-ap-upload-v1",
+      "source_id": "unified-v5-upload-001",
+      "attachment_id": "0",
+      "batch_id": null,
+      "case_id": null
+    },
+    "stage": "notify",
+    "outcome": "review_ready",
+    "receipt_id": "5de4b559-0bd4-4574-97c6-5e31211187cd",
+    "invoice_id": "1771e496-d925-4832-a504-fbcb96eba30e",
+    "analysis_run_id": 89,
+    "review_id": "ed3992fb-d12b-48bb-82c2-f4ae4a162e8e",
+    "review_url": "http://127.0.0.1:8000/reviews/1771e496-d925-4832-a504-fbcb96eba30e",
+    "issue_codes": [
+      "BUSINESS_DUPLICATE_CANDIDATE"
+    ],
+    "error_code": null,
+    "retryable": false,
+    "notification_status": "sent",
+    "extractor": "python_langchain_agent",
+    "analysis_cached": true,
+    "formSubmittedText": "Review pending: http://127.0.0.1:8000/reviews/1771e496-d925-4832-a504-fbcb96eba30e. Notification: sent"
+  }
+}

@@ -2,7 +2,29 @@
 
 Date: 2026-10-06
 
-## Latest implementation — Step 5 review (2026-10-06)
+## Default demo — Phase01 refactor steps 4–5 accepted (2026-10-06)
+
+Use APAgentIntakeV7: http://localhost:5678/workflow/APAgentIntakeV7 ; upload: http://127.0.0.1:5678/form/ap-agent-intake-v7 . No v8 or canvas changes were needed; all historical workflow files remain unchanged. 69 tests pass, including eight new control cases. Single-worker restart now reconciles Agent trace to interrupted and any in-flight call to unknown, preserving prior evidence; no automatic retry. Existing real Gmail/upload evidence is reused. New checks use fake models/virtual time and a real abrupt child-process exit in an isolated database; no new provider calls. See phase01_step45_verification.json and phase01_refactor_log.md. Rate limiting remains process-local; after restart wait the configured interval before fresh analysis. OCR11 address-grounding limitation remains.
+
+## Latest implementation — Phase01 LangChain Agent (2026-10-06)
+
+Python LangChain create_agent now replaces document analysis, retaining OCR, schema, evidence grounding and amount rules. New canvas APAgentIntakeV7 has 14 execution nodes plus 2 notes; imported/published with existing readonly Gmail credentials. Local trace is visible in read-only review. Historical v5/v6 JSON and pre-agent SQLite/backend snapshot remain. See phase01_refactor_log.md and phase01_agent_* evidence for acceptance and quality caveats. Acceptance: 61 tests pass; final Gmail 5 messages / 8 items = 4 review-ready, 2 invalid-PDF failures, 2 skipped. Final Agent used 5 real Gemini requests; caches/trace survived restart. OCR11 address draft includes Causeway but fails contiguous-text grounding, so validated address remains null with an explicit issue. Current editor: http://localhost:5678/workflow/APAgentIntakeV7 ; upload: http://127.0.0.1:5678/form/ap-agent-intake-v7 . Existing backend stage endpoints now use Agent; selecting an old canvas does not restore old backend code. No commit made.
+
+## Previous implementation — Phase01 deterministic refactor (2026-10-06)
+
+Steps 1–2 complete. Frozen working-tree/SQLite/original baseline under ignored data/baselines/phase01-pre-refactor-20261006. Compact v6 (APCompactIntakeV6) has 14 execution nodes plus 2 notes, imported/published and Gmail-bound. Python now owns staged reading/extraction/validation, durable run contracts and local SMTP notification. Existing extractor remains; no LangChain/Agent yet. Legacy v5/API retained and live-tested. Full 16-invoice and 3-batch comparisons pass; business counts and original hashes unchanged; zero model calls. Real five-email replay, upload/conflict, isolated real Mailpit outage/recovery and backend recreation pass; 56 tests pass. See phase01_refactor_log.md and phase01_refactor_* evidence. Current editor: http://localhost:5678/workflow/APCompactIntakeV6 ; form: http://127.0.0.1:5678/form/ap-compact-intake-v6 . No commit made.
+
+## Previous implementation — Unified Phase 01 canvas (2026-10-06)
+
+New APUnifiedIntakeV5 integrates upload and manual Gmail with all processing nodes inline in one canvas/JSON. Imported/published, credentials retained, Gmail 5-message/8-item replay and production upload/replay/conflict verified. No new model calls, tasks or notifications; one new upload receipt. Existing versions remain unchanged. Current demo: http://localhost:5678/workflow/APUnifiedIntakeV5 ; upload: http://127.0.0.1:5678/form/ap-unified-intake-v5 . See log_2026-10-06_unified_v5.md for validation and the resolved publish-snapshot issue.
+
+## Previous implementation — Steps 6–8 accepted (2026-10-06)
+
+Upload v4 and real readonly Gmail intake now share persisted processing/review/notification APIs. Mailpit notifications, independent retry status, per-attachment outcomes and traceable local MIME batches are implemented. Five authorized real Outlook→Gmail messages and replay passed (4 valid receipts, 2 linked tasks, 2 rejected items, 2 skipped items). Local 9-case and 100-message cached batches passed; 52 tests pass. Four pending tasks have four sent notifications; one deliberate SMTP failure is retained. Two new Gemini calls were 69.817 seconds apart; Gmail/throughput reused caches. Backend/Mailpit recreation preserved counts, originals and mail. Gmail is manual-only, no polling/deletion. No downstream approval/export features. No commit made.
+
+Current upload: http://127.0.0.1:5678/form/ap-intake-notify-v4 . Gmail editor: http://localhost:5678/workflow/APGmailIntakeV1 . Mailpit: http://127.0.0.1:8025 . See `log_2026-10-06_step06_08_acceptance.md` for exact import/publish/credential/runtime levels, evidence, runbook and limitations. This supersedes older “next Step 6” and “email not implemented” statements below. OCR11 Causeway omission remains. SMTP sending/unknown needs manual reconciliation; 100-message SMTP send duration was lost and is explicitly unreported.
+
+## Historical implementation — Step 5 review (2026-10-06)
 
 Persistent review tasks and read-only review pages are deployed. n8n APIntakeReviewV3 is imported, published and tested at /form/ap-intake-review-v3. Replays reuse the task; source conflicts stop at intake. Poppler page previews replace an iframe that rendered blank in the browser. 49 tests pass; real container recreation preserves the task and original. No model calls or Git commit this turn. Next: Step 6 local Mailpit notification, with notification status separate from task creation. Approval/rejection/editing/export remain unimplemented. See log_2026-10-06_step05_review.md and step_05_review_verification.json.
 

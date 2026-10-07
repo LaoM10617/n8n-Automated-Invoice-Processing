@@ -1,0 +1,1215 @@
+{
+  "id": "APUnifiedIntakeV5",
+  "name": "01_AP_Unified_Intake_v5",
+  "nodes": [
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://python-api:8000/api/ap/intakes",
+        "sendBody": true,
+        "contentType": "multipart-form-data",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "parameterType": "formBinaryData",
+              "name": "file",
+              "inputDataFieldName": "data"
+            },
+            {
+              "name": "source_type",
+              "value": "={{ $json.source_type }}"
+            },
+            {
+              "name": "source_namespace",
+              "value": "={{ $json.source_namespace }}"
+            },
+            {
+              "name": "source_id",
+              "value": "={{ $json.source_id }}"
+            },
+            {
+              "name": "attachment_id",
+              "value": "={{ $json.attachment_id }}"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "neverError": true,
+              "responseFormat": "json"
+            }
+          },
+          "timeout": 30000
+        }
+      },
+      "id": "c53bfbb4-331b-4697-954d-39d3a7c81e0e",
+      "name": "Store Original and Register Intake",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        1424,
+        0
+      ],
+      "typeVersion": 4.2
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "1f6e4792-18b4-4b04-b8a8-fcea517e4597",
+              "leftValue": "={{ Boolean($json.body && $json.body.invoice_id && ($json.statusCode === 200 || $json.statusCode === 201)) }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "d1fac054-681e-4191-a909-3d224f75418d",
+      "name": "Intake Accepted",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        1888,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ 'http://python-api:8000/api/ap/invoices/' + $json.body.invoice_id + '/process' }}",
+        "options": {
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "neverError": true,
+              "responseFormat": "json"
+            }
+          },
+          "timeout": 180000
+        }
+      },
+      "id": "da2798a6-58a7-4065-a694-fe484ce29fb1",
+      "name": "Extract Validate and Check Duplicates",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        944,
+        432
+      ],
+      "typeVersion": 4.2
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "1f6e4792-18b4-4b04-b8a8-fcea517e4597",
+              "leftValue": "={{ Boolean($json.statusCode === 200 && $json.body && $json.body.processing_status === 'processed') }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "d775f7c5-c28d-4e12-8757-b7e9261ffbb8",
+      "name": "Processing Completed",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        1424,
+        432
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ 'http://python-api:8000/api/ap/invoices/' + $json.body.invoice_id + '/review-task' }}",
+        "options": {
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "neverError": true,
+              "responseFormat": "json"
+            }
+          },
+          "timeout": 30000
+        }
+      },
+      "id": "18202939-6e61-46e4-830a-456933a7dd87",
+      "name": "Create Review Task",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        1648,
+        432
+      ],
+      "typeVersion": 4.2
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "1f6e4792-18b4-4b04-b8a8-fcea517e4597",
+              "leftValue": "={{ Boolean($json.body && $json.body.review_status === 'pending' && [200,201].includes($json.statusCode)) }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "30178bc9-ca87-437a-aa73-93d9f73bf216",
+      "name": "Review Ready",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        2128,
+        432
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ 'http://python-api:8000/api/ap/invoices/' + $json.body.invoice_id + '/notifications/claim' }}",
+        "options": {
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "neverError": true,
+              "responseFormat": "json"
+            }
+          },
+          "timeout": 30000
+        }
+      },
+      "id": "582ba619-ef9f-43e6-b058-4986c652ecc6",
+      "name": "Claim Notification",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        0,
+        864
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "1f6e4792-18b4-4b04-b8a8-fcea517e4597",
+              "leftValue": "={{ Boolean($json.statusCode === 200 && $json.body && $json.body.send_required) }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "48d9f5eb-f0ab-4f37-8e0f-0e247004704b",
+      "name": "Send Required",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        480,
+        864
+      ]
+    },
+    {
+      "parameters": {
+        "fromEmail": "ap-review@example.invalid",
+        "toEmail": "reviewer@example.invalid",
+        "subject": "={{ $json.body.subject }}",
+        "emailFormat": "text",
+        "text": "={{ $json.body.text }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "id": "71591819-1c3e-4836-9737-fff2ccbefc3b",
+      "name": "Send Local Review Email",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        720,
+        864
+      ],
+      "webhookId": "aceac906-09b9-4b0b-8608-6dddcc200b46",
+      "credentials": {
+        "smtp": {
+          "id": "APLocalMailpitSMTP",
+          "name": "AP Local Mailpit"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "const r=$input.first().json;\nconst claim=$('Capture Claim').item.json.body;\nconst error=String(r.error || '');\nconst sent=Boolean(r.messageId && (r.accepted || []).includes('reviewer@example.invalid'));\nconst definite=/ECONNREFUSED|ENOTFOUND|EAI_AGAIN|Invalid login|No recipients defined/.test(error);\nreturn [{json:{notification_id:claim.notification_id,status:sent?'sent':definite?'failed':'unknown',message_id:sent?r.messageId:null,error_code:sent?null:definite?'SMTP_CONNECTION_FAILED':'SMTP_DELIVERY_UNCERTAIN'}}];"
+      },
+      "id": "9c60d787-a57f-43ed-9ab0-c8221ee3df54",
+      "name": "Classify SMTP Result",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        944,
+        864
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ 'http://python-api:8000/api/ap/notifications/' + $json.notification_id + '/result' }}",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ {status:$json.status,message_id:$json.message_id,error_code:$json.error_code} }}",
+        "options": {
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "neverError": true,
+              "responseFormat": "json"
+            }
+          },
+          "timeout": 30000
+        }
+      },
+      "id": "2deafddf-eac3-4c18-9822-c4b05045d6c9",
+      "name": "Record Notification Result",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1184,
+        864
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "1f6e4792-18b4-4b04-b8a8-fcea517e4597",
+              "leftValue": "={{ Boolean($json.supported) }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "f2f24287-3134-4bb0-89d4-787b802fa79a",
+      "name": "Supported Attachment",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        1184,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "url": "={{ 'http://python-api:8000/api/ap/invoices/' + $json.body.invoice_id }}",
+        "options": {
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "neverError": true,
+              "responseFormat": "json"
+            }
+          },
+          "timeout": 180000
+        }
+      },
+      "id": "3b03d5ea-5e98-4de5-bbe7-8cd3bff7cda9",
+      "name": "Read Current Processing",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        0,
+        432
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "1f6e4792-18b4-4b04-b8a8-fcea517e4597",
+              "leftValue": "={{ Boolean($json.body && $json.body.processing_status === 'processed' && $json.body.processing_result?.pipeline_version === 'step4-layout-v1' && $json.body.processing_result?.model === 'gemini-3.5-flash-lite' && $json.body.processing_result?.model_base_url === 'https://generativelanguage.googleapis.com/v1beta/openai') }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "432e3435-f225-412f-9774-f85b3890814c",
+      "name": "Current Gemini Cache",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        480,
+        432
+      ]
+    },
+    {
+      "parameters": {
+        "amount": 65
+      },
+      "id": "500808e6-f280-445c-a09c-37c9403098ea",
+      "name": "Pace Uncached Model Call",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        720,
+        432
+      ],
+      "webhookId": "3163a178-2e3b-4e51-bc63-47846c1cb770"
+    },
+    {
+      "parameters": {
+        "path": "ap-unified-intake-v5",
+        "formTitle": "AP Invoice Intake and Review",
+        "formDescription": "Unified AP intake. Upload one invoice or run the controlled Gmail batch from the editor. Existing sources and invoices are reused.",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Upload ID",
+              "placeholder": "e.g. ap-upload-001",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Invoice File",
+              "fieldType": "file",
+              "multipleFiles": false,
+              "acceptFileTypes": ".pdf,.jpg,.jpeg,.png",
+              "requiredField": true
+            }
+          ]
+        },
+        "responseMode": "responseNode",
+        "options": {
+          "appendAttribution": false,
+          "buttonLabel": "Store invoice"
+        }
+      },
+      "id": "2228697b-3069-4884-be7a-6187efe6084d",
+      "name": "Upload Invoice",
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        -224
+      ],
+      "webhookId": "77a39957-4cc6-4d66-9332-259c34f07ede"
+    },
+    {
+      "parameters": {
+        "jsCode": "const item = $input.first();\nconst keys = Object.keys(item.binary || {});\nif (keys.length !== 1) throw new Error('Upload exactly one file.');\nconst sourceId = String(item.json['Upload ID'] || '').trim();\nif (!sourceId || sourceId.length > 200) throw new Error('Upload ID must contain 1 to 200 characters.');\nreturn [{json: {direction: 'AP', supported: true, source_type: 'upload', source_namespace: 'n8n-ap-upload-v1', source_id: sourceId, attachment_id: '0'}, binary: {data: item.binary[keys[0]]}}];"
+      },
+      "id": "ec4890dd-8e73-4f9b-be3c-72f5738f3271",
+      "name": "Normalize Upload",
+      "type": "n8n-nodes-base.code",
+      "position": [
+        240,
+        -224
+      ],
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {}
+      },
+      "id": "3479b6fa-7d0a-459a-bd95-9a207f539030",
+      "name": "Show Intake Result",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        2352,
+        1104
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "returnAll": true,
+        "simple": false,
+        "filters": {
+          "q": "subject:AP-DEMO subject:phase01-connect-001"
+        },
+        "options": {
+          "dataPropertyAttachmentsPrefixName": "attachment_",
+          "downloadAttachments": true
+        }
+      },
+      "id": "80625308-6617-44a7-bd62-3b9a891b37a0",
+      "name": "Get many messages",
+      "type": "n8n-nodes-base.gmail",
+      "position": [
+        240,
+        0
+      ],
+      "webhookId": "e7985f12-fdbd-4ca6-a89b-d41ead11a811",
+      "typeVersion": 2.1,
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "SGOORT8HCIJeyC72",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "id": "b29e53e6-4e43-458e-8077-d633e88cda31",
+      "name": "Run Controlled Batch",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const results=[];\nfor (const [i,item] of $input.all().entries()) {\n const j=item.json;\n const match=String(j.subject || '').match(/^\\[AP-DEMO\\]\\[([A-Za-z0-9_-]{1,80})\\]\\[([A-Za-z0-9_-]{1,80})\\]/);\n if (!match || !j.id) throw new Error('Expected a batch-tagged email with a provider message ID.');\n const keys=Object.keys(item.binary || {});\n for (const key of keys.length?keys:['none']) {\n  const b=item.binary?.[key];\n  const supported=Boolean(b && ['application/pdf','image/png','image/jpeg'].includes(b.mimeType));\n  results.push({json:{source_type:'email',source_namespace:'gmail:ap-test-inbox',source_id:String(j.id),attachment_id:key,batch_id:match[1],case_id:match[2],supported,skip_reason:b?'UNSUPPORTED_ATTACHMENT':'NO_ATTACHMENTS'},...(b?{binary:{data:b}}:{}),pairedItem:{item:i}});\n }\n}\nreturn results;"
+      },
+      "id": "f2517f24-8edc-46fd-8861-1c7f38d80379",
+      "name": "Split Email Attachments",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        480,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "5f8edc16-c625-4122-9643-e92b31901c1f",
+      "name": "One Attachment at a Time",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        720,
+        0
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "304b435d-9502-4dff-b8c4-cb86cdc2fce3",
+      "name": "Batch Finished",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        720,
+        -224
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const i=$input.first(); return [{json:{...i.json,ctx:{source:i.json}},...(i.binary?{binary:i.binary}:{}),pairedItem:{item:0}}];"
+      },
+      "name": "Prepare Item",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        944,
+        0
+      ],
+      "id": "2e209776-42cd-4628-b585-12d2c8df7200"
+    },
+    {
+      "parameters": {
+        "jsCode": "const response=$input.first().json; const previous=$('Prepare Item').item.json.ctx; return [{json:{...response,ctx:{...previous,intake:response}},pairedItem:{item:0}}];"
+      },
+      "name": "Capture Intake",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1648,
+        0
+      ],
+      "id": "64b5a6df-e40c-43e1-b799-3cfaadaf7371"
+    },
+    {
+      "parameters": {
+        "jsCode": "const response=$input.first().json; const previous=$('Capture Intake').item.json.ctx; return [{json:{...response,ctx:{...previous,current:response}},pairedItem:{item:0}}];"
+      },
+      "name": "Capture Current",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        240,
+        432
+      ],
+      "id": "278fb490-0b24-427b-b49b-9ec8e347ae67"
+    },
+    {
+      "parameters": {
+        "jsCode": "const response=$input.first().json; const previous=$('Capture Current').item.json.ctx; return [{json:{...response,ctx:{...previous,processing:response}},pairedItem:{item:0}}];"
+      },
+      "name": "Capture Processing",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1184,
+        432
+      ],
+      "id": "eabfebd2-f6ab-4db1-a28f-6832b99c36cb"
+    },
+    {
+      "parameters": {
+        "jsCode": "const response=$input.first().json; const previous=$('Capture Processing').item.json.ctx; return [{json:{...response,ctx:{...previous,review:response}},pairedItem:{item:0}}];"
+      },
+      "name": "Capture Review",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1888,
+        432
+      ],
+      "id": "109552f1-af62-4d8a-a5bc-3645cf2c6b98"
+    },
+    {
+      "parameters": {
+        "jsCode": "const response=$input.first().json; const previous=$('Capture Review').item.json.ctx; return [{json:{...response,ctx:{...previous,claim:response}},pairedItem:{item:0}}];"
+      },
+      "name": "Capture Claim",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        240,
+        864
+      ],
+      "id": "0054a81d-73c4-4f70-a834-14d7a619d5c4"
+    },
+    {
+      "parameters": {
+        "jsCode": "const r=$input.first().json; const ctx=$('Capture Claim').item.json.ctx; return [{json:{ctx:{...ctx,notification:r}},pairedItem:{item:0}}];"
+      },
+      "name": "Capture Notification",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1424,
+        864
+      ],
+      "id": "e857da2f-7b7a-4cd9-b70e-133a90488ecb"
+    },
+    {
+      "parameters": {
+        "jsCode": "const c=$input.first().json.ctx;\nconst s=c.source, intake=c.intake || {}, processing=c.processing || {}, review=c.review || {};\nconst saved=intake.body || {};\nconst status=!s.supported?'skipped':!saved.receipt_id?'intake_failed':review.body?.review_status==='pending'?'review_ready':processing.body?.processing_status==='processed'?'review_failed':'processing_failed';\nconst failed=status==='intake_failed'?intake:status==='processing_failed'?processing:review;\nconst notification=(c.notification || c.claim)?.body?.status || 'not_started';\nreturn [{json:{source_type:s.source_type,source_namespace:s.source_namespace,source_id:s.source_id,attachment_id:s.attachment_id,batch_id:s.batch_id,case_id:s.case_id,status,reason_code:!s.supported?s.skip_reason:status==='review_ready'?'PENDING_REVIEW':`HTTP_${failed.statusCode || 'NETWORK_ERROR'}`,receipt_id:saved.receipt_id || null,invoice_id:saved.invoice_id || null,review_url:review.body?.review_url || null,notification_status:notification},pairedItem:{item:0}}];"
+      },
+      "name": "Summarize Result",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1648,
+        864
+      ],
+      "id": "8ed1adf2-4566-4955-8582-8c961196e6a7"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "1f6e4792-18b4-4b04-b8a8-fcea517e4597",
+              "leftValue": "={{ $json.source_type === 'email' }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "name": "Email Result",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        1888,
+        864
+      ],
+      "id": "add86b95-e43f-45ec-b074-bbad38b73a67"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://python-api:8000/api/ap/email-outcomes",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ {source_namespace:$json.source_namespace,source_id:$json.source_id,attachment_id:$json.attachment_id,batch_id:$json.batch_id,case_id:$json.case_id,status:$json.status,reason_code:$json.reason_code,receipt_id:$json.receipt_id,invoice_id:$json.invoice_id} }}",
+        "options": {
+          "timeout": 30000
+        }
+      },
+      "id": "dbdea7dc-210a-428d-a604-e5442f97f4fd",
+      "name": "Persist Email Outcome",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1888,
+        1104
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const r=$input.first().json; return [{json:{...r,formSubmittedText:r.status==='review_ready'?`Invoice stored. Review pending: ${r.review_url}. Notification: ${r.notification_status}. Read-only review.`:`Review not ready: ${r.reason_code}. Records retained; retry the same Upload ID after resolving the error.`}}];"
+      },
+      "name": "Format Upload Result",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2128,
+        1104
+      ],
+      "id": "1c018970-a90a-4aab-9246-a35df756c9be"
+    },
+    {
+      "parameters": {
+        "content": "## PHASE 01 | Unified upload + Gmail\nBoth entries run the same inline processing chain. Gmail is a readonly manual batch (phase01-connect-001); no new external mail is sent. Upload uses the production form path ap-unified-intake-v5. Original v4 and email workflows are preserved.",
+        "height": 190,
+        "width": 2200
+      },
+      "name": "Overview",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        0,
+        -464
+      ],
+      "id": "95ae869a-496a-44fe-a94d-60a583d3e243"
+    },
+    {
+      "parameters": {
+        "content": "## Persistence, validation and review\nPython owns originals, OCR/Gemini extraction, validation, duplicate candidates and pending tasks. Capture nodes carry the CURRENT item context through the loop; unsupported/invalid attachments cannot inherit an earlier result. Cache condition matches the current Gemini configuration. Uncached requests wait 65 seconds; the backend enforces its own rate limit.",
+        "height": 180,
+        "width": 2200
+      },
+      "name": "Processing Notes",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        0,
+        224
+      ],
+      "id": "38c2686b-82b7-4ddf-bd88-4ebb5e3d39b4"
+    },
+    {
+      "parameters": {
+        "content": "## Local notification and outcomes\nMailpit SMTP only. Notification claims/results are independent from review tasks; sent/sending/unknown are not resent automatically. Email outcomes return to the attachment loop; upload results return to the form. No approval, rejection, export or payment. Export is inactive; credential references must be rebound on another instance.",
+        "height": 170,
+        "width": 2200
+      },
+      "name": "Notification Notes",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        0,
+        640
+      ],
+      "id": "a6d142ab-647c-4e12-88b3-1169b0b25d02"
+    }
+  ],
+  "connections": {
+    "Store Original and Register Intake": {
+      "main": [
+        [
+          {
+            "node": "Capture Intake",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Intake Accepted": {
+      "main": [
+        [
+          {
+            "node": "Read Current Processing",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Summarize Result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Validate and Check Duplicates": {
+      "main": [
+        [
+          {
+            "node": "Capture Processing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Processing Completed": {
+      "main": [
+        [
+          {
+            "node": "Create Review Task",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Summarize Result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Review Task": {
+      "main": [
+        [
+          {
+            "node": "Capture Review",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Review Ready": {
+      "main": [
+        [
+          {
+            "node": "Claim Notification",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Summarize Result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Claim Notification": {
+      "main": [
+        [
+          {
+            "node": "Capture Claim",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Required": {
+      "main": [
+        [
+          {
+            "node": "Send Local Review Email",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Summarize Result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Local Review Email": {
+      "main": [
+        [
+          {
+            "node": "Classify SMTP Result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Classify SMTP Result": {
+      "main": [
+        [
+          {
+            "node": "Record Notification Result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Record Notification Result": {
+      "main": [
+        [
+          {
+            "node": "Capture Notification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Supported Attachment": {
+      "main": [
+        [
+          {
+            "node": "Store Original and Register Intake",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Summarize Result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read Current Processing": {
+      "main": [
+        [
+          {
+            "node": "Capture Current",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Current Gemini Cache": {
+      "main": [
+        [
+          {
+            "node": "Extract Validate and Check Duplicates",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Pace Uncached Model Call",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pace Uncached Model Call": {
+      "main": [
+        [
+          {
+            "node": "Extract Validate and Check Duplicates",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Run Controlled Batch": {
+      "main": [
+        [
+          {
+            "node": "Get many messages",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get many messages": {
+      "main": [
+        [
+          {
+            "node": "Split Email Attachments",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Email Attachments": {
+      "main": [
+        [
+          {
+            "node": "One Attachment at a Time",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload Invoice": {
+      "main": [
+        [
+          {
+            "node": "Normalize Upload",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalize Upload": {
+      "main": [
+        [
+          {
+            "node": "One Attachment at a Time",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "One Attachment at a Time": {
+      "main": [
+        [
+          {
+            "node": "Batch Finished",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Prepare Item",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Item": {
+      "main": [
+        [
+          {
+            "node": "Supported Attachment",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Capture Intake": {
+      "main": [
+        [
+          {
+            "node": "Intake Accepted",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Capture Current": {
+      "main": [
+        [
+          {
+            "node": "Current Gemini Cache",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Capture Processing": {
+      "main": [
+        [
+          {
+            "node": "Processing Completed",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Capture Review": {
+      "main": [
+        [
+          {
+            "node": "Review Ready",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Capture Claim": {
+      "main": [
+        [
+          {
+            "node": "Send Required",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Capture Notification": {
+      "main": [
+        [
+          {
+            "node": "Summarize Result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Summarize Result": {
+      "main": [
+        [
+          {
+            "node": "Email Result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Email Result": {
+      "main": [
+        [
+          {
+            "node": "Persist Email Outcome",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Format Upload Result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Persist Email Outcome": {
+      "main": [
+        [
+          {
+            "node": "One Attachment at a Time",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format Upload Result": {
+      "main": [
+        [
+          {
+            "node": "Show Intake Result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Europe/Berlin",
+    "saveDataSuccessExecution": "all",
+    "saveDataErrorExecution": "all",
+    "binaryMode": "separate"
+  },
+  "pinData": {},
+  "active": false
+}

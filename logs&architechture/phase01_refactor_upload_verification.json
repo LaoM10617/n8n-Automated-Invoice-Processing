@@ -1,0 +1,109 @@
+[
+  {
+    "entry": "ap-compact-intake-v6",
+    "http": 200,
+    "result": {
+      "contract_version": "ap-stage-v1",
+      "run_id": "11584306-414e-4e0e-83c9-615766a94288",
+      "source": {
+        "source_type": "upload",
+        "source_namespace": "n8n-ap-upload-v1",
+        "source_id": "unified-v5-upload-001",
+        "attachment_id": "0",
+        "batch_id": null,
+        "case_id": null
+      },
+      "stage": "notify",
+      "outcome": "review_ready",
+      "receipt_id": "5de4b559-0bd4-4574-97c6-5e31211187cd",
+      "invoice_id": "1771e496-d925-4832-a504-fbcb96eba30e",
+      "analysis_run_id": 82,
+      "review_id": "ed3992fb-d12b-48bb-82c2-f4ae4a162e8e",
+      "review_url": "http://127.0.0.1:8000/reviews/1771e496-d925-4832-a504-fbcb96eba30e",
+      "issue_codes": [
+        "BUSINESS_DUPLICATE_CANDIDATE"
+      ],
+      "error_code": null,
+      "retryable": false,
+      "notification_status": "sent",
+      "extractor": "direct_structured_extraction_not_agent",
+      "formSubmittedText": "Review pending: http://127.0.0.1:8000/reviews/1771e496-d925-4832-a504-fbcb96eba30e. Notification: sent"
+    }
+  },
+  {
+    "entry": "ap-compact-intake-v6",
+    "http": 200,
+    "result": {
+      "contract_version": "ap-stage-v1",
+      "run_id": "a5ff8c8c-fe30-483a-b64f-0bd2466d81bc",
+      "source": {
+        "source_type": "upload",
+        "source_namespace": "n8n-ap-upload-v1",
+        "source_id": "unified-v5-upload-001",
+        "attachment_id": "0",
+        "batch_id": null,
+        "case_id": null
+      },
+      "stage": "notify",
+      "outcome": "review_ready",
+      "receipt_id": "5de4b559-0bd4-4574-97c6-5e31211187cd",
+      "invoice_id": "1771e496-d925-4832-a504-fbcb96eba30e",
+      "analysis_run_id": 82,
+      "review_id": "ed3992fb-d12b-48bb-82c2-f4ae4a162e8e",
+      "review_url": "http://127.0.0.1:8000/reviews/1771e496-d925-4832-a504-fbcb96eba30e",
+      "issue_codes": [
+        "BUSINESS_DUPLICATE_CANDIDATE"
+      ],
+      "error_code": null,
+      "retryable": false,
+      "notification_status": "sent",
+      "extractor": "direct_structured_extraction_not_agent",
+      "formSubmittedText": "Review pending: http://127.0.0.1:8000/reviews/1771e496-d925-4832-a504-fbcb96eba30e. Notification: sent"
+    }
+  },
+  {
+    "entry": "ap-unified-intake-v5",
+    "http": 200,
+    "result": {
+      "source_type": "upload",
+      "source_namespace": "n8n-ap-upload-v1",
+      "source_id": "unified-v5-upload-001",
+      "attachment_id": "0",
+      "status": "review_ready",
+      "reason_code": "PENDING_REVIEW",
+      "receipt_id": "5de4b559-0bd4-4574-97c6-5e31211187cd",
+      "invoice_id": "1771e496-d925-4832-a504-fbcb96eba30e",
+      "review_url": "http://127.0.0.1:8000/reviews/1771e496-d925-4832-a504-fbcb96eba30e",
+      "notification_status": "sent",
+      "formSubmittedText": "Invoice stored. Review pending: http://127.0.0.1:8000/reviews/1771e496-d925-4832-a504-fbcb96eba30e. Notification: sent. Read-only review."
+    }
+  },
+  {
+    "case": "source_conflict",
+    "result": {
+      "contract_version": "ap-stage-v1",
+      "run_id": "9f064d5f-dbd3-4f2c-9203-fd2f58dcaca9",
+      "source": {
+        "source_type": "upload",
+        "source_namespace": "n8n-ap-upload-v1",
+        "source_id": "unified-v5-upload-001",
+        "attachment_id": "0",
+        "batch_id": null,
+        "case_id": null
+      },
+      "stage": "archive",
+      "outcome": "failed",
+      "receipt_id": null,
+      "invoice_id": null,
+      "analysis_run_id": null,
+      "review_id": null,
+      "review_url": null,
+      "issue_codes": [],
+      "error_code": "HTTP_409",
+      "retryable": false,
+      "notification_status": "not_started",
+      "extractor": "direct_structured_extraction_not_agent",
+      "formSubmittedText": "Result: failed. HTTP_409"
+    }
+  }
+]

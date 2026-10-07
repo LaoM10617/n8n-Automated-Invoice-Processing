@@ -1,0 +1,128 @@
+{
+  "id": "APLocalEmailBridgeV1",
+  "name": "01_AP_Local_Email_Bridge_v1",
+  "nodes": [
+    {
+      "id": "a294bb85-6f12-4136-a0a1-82414e4dfb65",
+      "name": "Local Email Bridge",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        200
+      ],
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "ap-local-email-attachment",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "webhookId": "9d1f93b1-8dc2-4335-9319-f78a380a9c46"
+    },
+    {
+      "id": "43c623bb-c885-444d-b0fa-f7eaf784050d",
+      "name": "Normalize Local Attachment",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        240,
+        200
+      ],
+      "parameters": {
+        "jsCode": "const i=$input.first();const b=i.json.body;const keys=Object.keys(i.binary || {});const data=keys.length?i.binary[keys[0]]:null;if(b.source_namespace!=='mailpit:ap-test-inbox')throw new Error('Local Mailpit sources only.');return [{json:{...b,source_type:'email',supported:b.supported==='true'},...(data?{binary:{data}}:{})}];"
+      }
+    },
+    {
+      "id": "b97b4f88-f5b7-41c1-83b7-a64747a42cce",
+      "name": "Process Attachment",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        480,
+        200
+      ],
+      "parameters": {
+        "source": "database",
+        "workflowId": {
+          "__rl": true,
+          "value": "APEmailAttachmentV1",
+          "mode": "id"
+        },
+        "mode": "once",
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      }
+    },
+    {
+      "id": "05021fcd-da8e-4f56-8fc3-b56fbea3d33c",
+      "name": "Return Outcome",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        720,
+        200
+      ],
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {}
+      }
+    },
+    {
+      "id": "d3fa08ab-d758-4d69-b312-6e749ce62eb2",
+      "name": "Local Test Boundary",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        0,
+        -100
+      ],
+      "parameters": {
+        "content": "## Local SMTP integration test bridge\nThe Python batch tool reads actual messages received by Mailpit, parses MIME attachments and POSTs each attachment here. This is a real local mail path, not Gmail API validation. Calls the same attachment child as Gmail. Loopback demo only; no authentication or production exposure. No mail deletion.",
+        "height": 240,
+        "width": 780
+      }
+    }
+  ],
+  "connections": {
+    "Local Email Bridge": {
+      "main": [
+        [
+          {
+            "node": "Normalize Local Attachment",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalize Local Attachment": {
+      "main": [
+        [
+          {
+            "node": "Process Attachment",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process Attachment": {
+      "main": [
+        [
+          {
+            "node": "Return Outcome",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "active": false,
+  "pinData": {}
+}

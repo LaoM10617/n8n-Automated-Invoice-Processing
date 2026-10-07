@@ -1,0 +1,158 @@
+[
+  {
+    "id": 381,
+    "status": "success",
+    "mode": "manual",
+    "started_at": "2026-10-06 20:14:11.360",
+    "stopped_at": "2026-10-06 20:14:15.356",
+    "messages": [
+      {
+        "provider_message_id": "1a112d9b5a4ac7d9",
+        "smtp_message_id": "<AM9P190MB15716312913DD65BD1B4F761E2952@AM9P190MB1571.EURP190.PROD.OUTLOOK.COM>",
+        "case_subject": "[AP-DEMO][phase01-connect-001][multi]",
+        "attachment_keys": [
+          "attachment_0",
+          "attachment_1"
+        ]
+      },
+      {
+        "provider_message_id": "1a112d8327e7aa23",
+        "smtp_message_id": "<AM9P190MB1571F3356A51BDE5B3BB1960E2952@AM9P190MB1571.EURP190.PROD.OUTLOOK.COM>",
+        "case_subject": "[AP-DEMO][phase01-connect-001][single]",
+        "attachment_keys": [
+          "attachment_0"
+        ]
+      }
+    ],
+    "error": null
+  },
+  {
+    "id": 385,
+    "status": "success",
+    "mode": "manual",
+    "started_at": "2026-10-06 20:15:22.033",
+    "stopped_at": "2026-10-06 20:15:26.219",
+    "messages": [
+      {
+        "provider_message_id": "1a112d9b5a4ac7d9",
+        "smtp_message_id": "<AM9P190MB15716312913DD65BD1B4F761E2952@AM9P190MB1571.EURP190.PROD.OUTLOOK.COM>",
+        "case_subject": "[AP-DEMO][phase01-connect-001][multi]",
+        "attachment_keys": [
+          "attachment_0",
+          "attachment_1"
+        ]
+      },
+      {
+        "provider_message_id": "1a112d8327e7aa23",
+        "smtp_message_id": "<AM9P190MB1571F3356A51BDE5B3BB1960E2952@AM9P190MB1571.EURP190.PROD.OUTLOOK.COM>",
+        "case_subject": "[AP-DEMO][phase01-connect-001][single]",
+        "attachment_keys": [
+          "attachment_0"
+        ]
+      }
+    ],
+    "error": null
+  },
+  {
+    "id": 389,
+    "status": "success",
+    "mode": "manual",
+    "started_at": "2026-10-06 20:21:12.810",
+    "stopped_at": "2026-10-06 20:21:25.681",
+    "messages": [
+      {
+        "provider_message_id": "1a112e07928275fb",
+        "smtp_message_id": "<AM9P190MB15710A63E93D08BD2346ED86E2952@AM9P190MB1571.EURP190.PROD.OUTLOOK.COM>",
+        "case_subject": "[AP-DEMO][phase01-connect-001][mixed]",
+        "attachment_keys": [
+          "attachment_0",
+          "attachment_1",
+          "attachment_2"
+        ]
+      },
+      {
+        "provider_message_id": "1a112e0004b7b16b",
+        "smtp_message_id": "<AM9P190MB1571FF6FD431CEF726D5707DE2952@AM9P190MB1571.EURP190.PROD.OUTLOOK.COM>",
+        "case_subject": "[AP-DEMO][phase01-connect-001][invalid]",
+        "attachment_keys": [
+          "attachment_0"
+        ]
+      },
+      {
+        "provider_message_id": "1a112df5e8cf3ac5",
+        "smtp_message_id": "<AM9P190MB1571674162CCB4F22A465AC0E2952@AM9P190MB1571.EURP190.PROD.OUTLOOK.COM>",
+        "case_subject": "[AP-DEMO][phase01-connect-001][no-attachments]",
+        "attachment_keys": []
+      },
+      {
+        "provider_message_id": "1a112d9b5a4ac7d9",
+        "smtp_message_id": "<AM9P190MB15716312913DD65BD1B4F761E2952@AM9P190MB1571.EURP190.PROD.OUTLOOK.COM>",
+        "case_subject": "[AP-DEMO][phase01-connect-001][multi]",
+        "attachment_keys": [
+          "attachment_0",
+          "attachment_1"
+        ]
+      },
+      {
+        "provider_message_id": "1a112d8327e7aa23",
+        "smtp_message_id": "<AM9P190MB1571F3356A51BDE5B3BB1960E2952@AM9P190MB1571.EURP190.PROD.OUTLOOK.COM>",
+        "case_subject": "[AP-DEMO][phase01-connect-001][single]",
+        "attachment_keys": [
+          "attachment_0"
+        ]
+      }
+    ],
+    "error": null
+  },
+  {
+    "id": 398,
+    "status": "success",
+    "mode": "manual",
+    "started_at": "2026-10-06 20:21:45.753",
+    "stopped_at": "2026-10-06 20:21:55.942",
+    "messages": [
+      {
+        "provider_message_id": "1a112e07928275fb",
+        "smtp_message_id": "<AM9P190MB15710A63E93D08BD2346ED86E2952@AM9P190MB1571.EURP190.PROD.OUTLOOK.COM>",
+        "case_subject": "[AP-DEMO][phase01-connect-001][mixed]",
+        "attachment_keys": [
+          "attachment_0",
+          "attachment_1",
+          "attachment_2"
+        ]
+      },
+      {
+        "provider_message_id": "1a112e0004b7b16b",
+        "smtp_message_id": "<AM9P190MB1571FF6FD431CEF726D5707DE2952@AM9P190MB1571.EURP190.PROD.OUTLOOK.COM>",
+        "case_subject": "[AP-DEMO][phase01-connect-001][invalid]",
+        "attachment_keys": [
+          "attachment_0"
+        ]
+      },
+      {
+        "provider_message_id": "1a112df5e8cf3ac5",
+        "smtp_message_id": "<AM9P190MB1571674162CCB4F22A465AC0E2952@AM9P190MB1571.EURP190.PROD.OUTLOOK.COM>",
+        "case_subject": "[AP-DEMO][phase01-connect-001][no-attachments]",
+        "attachment_keys": []
+      },
+      {
+        "provider_message_id": "1a112d9b5a4ac7d9",
+        "smtp_message_id": "<AM9P190MB15716312913DD65BD1B4F761E2952@AM9P190MB1571.EURP190.PROD.OUTLOOK.COM>",
+        "case_subject": "[AP-DEMO][phase01-connect-001][multi]",
+        "attachment_keys": [
+          "attachment_0",
+          "attachment_1"
+        ]
+      },
+      {
+        "provider_message_id": "1a112d8327e7aa23",
+        "smtp_message_id": "<AM9P190MB1571F3356A51BDE5B3BB1960E2952@AM9P190MB1571.EURP190.PROD.OUTLOOK.COM>",
+        "case_subject": "[AP-DEMO][phase01-connect-001][single]",
+        "attachment_keys": [
+          "attachment_0"
+        ]
+      }
+    ],
+    "error": null
+  }
+]

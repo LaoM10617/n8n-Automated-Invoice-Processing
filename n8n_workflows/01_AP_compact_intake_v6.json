@@ -1,0 +1,496 @@
+{
+  "id": "APCompactIntakeV6",
+  "name": "01_AP_Compact_Intake_v6",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "cf83c49f-0408-4cdf-a006-fa657a512d60",
+      "name": "Run Gmail Batch",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "returnAll": true,
+        "simple": false,
+        "filters": {
+          "q": "subject:AP-DEMO subject:phase01-connect-001"
+        },
+        "options": {
+          "dataPropertyAttachmentsPrefixName": "attachment_",
+          "downloadAttachments": true
+        }
+      },
+      "id": "3f2a6f41-2aa2-4b2e-9ddd-2acba0895bdb",
+      "name": "Gmail",
+      "type": "n8n-nodes-base.gmail",
+      "position": [
+        240,
+        200
+      ],
+      "webhookId": "f1d41315-530d-45df-b3a4-0a51208c32c8",
+      "typeVersion": 2.1,
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "SGOORT8HCIJeyC72",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "path": "ap-compact-intake-v6",
+        "formTitle": "AP Invoice Intake and Review",
+        "formDescription": "Compact AP intake. Existing extractor; no agent yet. Review stays read-only. Reuse Upload ID to retry.",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Upload ID",
+              "placeholder": "e.g. ap-upload-001",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Invoice File",
+              "fieldType": "file",
+              "multipleFiles": false,
+              "acceptFileTypes": ".pdf,.jpg,.jpeg,.png",
+              "requiredField": true
+            }
+          ]
+        },
+        "responseMode": "responseNode",
+        "options": {
+          "appendAttribution": false,
+          "buttonLabel": "Store invoice"
+        }
+      },
+      "id": "7a63507e-9684-4026-80c5-5f75fa0d1083",
+      "name": "Upload Invoice",
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.1,
+      "position": [
+        240,
+        -30
+      ],
+      "webhookId": "0e16e1a3-f697-4057-bd5d-bbe76525a150"
+    },
+    {
+      "name": "Prepare Attachments",
+      "id": "ed86414a-b201-4f8a-869a-f6971ede82f2",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        480,
+        140
+      ],
+      "parameters": {
+        "jsCode": "const results=[];\nfor (const [i,item] of $input.all().entries()) {\n const j=item.json;\n if (j['Upload ID'] !== undefined) {\n  const keys=Object.keys(item.binary || {}), source=String(j['Upload ID']).trim();\n  if (keys.length!==1 || !source || source.length>200) throw new Error('One file and a valid Upload ID are required.');\n  results.push({json:{source_type:'upload',source_namespace:'n8n-ap-upload-v1',source_id:source,attachment_id:'0'},binary:{data:item.binary[keys[0]]},pairedItem:{item:i}});continue;\n }\n\n const match=String(j.subject || '').match(/^\\[AP-DEMO\\]\\[([A-Za-z0-9_-]{1,80})\\]\\[([A-Za-z0-9_-]{1,80})\\]/);\n if (!match || !j.id) throw new Error('Expected a batch-tagged email with a provider message ID.');\n const keys=Object.keys(item.binary || {});\n for (const key of keys.length?keys:['none']) {\n  const b=item.binary?.[key];\n  const supported=Boolean(b && ['application/pdf','image/png','image/jpeg'].includes(b.mimeType));\n  results.push({json:{source_type:'email',source_namespace:'gmail:ap-test-inbox',source_id:String(j.id),attachment_id:key,batch_id:match[1],case_id:match[2]},binary:{data:b || {data:'',mimeType:'application/x-ap-no-attachment',fileName:'no-attachment'}},pairedItem:{item:i}});\n }\n}\nreturn results;"
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "1c3f021a-6c75-4c10-bbd4-a808d2fb4fd1",
+      "name": "Process Each Invoice",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        720,
+        140
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "3b58d503-a606-4218-a9b0-7eaf42f80791",
+      "name": "Batch Complete",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        720,
+        -50
+      ]
+    },
+    {
+      "name": "Archive & Read Document",
+      "id": "50d58092-e47d-4a54-b8d3-413d7f594c03",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        960,
+        140
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "http://python-api:8000/api/ap/stages/archive",
+        "sendBody": true,
+        "contentType": "multipart-form-data",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "metadata",
+              "value": "={{ JSON.stringify($json) }}"
+            },
+            {
+              "parameterType": "formBinaryData",
+              "name": "file",
+              "inputDataFieldName": "data"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 180000
+        }
+      }
+    },
+    {
+      "name": "Extract Invoice Fields",
+      "id": "e94447fb-de8d-47e5-a61b-ede0ca4c8d98",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1200,
+        140
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "={{ 'http://python-api:8000/api/ap/stages/' + $json.run_id + '/analyze' }}",
+        "options": {
+          "timeout": 180000
+        }
+      }
+    },
+    {
+      "name": "Validate & Save Result",
+      "id": "891b021e-0509-4092-8d77-eff214de5159",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1440,
+        140
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "={{ 'http://python-api:8000/api/ap/stages/' + $json.run_id + '/validate' }}",
+        "options": {
+          "timeout": 180000
+        }
+      }
+    },
+    {
+      "name": "Notify Reviewer",
+      "id": "dff9e032-3516-4ac7-9dce-4b6792e13f90",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1920,
+        60
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "={{ 'http://python-api:8000/api/ap/stages/' + $json.run_id + '/notify' }}",
+        "options": {
+          "timeout": 180000
+        }
+      }
+    },
+    {
+      "name": "Record Exception",
+      "id": "dc7b752f-b098-48d2-83e7-6a0365e645ce",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1920,
+        270
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "={{ 'http://python-api:8000/api/ap/stages/' + $json.run_id + '/exception' }}",
+        "options": {
+          "timeout": 180000
+        }
+      }
+    },
+    {
+      "name": "Route Outcome",
+      "id": "77d3ae1b-2ece-4bae-a963-fdff8fd4d003",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        1680,
+        140
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "1f6e4792-18b4-4b04-b8a8-fcea517e4597",
+              "leftValue": "={{ $json.outcome === 'review_ready' }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      }
+    },
+    {
+      "name": "Return or Continue",
+      "id": "d51d4c81-f9f3-4249-a9db-335fbb0288ea",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        2160,
+        140
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "1f6e4792-18b4-4b04-b8a8-fcea517e4597",
+              "leftValue": "={{ $json.source.source_type === 'email' }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      }
+    },
+    {
+      "name": "Upload Result",
+      "id": "8900569b-9a00-4061-9b00-a5fc4c9cd233",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        2400,
+        240
+      ],
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ {...$json, formSubmittedText: $json.outcome === 'review_ready' ? 'Review pending: ' + $json.review_url + '. Notification: ' + $json.notification_status : 'Result: ' + $json.outcome + '. ' + $json.error_code} }}",
+        "options": {}
+      }
+    },
+    {
+      "name": "Business Overview",
+      "id": "05cce40c-cecc-41fa-95b7-60b257b5713b",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        0,
+        -280
+      ],
+      "parameters": {
+        "content": "## PHASE 01 | Compact deterministic workflow\nUpload or run the readonly Gmail test batch. All business stages are inline. Python owns source isolation, originals/OCR, extraction cache and cooldown, validation, review tasks and notification delivery. Historical v5 is preserved.",
+        "width": 2500,
+        "height": 180
+      }
+    },
+    {
+      "name": "Current Scope",
+      "id": "51098db6-9207-48e4-be35-fbbdfea8ab73",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        0,
+        490
+      ],
+      "parameters": {
+        "content": "## Current extractor, NOT an agent\nExtract Invoice Fields uses the existing Gemini structured extractor. LangChain Agent is a future step. Backend stage results share a persisted run_id contract; failed/skipped stages pass through without model calls. Failures are recorded immediately, before Record Exception.\n\nNotify Reviewer sends only to local Mailpit. Sent/unknown/in-flight notifications are not resent automatically. No approval, rejection, export, mailbox deletion or external sending. Export is inactive; bind the existing Gmail readonly credential after import on another instance.",
+        "width": 2500,
+        "height": 230
+      }
+    }
+  ],
+  "connections": {
+    "Run Gmail Batch": {
+      "main": [
+        [
+          {
+            "node": "Gmail",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gmail": {
+      "main": [
+        [
+          {
+            "node": "Prepare Attachments",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload Invoice": {
+      "main": [
+        [
+          {
+            "node": "Prepare Attachments",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Attachments": {
+      "main": [
+        [
+          {
+            "node": "Process Each Invoice",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process Each Invoice": {
+      "main": [
+        [
+          {
+            "node": "Batch Complete",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Archive & Read Document",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Archive & Read Document": {
+      "main": [
+        [
+          {
+            "node": "Extract Invoice Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Invoice Fields": {
+      "main": [
+        [
+          {
+            "node": "Validate & Save Result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate & Save Result": {
+      "main": [
+        [
+          {
+            "node": "Route Outcome",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Route Outcome": {
+      "main": [
+        [
+          {
+            "node": "Notify Reviewer",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Record Exception",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Notify Reviewer": {
+      "main": [
+        [
+          {
+            "node": "Return or Continue",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Record Exception": {
+      "main": [
+        [
+          {
+            "node": "Return or Continue",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Return or Continue": {
+      "main": [
+        [
+          {
+            "node": "Process Each Invoice",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Upload Result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Europe/Berlin",
+    "saveDataSuccessExecution": "all",
+    "saveDataErrorExecution": "all"
+  },
+  "active": false,
+  "pinData": {}
+}

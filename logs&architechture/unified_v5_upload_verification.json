@@ -1,0 +1,51 @@
+[
+  {
+    "http_status": 200,
+    "response": {
+      "source_type": "upload",
+      "source_namespace": "n8n-ap-upload-v1",
+      "source_id": "unified-v5-upload-001",
+      "attachment_id": "0",
+      "status": "review_ready",
+      "reason_code": "PENDING_REVIEW",
+      "receipt_id": "5de4b559-0bd4-4574-97c6-5e31211187cd",
+      "invoice_id": "1771e496-d925-4832-a504-fbcb96eba30e",
+      "review_url": "http://127.0.0.1:8000/reviews/1771e496-d925-4832-a504-fbcb96eba30e",
+      "notification_status": "sent",
+      "formSubmittedText": "Invoice stored. Review pending: http://127.0.0.1:8000/reviews/1771e496-d925-4832-a504-fbcb96eba30e. Notification: sent. Read-only review."
+    }
+  },
+  {
+    "http_status": 200,
+    "response": {
+      "source_type": "upload",
+      "source_namespace": "n8n-ap-upload-v1",
+      "source_id": "unified-v5-upload-001",
+      "attachment_id": "0",
+      "status": "review_ready",
+      "reason_code": "PENDING_REVIEW",
+      "receipt_id": "5de4b559-0bd4-4574-97c6-5e31211187cd",
+      "invoice_id": "1771e496-d925-4832-a504-fbcb96eba30e",
+      "review_url": "http://127.0.0.1:8000/reviews/1771e496-d925-4832-a504-fbcb96eba30e",
+      "notification_status": "sent",
+      "formSubmittedText": "Invoice stored. Review pending: http://127.0.0.1:8000/reviews/1771e496-d925-4832-a504-fbcb96eba30e. Notification: sent. Read-only review."
+    }
+  },
+  {
+    "case": "same_source_different_file",
+    "http_status": 200,
+    "response": {
+      "source_type": "upload",
+      "source_namespace": "n8n-ap-upload-v1",
+      "source_id": "unified-v5-upload-001",
+      "attachment_id": "0",
+      "status": "intake_failed",
+      "reason_code": "HTTP_409",
+      "receipt_id": null,
+      "invoice_id": null,
+      "review_url": null,
+      "notification_status": "not_started",
+      "formSubmittedText": "Review not ready: HTTP_409. Records retained; retry the same Upload ID after resolving the error."
+    }
+  }
+]

@@ -1,3 +1,16 @@
+## Default demo entry (Phase01 refactor steps 4–5 accepted)
+
+Use [v7 editor](http://localhost:5678/workflow/APAgentIntakeV7) or
+[v7 upload form](http://127.0.0.1:5678/form/ap-agent-intake-v7).
+Select **Run Gmail Batch** to replay the existing readonly five-message batch.
+The canvas and workflow JSON are unchanged; v5/v6 remain historical versions.
+The older setup notes below describe previous stages, not the default entry.
+
+69 backend tests pass. Control verification uses a virtual clock and fake models;
+a separate child process exits abruptly to exercise persisted interruption state.
+Existing real-provider and real-Gmail execution evidence is retained instead of
+repeating paid model calls. See `logs&architechture/phase01_step45_verification.json`.
+
 # AP intake backend
 
 Local-only demo service. Implemented: PDF/JPEG/PNG intake, persistent originals,
@@ -151,6 +164,65 @@ Keep the current unauthenticated demo loopback-only. PDF previews use Poppler at
 `/api/ap/invoices/{invoice_id}/preview/{page}`; original bytes remain downloadable.
 Rebuild with `docker compose up -d --build python-api`.
 
-Current local workflow: http://127.0.0.1:5678/form/ap-intake-review-v3
+Historical v3 workflow: http://127.0.0.1:5678/form/ap-intake-review-v3
 Export: `n8n_workflows/01_AP_intake_review_v3.json` (import and publish on another instance).
 The original template and earlier workflows are retained. Notification delivery is Step 6.
+
+
+## Historical deterministic refactor (v6)
+
+The existing structured extractor is unchanged; no Agent or LangChain is installed yet. `document_stages.py` separates reading, persisted raw analysis and deterministic validation. Legacy `/process` delegates to these services. `intake_stages.py` stores `ap-stage-v1` contracts and event history; n8n passes only run IDs after intake.
+
+- POST `/api/ap/stages/archive`: multipart `metadata` (Source JSON) and optional `file`.
+- POST `/api/ap/stages/{run_id}/analyze`: reuse the configured extraction cache or execute the current extractor.
+- POST `/api/ap/stages/{run_id}/validate`: validate/save, identify duplicates and create/reuse the pending task.
+- POST `/api/ap/stages/{run_id}/notify`: independent claim, local Mailpit SMTP and result persistence.
+- POST `/api/ap/stages/{run_id}/exception`: acknowledge an already-persisted failed/skipped outcome.
+- GET `/api/ap/stages/{run_id}`: durable current result.
+
+Business outcomes (`continue`, `review_ready`, `failed`, `skipped`) are distinct from HTTP transport success. Failed/skipped runs pass through later processing stages without extraction. Invalid stage order returns 409; missing runs return 404. Email metadata requires a batch and case ID. Model/service failures are recorded at the originating stage, before any exception node. A retry uses the same source identity through archive; invoice/receipt/task reuse is enforced by existing storage rules.
+
+The synchronous compact analysis stage waits for the local cooldown up to 65 seconds, then each provider call still passes the original rate gate. Provider errors are not retried or switched to another provider. Use one application worker. Larger/multi-round Agent execution will require a separate design; it is not implemented here.
+
+Notifications use port 1025 and host `mailpit` by default. `AP_MAILPIT_HOST` may select localhost/127.0.0.1 for isolated local verification only. No external SMTP hosts or credentials are supported. Sending/unknown claims require reconciliation instead of blind retries. This service shares the claim ledger with the legacy n8n SMTP workflow.
+
+See `logs&architechture/phase01_refactor_log.md` for baseline comparison, evidence, limitations and rollback instructions.
+
+
+## LangChain invoice analysis (v7)
+
+The analysis stage now uses `backend/invoice_agent.py`: LangChain `create_agent`,
+Gemini native tool calling, and the existing `Extraction` schema. It exposes only
+current-document page reading, literal evidence search and OCR quality tools.
+OCR, grounding, arithmetic, duplicate detection and state changes remain deterministic.
+`AP_LLM_*` environment variables remain required; only the configured Gemini
+endpoint is supported by this adapter. No OpenAI fallback is enabled.
+
+Each analysis permits at most three model requests and six document-tool calls.
+The last model request has only the structured-output tool available. Requests
+are paced at least 60 seconds apart within the single backend process; restart
+and multiworker global rate limiting are not implemented. Provider retries and
+schema retries are disabled. Do not bulk-reprocess the historical corpus.
+
+The analysis signature versions prompts, tools and schema separately from OCR.
+Old extraction attempts remain available but cannot satisfy the agent cache.
+`processing_result.agent_trace` holds local execution metadata (not reasoning);
+the review page shows this saved trace. `analysis_cached` on stage responses
+identifies reuse rather than a fresh agent run. LangSmith tracing is disabled.
+On single-worker application restart, unfinished attempts become failed with
+`PROCESS_INTERRUPTED`. Their Agent trace becomes `interrupted`; a model call that
+had not returned becomes `unknown`, while completed calls and tools are preserved.
+No automatic model retry occurs. Inspect the invoice attempt before explicitly
+resubmitting the same source. The intake run can retain its last saved `read`
+checkpoint; it is not proof that analysis completed. A completed `analyzed`
+checkpoint remains eligible for validation without another model call.
+There is no autonomous retry queue. The rate gate is process-local: after a
+restart wait at least the configured interval before starting fresh analysis.
+Cross-process/restart rate enforcement and provider-side cancellation are not
+claimed. Stopping an n8n execution does not guarantee cancellation of an in-flight
+backend/provider request.
+
+Open `http://localhost:5678/workflow/APAgentIntakeV7` and choose **Run Gmail Batch**
+for the existing readonly five-message test batch. The upload entry is
+`http://127.0.0.1:5678/form/ap-agent-intake-v7`. Valid invoices remain pending review.
+The HTTP node calls a real Python Agent; it is not an n8n built-in AI Agent node.

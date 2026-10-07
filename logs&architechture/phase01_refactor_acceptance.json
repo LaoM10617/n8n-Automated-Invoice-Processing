@@ -1,0 +1,26 @@
+{
+  "json_valid": true,
+  "node_count": 16,
+  "execution_nodes": 14,
+  "imported": true,
+  "published": true,
+  "runtime_matches_export_nodes_and_connections": true,
+  "credential_binding": {
+    "Gmail": "existing readonly credential; real executions succeeded",
+    "SMTP": "Python local Mailpit transport; no n8n SMTP credential needed in v6"
+  },
+  "stage_state_survived_backend_recreation": true,
+  "health": {
+    "status": "ok",
+    "capabilities": {
+      "intake": true,
+      "extraction": true,
+      "ocr": true,
+      "review": true,
+      "review_decisions": false
+    }
+  },
+  "test_count": 56,
+  "new_model_calls": 0,
+  "agent_implemented": false
+}

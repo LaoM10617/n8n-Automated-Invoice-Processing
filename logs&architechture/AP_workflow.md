@@ -1,3 +1,7 @@
+Current update (2026-10-06): Phase01 analysis now uses a real Python LangChain Agent through APAgentIntakeV7. OCR, evidence grounding, amount rules and state changes stay deterministic. v5/v6 files are historical; see phase01_refactor_log.md and phase01_agent_verification.json for runtime evidence and quality limits.
+
+Current implementation update (2026-10-06): Phase 01 steps 6–8 are verified. Upload v4 and manual readonly Gmail intake share the backend, attachment child and persistent Mailpit notification status. Five real external test emails, local representative/100-message cached batches, replay and container persistence passed. Review remains pending/read-only. See log_2026-10-06_step06_08_acceptance.md; older unimplemented statements below are historical.
+
 > 最新进度（2026-10-06）：**第五步／第8节已完成**。真实待审核任务、只读原件/字段/异常/重复候选页面、n8n v3及重启持久化已验证。49项测试通过，本轮模型调用0。当前停在pending；下一步为**第六步／第9节：Mailpit审核通知与单张happy path**。详见 `log_2026-10-06_step05_review.md`。下文较早状态为历史记录。
 
 > 2026-10-06 第四步最新状态：真实本地 OCR、OpenAI 结构化提取、确定性校验和业务重复候选已接入；n8n v2 已导入发布并实际执行。详情与限制见 `decision_2026-10-06_step04_processing.md`，字段评估见 `step_04_field_evaluation.json`。下文旧的未实现/501 说明为历史状态；审核任务和通知仍待第五、六步。

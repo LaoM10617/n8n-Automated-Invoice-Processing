@@ -1,0 +1,27 @@
+{
+  "originals_unchanged": true,
+  "v5_unchanged": true,
+  "invoice_differences": [],
+  "batch_differences": [],
+  "baseline_files_unchanged": true,
+  "originals_checked": 16,
+  "before_counts": {
+    "invoices": 16,
+    "receipts": 159,
+    "processing_attempts": 84,
+    "review_tasks": 4,
+    "notification_attempts": 5,
+    "email_outcomes": 123
+  },
+  "after_counts": {
+    "invoices": 16,
+    "receipts": 159,
+    "processing_attempts": 84,
+    "review_tasks": 4,
+    "notification_attempts": 5,
+    "email_outcomes": 123
+  },
+  "stage_runs": 19,
+  "stage_events": 78,
+  "passed": true
+}

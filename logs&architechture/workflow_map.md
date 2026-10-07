@@ -1,3 +1,7 @@
+Current update (2026-10-06): Phase01 analysis now uses a real Python LangChain Agent through APAgentIntakeV7. OCR, evidence grounding, amount rules and state changes stay deterministic. v5/v6 files are historical; see phase01_refactor_log.md and phase01_agent_verification.json for runtime evidence and quality limits.
+
+Current implementation update (2026-10-06): Phase 01 steps 6–8 are verified. Upload v4 and manual readonly Gmail intake share the backend, attachment child and persistent Mailpit notification status. Five real external test emails, local representative/100-message cached batches, replay and container persistence passed. Review remains pending/read-only. See log_2026-10-06_step06_08_acceptance.md; older unimplemented statements below are historical.
+
 先纠正一个数量上的歧义：**AR 的提醒分支已经包含在第三条工作流里，不是再加一条完整 AR 流程。** 额外的 AR 初始化只是把模拟发票放进数据库。
 
 可以把项目想象成这样的目录：

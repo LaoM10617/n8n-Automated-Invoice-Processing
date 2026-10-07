@@ -1,0 +1,71 @@
+{
+  "upload_and_replay": [
+    {
+      "http_status": 200,
+      "result": {
+        "formSubmittedText": "Invoice stored. Review pending. Open review: http://127.0.0.1:8000/reviews/1771e496-d925-4832-a504-fbcb96eba30e . Notification: sent. This page is read-only.",
+        "review_url": "http://127.0.0.1:8000/reviews/1771e496-d925-4832-a504-fbcb96eba30e",
+        "invoice_id": "1771e496-d925-4832-a504-fbcb96eba30e",
+        "notification_status": "sent"
+      }
+    },
+    {
+      "http_status": 200,
+      "result": {
+        "formSubmittedText": "Invoice stored. Review pending. Open review: http://127.0.0.1:8000/reviews/1771e496-d925-4832-a504-fbcb96eba30e . Notification: sent. This page is read-only.",
+        "review_url": "http://127.0.0.1:8000/reviews/1771e496-d925-4832-a504-fbcb96eba30e",
+        "invoice_id": "1771e496-d925-4832-a504-fbcb96eba30e",
+        "notification_status": "sent"
+      }
+    }
+  ],
+  "smtp_failure": {
+    "formSubmittedText": "Invoice stored. Review pending. Open review: http://127.0.0.1:8000/reviews/41608a73-1043-48ec-9482-bd84bc6fc2ee . Notification: failed. This page is read-only.",
+    "review_url": "http://127.0.0.1:8000/reviews/41608a73-1043-48ec-9482-bd84bc6fc2ee",
+    "invoice_id": "41608a73-1043-48ec-9482-bd84bc6fc2ee",
+    "notification_status": "failed"
+  },
+  "smtp_recovery": {
+    "formSubmittedText": "Invoice stored. Review pending. Open review: http://127.0.0.1:8000/reviews/41608a73-1043-48ec-9482-bd84bc6fc2ee . Notification: sent. This page is read-only.",
+    "review_url": "http://127.0.0.1:8000/reviews/41608a73-1043-48ec-9482-bd84bc6fc2ee",
+    "invoice_id": "41608a73-1043-48ec-9482-bd84bc6fc2ee",
+    "notification_status": "sent"
+  },
+  "notification_attempts": {
+    "1771e496-d925-4832-a504-fbcb96eba30e": [
+      {
+        "notification_id": "e75af276-0e7d-4834-bec1-d66802879b99",
+        "invoice_id": "1771e496-d925-4832-a504-fbcb96eba30e",
+        "review_id": "ed3992fb-d12b-48bb-82c2-f4ae4a162e8e",
+        "status": "sent",
+        "message_id": "<59173c3a-393e-7546-02f9-9eb3b36f8430@example.invalid>",
+        "error_code": null,
+        "created_at": "2026-10-06T19:50:07.997Z",
+        "updated_at": "2026-10-06T19:50:08.257Z"
+      }
+    ],
+    "41608a73-1043-48ec-9482-bd84bc6fc2ee": [
+      {
+        "notification_id": "23c2df67-9c3e-4eb2-9065-f5256e43bf1e",
+        "invoice_id": "41608a73-1043-48ec-9482-bd84bc6fc2ee",
+        "review_id": "2fb3d0be-830f-4844-8ab3-084a8fc7cce8",
+        "status": "failed",
+        "message_id": null,
+        "error_code": "SMTP_CONNECTION_FAILED",
+        "created_at": "2026-10-06T19:50:59.801Z",
+        "updated_at": "2026-10-06T19:51:12.733Z"
+      },
+      {
+        "notification_id": "69c47bda-a2fe-4669-b9ee-654f3023a589",
+        "invoice_id": "41608a73-1043-48ec-9482-bd84bc6fc2ee",
+        "review_id": "2fb3d0be-830f-4844-8ab3-084a8fc7cce8",
+        "status": "sent",
+        "message_id": "<e9b840b2-6c56-8a18-befe-38fd32b48b82@example.invalid>",
+        "error_code": null,
+        "created_at": "2026-10-06T19:51:51.851Z",
+        "updated_at": "2026-10-06T19:51:52.004Z"
+      }
+    ]
+  },
+  "mailpit_count": 2
+}

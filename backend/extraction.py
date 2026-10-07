@@ -19,12 +19,22 @@ _next_request_at = 0.0
 def reserve_model_request():
     """Fail fast rather than queue or automatically retry paid model calls."""
     global _next_request_at
-    interval = max(0, float(os.environ.get('AP_LLM_MIN_INTERVAL_SECONDS', '60')))
+    interval = max(60.1, float(os.environ.get('AP_LLM_MIN_INTERVAL_SECONDS', '60')))
     with _request_lock:
         now = time.monotonic()
         if now < _next_request_at:
             raise ProcessingError('MODEL_LOCAL_RATE_LIMIT', 'Model cooldown is active; retry later. No provider request was sent.')
         _next_request_at = now + interval
+
+
+def wait_for_model_cooldown():
+    """Compact synchronous stages wait locally, never retry a provider request."""
+    with _request_lock:
+        remaining = max(0, _next_request_at - time.monotonic())
+    if remaining > 65:
+        raise ProcessingError('MODEL_LOCAL_RATE_LIMIT', 'Cooldown exceeds the synchronous stage budget; retry later.')
+    if remaining:
+        time.sleep(remaining)
 
 
 class RawFields(BaseModel):

@@ -1,0 +1,74 @@
+{
+  "before_counts": {
+    "invoices": 16,
+    "receipts": 159,
+    "processing_attempts": 90,
+    "review_tasks": 4,
+    "notification_attempts": 5
+  },
+  "workflow_sha256": {
+    "01_AP_agent_intake_v7.json": "1a6fa0e1dc6c18d0d7598f14be008770bf78ea664a802ea10124d488278e33e9",
+    "01_AP_compact_intake_v6.json": "fb9ad08335291635c961aff45eecedeb5539fa17f0d8c0240913d0610e6cdac2",
+    "01_AP_email_attachment_v1.json": "45e83c4146734b4a84bf9b139205bc9e889e772d23b197234cd0962a0901510e",
+    "01_AP_gmail_intake_v1.json": "fb09d799b14a0505d444dae22ce9fb56c71ad81400d048bc524828394dea1feb",
+    "01_AP_intake_notify_v4.json": "bcdc6cf30a3319d2c76a554e9a245266bd5775c23020f22506c2b6c5d338a1e4",
+    "01_AP_intake_process_v2.json": "deb73f62b405dd42123d1412eeb21de3de30de8de9ed01b975902563c8104f53",
+    "01_AP_intake_review_v3.json": "511b8dfeb34bff7d396c97ded15363b012ab2d993a329fa8f4c15666f9467cdf",
+    "01_AP_intake_upload_v1.json": "c6fb7a88b21c919026baeef542c6a2b66fa5420230cdcc4e26a42c710e7ae309",
+    "01_AP_local_email_bridge_v1.json": "8eb02d50a27affa06e174a6c30c0a13d905cbde7d35d28b15e7902977f91d4ad",
+    "01_AP_unified_intake_v5.json": "42036710acd6245147a55ee60b37fded5c11c2faf14fee3e8dded15298bc19dc",
+    "Email invoice archiving & data extraction.json": "71255542f88fc811493b44b8c22a84dec1fab626fe98926f4ff2a2e4830f4110"
+  },
+  "before_mailpit": 116,
+  "workflow_files_unchanged": true,
+  "instance_nodes_connections_match": true,
+  "instance_published": true,
+  "gmail_credential_bound": true,
+  "post_deploy_cached_upload": {
+    "contract_version": "ap-stage-v1",
+    "run_id": "d20aae1c-6370-4ace-8a9e-f81aab133c24",
+    "source": {
+      "source_type": "upload",
+      "source_namespace": "n8n-ap-upload-v1",
+      "source_id": "unified-v5-upload-001",
+      "attachment_id": "0",
+      "batch_id": null,
+      "case_id": null
+    },
+    "stage": "notify",
+    "outcome": "review_ready",
+    "receipt_id": "5de4b559-0bd4-4574-97c6-5e31211187cd",
+    "invoice_id": "1771e496-d925-4832-a504-fbcb96eba30e",
+    "analysis_run_id": 89,
+    "review_id": "ed3992fb-d12b-48bb-82c2-f4ae4a162e8e",
+    "review_url": "http://127.0.0.1:8000/reviews/1771e496-d925-4832-a504-fbcb96eba30e",
+    "issue_codes": [
+      "BUSINESS_DUPLICATE_CANDIDATE"
+    ],
+    "error_code": null,
+    "retryable": false,
+    "notification_status": "sent",
+    "extractor": "python_langchain_agent",
+    "analysis_cached": true,
+    "formSubmittedText": "Review pending: http://127.0.0.1:8000/reviews/1771e496-d925-4832-a504-fbcb96eba30e. Notification: sent"
+  },
+  "after_mailpit": 116,
+  "after_counts": {
+    "invoices": 16,
+    "receipts": 159,
+    "processing_attempts": 90,
+    "review_tasks": 4,
+    "notification_attempts": 5
+  },
+  "default_workflow": "APAgentIntakeV7",
+  "tests_passed": 69,
+  "new_control_cases": 8,
+  "new_provider_calls": 0,
+  "interruption_test": "Real abrupt subprocess exit with a fake model and isolated SQLite; no live provider failure injection",
+  "rate_scope": "Single process; restart/multiworker global rate enforcement not implemented",
+  "reused_live_evidence": [
+    "phase01_agent_executions.json",
+    "phase01_agent_verification.json",
+    "phase01_agent_restart_cache.json"
+  ]
+}
