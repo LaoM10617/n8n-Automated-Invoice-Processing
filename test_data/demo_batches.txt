@@ -1,0 +1,7 @@
+| 演练批次 | 邮件主题（一封邮件附三张发票） |
+|---|---|
+| batch1 | `[AP-DEMO][demo-batch-01][three-invoices] Rechnungseingang – Runde 1` |
+| batch2 | `[AP-DEMO][demo-batch-02][three-invoices] Rechnungseingang – Runde 2` |
+| batch3 | `[AP-DEMO][demo-batch-03][three-invoices] Rechnungseingang – Runde 3` |
+| batch4 | `[AP-DEMO][demo-batch-04][three-invoices] Rechnungseingang – Runde 4` |
+| batch5 | `[AP-DEMO][demo-batch-05][three-invoices] Rechnungseingang – Runde 5` |

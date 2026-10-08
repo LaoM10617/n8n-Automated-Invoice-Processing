@@ -15,10 +15,11 @@ from backend.document_text import ProcessingError
 from backend.test_invoice_agent import ScriptedModel
 
 
-def test_every_model_round_and_next_analysis_are_paced(monkeypatch):
+@pytest.mark.parametrize('interval', [0, 2, 60])
+def test_every_model_round_and_next_analysis_are_paced(monkeypatch, interval):
     clock=[100.0]
     monkeypatch.setattr(extraction,'_next_request_at',0)
-    monkeypatch.setenv('AP_LLM_MIN_INTERVAL_SECONDS','0')
+    monkeypatch.setenv('AP_LLM_MIN_INTERVAL_SECONDS',str(interval))
     monkeypatch.setattr(extraction.time,'monotonic',lambda:clock[0])
     monkeypatch.setattr(extraction.time,'sleep',lambda seconds:clock.__setitem__(0,clock[0]+seconds))
     starts=[]
@@ -29,8 +30,8 @@ def test_every_model_round_and_next_analysis_are_paced(monkeypatch):
     monkeypatch.setattr(agent,'make_model',lambda:ScriptedModel())
     for _ in range(2):agent.extract_fields([{'page':1,'text':'Offline invoice'}])
     assert len(starts)==4
-    assert all(b-a>=60 for a,b in zip(starts,starts[1:]))
-    assert starts==pytest.approx([100,160.1,220.2,280.3])
+    assert all(b-a>=interval for a,b in zip(starts,starts[1:]))
+    assert starts==pytest.approx([100+i*interval for i in range(4)])
 
 
 def test_exact_model_budget_and_final_request_tools(monkeypatch):

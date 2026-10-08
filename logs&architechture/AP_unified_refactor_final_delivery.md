@@ -1,3 +1,5 @@
+> Current update (2026-10-07): native intake now waits for its fixed batch of human reviews and sends one batch summary. Approved records remain available for user-selected Excel export. See [batch-wait delivery and verification](AP_batch_wait_delivery.md). Earlier non-waiting and per-invoice notification descriptions below are historical for the native route.
+
 # 统一画布与原生 Agent：最终交付 — 2026-10-07
 
 ## 交付结论与边界

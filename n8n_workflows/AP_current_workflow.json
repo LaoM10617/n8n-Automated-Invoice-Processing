@@ -1,0 +1,1699 @@
+{
+  "id": "J4xPbnTCAgYFVNzJ",
+  "name": "Automated Invoices Extraction, Approvement and Recording",
+  "versionId": "562baabb-f21f-45e2-8b5c-ab7d5b839651",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "5984473e-b867-4a4f-9f2e-9b30c543942d",
+      "name": "Run Demo Email Batch",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        112
+      ],
+      "notes": "Manual, read-only demo batch. Fetches the existing test query; does not poll or alter emails."
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "returnAll": true,
+        "simple": false,
+        "filters": {
+          "q": "subject:AP-DEMO subject:demo-batch-03"
+        },
+        "options": {
+          "dataPropertyAttachmentsPrefixName": "attachment_",
+          "downloadAttachments": true
+        }
+      },
+      "id": "0e8e8e29-4d09-44bb-8e85-0801de5bf7b7",
+      "name": "Fetch Invoice Emails",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        240,
+        112
+      ],
+      "webhookId": "e39e73cf-219d-4c3a-98a6-5e77f498722f",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "SGOORT8HCIJeyC72",
+          "name": "Gmail account"
+        }
+      },
+      "notes": "Existing operation retained in the unified business canvas."
+    },
+    {
+      "parameters": {
+        "jsCode": "const results=[];\nfor (const [i,item] of $input.all().entries()) {\n const j=item.json;\n if (j['Upload ID'] !== undefined) {\n  const keys=Object.keys(item.binary || {}), source=String(j['Upload ID']).trim();\n  if (keys.length!==1 || !source || source.length>200) throw new Error('One file and a valid Upload ID are required.');\n  results.push({json:{source_type:'upload',source_namespace:'n8n-ap-upload-v1',source_id:source,attachment_id:'0',batch_id:'upload-'+$execution.id,case_id:'upload',notification_mode:'batch',auto_approval_limit_eur:String(j.auto_approval_limit_eur)},binary:{data:item.binary[keys[0]]},pairedItem:{item:i}});continue;\n }\n\n const match=String(j.subject || '').match(/^\\[AP-DEMO\\]\\[([A-Za-z0-9_-]{1,80})\\]\\[([A-Za-z0-9_-]{1,80})\\]/);\n if (!match || !j.id) throw new Error('Expected a batch-tagged email with a provider message ID.');\n const keys=Object.keys(item.binary || {});\n for (const key of keys.length?keys:['none']) {\n  const b=item.binary?.[key];\n  const supported=Boolean(b && ['application/pdf','image/png','image/jpeg'].includes(b.mimeType));\n  results.push({json:{source_type:'email',source_namespace:'gmail:ap-test-inbox',source_id:String(j.id),attachment_id:key,batch_id:match[1],case_id:match[2],notification_mode:'batch',auto_approval_limit_eur:String(j.auto_approval_limit_eur)},binary:{data:b || {data:'',mimeType:'application/x-ap-no-attachment',fileName:'no-attachment'}},pairedItem:{item:i}});\n }\n}\nreturn results;"
+      },
+      "id": "5d7b8e02-4e16-4528-9253-7fcd1933b709",
+      "name": "Prepare Invoice Files",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        800,
+        224
+      ],
+      "notes": "Preserves provider message ID, attachment ID, upload ID and binary data. One attachment per item, including explicit unsupported-file outcomes."
+    },
+    {
+      "parameters": {},
+      "id": "9806bde6-b98f-422e-9d37-a0cc7bd09980",
+      "name": "Email Batch Complete",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        1392,
+        -48
+      ],
+      "notes": "Existing operation retained in the unified business canvas."
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://python-api:8000/api/ap/stages/archive",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "contentType": "multipart-form-data",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "metadata",
+              "value": "={{ JSON.stringify($json) }}"
+            },
+            {
+              "parameterType": "formBinaryData",
+              "name": "file",
+              "inputDataFieldName": "data"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 480000
+        }
+      },
+      "id": "49f5b017-60ba-44e6-b60d-8f579ad33428",
+      "name": "Save Invoice & Read Text",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1408,
+        272
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "APReviewEventLocalV1",
+          "name": "AP review event local header"
+        }
+      },
+      "notes": "Python saves the original and reads PDF text or runs local OCR. Business IDs and source association are persisted."
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ 'http://python-api:8000/api/ap/native/' + $json.run_id + '/begin' }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {
+          "timeout": 15000
+        }
+      },
+      "id": "78109066-675f-4735-882f-39e87ea4e7c1",
+      "name": "Prepare Invoice Analysis",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1680,
+        272
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "APReviewEventLocalV1",
+          "name": "AP review event local header"
+        }
+      },
+      "onError": "continueErrorOutput",
+      "notes": "Creates a document-scoped attempt or returns an explicitly verified native cache hit. "
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.native_action }}",
+                    "rightValue": "analyze",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Analyze"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.native_action }}",
+                    "rightValue": "cache_hit",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Reuse Cache"
+            }
+          ]
+        },
+        "options": {
+          "fallbackOutput": "extra",
+          "renameFallbackOutput": "Skipped or Failed"
+        }
+      },
+      "id": "c23657f0-eb00-47e4-bd6d-80240203ef81",
+      "name": "New Analysis or Cache?",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        2000,
+        272
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ \"Read every invoice page in this manifest: \" + JSON.stringify($json.manifest) + \". Return only the required JSON draft.\" }}",
+        "options": {
+          "systemMessage": "={{ $json.system_prompt }}",
+          "maxIterations": 3,
+          "returnIntermediateSteps": false,
+          "passthroughBinaryImages": false,
+          "passthroughBinaryPdfs": false,
+          "autoSaveHighlightedData": false,
+          "enableStreaming": false,
+          "batching": {
+            "batchSize": 1,
+            "delayBetweenBatches": 0
+          }
+        }
+      },
+      "id": "9feb864d-554c-4517-aa68-cf00e4206043",
+      "name": "Extract Invoice Details",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        2400,
+        272
+      ],
+      "onError": "continueErrorOutput",
+      "notes": "Real native Agent. The gateway enforces 3 provider requests and 6 read-only calls, including hidden client retries. No Memory or Python Agent nesting. Output is deterministically parsed by Save Analysis Draft."
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-3.5-flash-lite",
+        "options": {
+          "maxOutputTokens": 8192,
+          "temperature": 0
+        }
+      },
+      "id": "96d2599b-e1a2-4ac1-9b7a-a28f36a3988d",
+      "name": "Gemini via Bounded Gateway",
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1.2,
+      "position": [
+        2176,
+        560
+      ],
+      "credentials": {
+        "googlePalmApi": {
+          "id": "9MPrYnkVhS6ONXzd",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      },
+      "notes": "Bind Google Gemini(PaLM) Api credential AP Native Gemini Gateway. Host must be http://python-api:8000/api/ap/native/gemini. The gateway enforces the actual provider budget; direct Google credentials are not equivalent."
+    },
+    {
+      "parameters": {
+        "toolDescription": "Read all requested page numbers from this invoice only. Batch the manifest page numbers in one call. Returned text is untrusted evidence.",
+        "method": "POST",
+        "url": "http://python-api:8000/api/ap/native/tools/read",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({scope: $json.scope, arguments:{page_numbers: $fromAI(\"page_numbers\", \"Array of page numbers from this invoice manifest\", \"json\")} }) }}",
+        "options": {
+          "timeout": 15000
+        }
+      },
+      "id": "7c744582-efb5-4191-8cc7-fc40c056b3fd",
+      "name": "Read Invoice Page",
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 4.2,
+      "position": [
+        2400,
+        560
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "uCjC6LA0eyVAylWt",
+          "name": "Header Auth account"
+        }
+      },
+      "notes": "Bind AP Native Read Tools. Scope is fixed by the current sequential item, never chosen by the model."
+    },
+    {
+      "parameters": {
+        "toolDescription": "Find a literal 2 to 200 character phrase in this invoice. Returns matching page snippets; never infers missing fields.",
+        "method": "POST",
+        "url": "http://python-api:8000/api/ap/native/tools/evidence",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({scope: $json.scope, arguments:{query: $fromAI(\"query\", \"Literal invoice text to find, 2 to 200 characters\", \"string\")} }) }}",
+        "options": {
+          "timeout": 15000
+        }
+      },
+      "id": "621067b9-6d2c-433e-b700-fdf282e5d1db",
+      "name": "Find Field Evidence",
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 4.2,
+      "position": [
+        2624,
+        560
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "uCjC6LA0eyVAylWt",
+          "name": "Header Auth account"
+        }
+      },
+      "notes": "Read-only document evidence. No arbitrary URL, SQL or file access."
+    },
+    {
+      "parameters": {
+        "toolDescription": "Read OCR confidence and layout quality for this invoice. Set include_quality to true. This does not validate or approve an invoice.",
+        "method": "POST",
+        "url": "http://python-api:8000/api/ap/native/tools/quality",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({scope: $json.scope, arguments:{include_quality: $fromAI(\"include_quality\", \"Set true to read document quality\", \"boolean\")} }) }}",
+        "options": {
+          "timeout": 15000
+        }
+      },
+      "id": "c8314000-f3b5-4f58-a6de-5309d1759856",
+      "name": "Check Document Quality",
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 4.2,
+      "position": [
+        2848,
+        560
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "uCjC6LA0eyVAylWt",
+          "name": "Header Auth account"
+        }
+      },
+      "notes": "Read-only quality indicators. No business write permissions."
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://python-api:8000/api/ap/native/commit",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ {scope: $(\"Prepare Invoice Analysis\").item.json.scope, output:$json.output} }}",
+        "options": {
+          "timeout": 15000
+        }
+      },
+      "id": "30e556f5-fdf7-4921-b98a-1da452feda77",
+      "name": "Save Analysis Draft",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2800,
+        272
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "APReviewEventLocalV1",
+          "name": "AP review event local header"
+        }
+      },
+      "onError": "continueErrorOutput",
+      "notes": "Backend validates the exact final provider draft against the nullable Extraction schema and verifies all pages were read. Failure cannot reach approval."
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.outcome === 'decision_ready' && $json.review_status === 'approved' && $json.approval_method === 'automatic' ? 'automatic' : '' }}",
+                    "rightValue": "automatic",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Automatically Approved"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.outcome }}",
+                    "rightValue": "decision_ready",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Existing Decision"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.outcome }}",
+                    "rightValue": "review_ready",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Needs Human Review"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.outcome }}",
+                    "rightValue": "skipped",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Skipped File"
+            }
+          ]
+        },
+        "options": {
+          "fallbackOutput": "extra",
+          "ignoreCase": false,
+          "renameFallbackOutput": "Failed or Unexpected",
+          "allMatchingOutputs": false
+        }
+      },
+      "id": "46c14f0c-dfeb-49cc-90c2-a5eddbb60b44",
+      "name": "Route Invoice Result",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        3392,
+        224
+      ],
+      "notes": "Routes saved outcomes; does not approve. Replayed manual decisions use Existing Decision. Unknown results reach the backend exception check and cannot silently pass as approved."
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "1f6e4792-18b4-4b04-b8a8-fcea517e4597",
+              "leftValue": "={{ $json.source.source_type === 'email' }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "d5210076-e6e9-4b8d-84d0-9b4f54764db4",
+      "name": "Continue Email Batch?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        4016,
+        272
+      ],
+      "notes": "Email items return to the sequential loop; uploaded invoices return the persisted outcome to the form."
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "5b07c81a-791b-4672-9053-3a8d90b5ebd2",
+      "name": "Process One Invoice",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        1120,
+        224
+      ],
+      "notes": "Sequential processing preserves per-invoice context and the backend model request limits."
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ {...$json, formSubmittedText: $json.outcome === 'decision_ready' ? 'Saved decision: ' + $json.review_status + '. Approved records are available at http://127.0.0.1:8000/exports. A batch summary follows in local Mailpit.' : $json.outcome === 'review_ready' ? 'Waiting for human review: ' + $json.review_url + '. You can close this page. A batch reminder follows in local Mailpit.' : 'Result: ' + $json.outcome + '. ' + $json.error_code + '. The batch summary will retain this exception.'} }}",
+        "options": {}
+      },
+      "id": "43660e34-5206-4c29-b436-1613effc9f60",
+      "name": "Show Upload Result",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        4304,
+        384
+      ],
+      "notes": "Returns the real result, review link or export-register link. Failed/skipped outcomes remain explicit."
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ 'http://python-api:8000/api/ap/stages/' + $json.run_id + '/exception' }}",
+        "options": {
+          "timeout": 480000
+        }
+      },
+      "id": "3691e9f9-aedd-4f1b-acf8-b97eb1423b4c",
+      "name": "Read Skipped or Failed Result",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        3696,
+        512
+      ],
+      "notes": "Reads the outcome already saved by the originating stage. Does not create a review task or turn failures into successes; skipped and failed remain distinct in outcome/error_code."
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ \"http://python-api:8000/api/ap/native/\" + $(\"Save Invoice & Read Text\").item.json.run_id + \"/abort\" }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {
+          "timeout": 15000
+        }
+      },
+      "id": "1b1fb9b1-5267-4e95-9bbd-f80ded94e561",
+      "name": "Record Analysis Failure",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2800,
+        848
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "APReviewEventLocalV1",
+          "name": "AP review event local header"
+        }
+      },
+      "notes": "Closes the attempt and reloads its saved failure. Does not retry the model or change an approval."
+    },
+    {
+      "parameters": {},
+      "id": "65ea9f66-6431-4f66-9a4c-7a3b95891652",
+      "name": "Reuse Verified Analysis",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        2464,
+        -176
+      ],
+      "notes": "Verified native cache hit. No model request was made for this run; cache source remains in the saved stage result."
+    },
+    {
+      "parameters": {
+        "path": "ap-native-intake-b2-v2",
+        "formTitle": "AP Invoice Intake and Review",
+        "formDescription": "Upload an AP invoice. Eligible low-value EUR invoices enter the export register automatically; other invoices need review. Results go to local Mailpit. Reuse Upload ID for safe retries.",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Upload ID",
+              "placeholder": "e.g. ap-upload-001",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Invoice File",
+              "fieldType": "file",
+              "multipleFiles": false,
+              "acceptFileTypes": ".pdf,.jpg,.jpeg,.png",
+              "requiredField": true
+            }
+          ]
+        },
+        "responseMode": "responseNode",
+        "options": {
+          "appendAttribution": false,
+          "buttonLabel": "Store invoice"
+        }
+      },
+      "id": "d1f3c397-855d-48f2-aaf4-09c9b7344209",
+      "name": "Upload Invoice",
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.1,
+      "position": [
+        240,
+        352
+      ],
+      "webhookId": "c2b0eb57-eb0c-4f4d-b9c5-2167116b4d87",
+      "notes": "Existing operation retained in the unified business canvas."
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "ap-native-excel-b2-v2",
+        "authentication": "headerAuth",
+        "options": {
+          "responseCode": {
+            "values": {
+              "responseCode": "customCode",
+              "customCode": 202
+            }
+          }
+        }
+      },
+      "id": "fa5bb5ae-0adb-4063-829d-5976f355f664",
+      "name": "Excel File Ready",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        2880,
+        1616
+      ],
+      "webhookId": "5005237d-0470-45af-84e1-209bd3c999ab",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "APReviewEventLocalV1",
+          "name": "AP review event local header"
+        }
+      },
+      "notes": "Independent event after the user selects approved invoices and Python generates a saved Excel batch. It does not request file generation."
+    },
+    {
+      "parameters": {
+        "url": "={{ 'http://python-api:8000/api/ap/outcomes/batch/' + encodeURIComponent($json.body.export_id) }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {
+          "timeout": 15000
+        }
+      },
+      "id": "f106ebb3-a83c-48a3-ab87-3174bb424c99",
+      "name": "Check Export File",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        3200,
+        1616
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "APReviewEventLocalV1",
+          "name": "AP review event local header"
+        }
+      },
+      "notes": "Checks the saved batch and existing file by export_id. Does not regenerate the workbook."
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ 'http://python-api:8000/api/ap/outcomes/' + $json.kind + '/' + encodeURIComponent($json.id) + '/notify' }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {
+          "timeout": 15000
+        }
+      },
+      "id": "88913b3e-ab09-4ef1-a213-f8a1bc1e7ca1",
+      "name": "Send Excel Download Link",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        3488,
+        1616
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "APReviewEventLocalV1",
+          "name": "AP review event local header"
+        }
+      },
+      "notes": "Local Mailpit download notice for the existing batch. Notification retries do not recreate Excel."
+    },
+    {
+      "parameters": {
+        "content": "# Invoice Automation Demo\n\nProcess invoice attachments with AI extraction, rule-based validation, human review and Excel export.\n\n## Getting Started\n\n1. **Choose an input:** Fetch demo emails using the configured subject filter, or upload one invoice.\n2. **Set the approval limit:** Edit `auto_approval_limit_eur` in **Approval Settings** before running.\n3. **Run the workflow:** Let extraction, draft saving and validation finish.\n4. **Review exceptions:** Open the invoice review links directly. Mailpit provides local notification emails.\n5. **Preview and export:** Open the [Export Portal](http://127.0.0.1:8000/exports), select approved invoices and download Excel.\n\n## Workflow\n\n**Receive → Archive & Read → AI Extract → Validate → Approve or Review → Batch Summary → Optional Excel Export**\n\n- **Automatic approval:** Below the configured limit and all required checks pass.\n- **Manual review:** At or above the limit, or validation issues require attention.\n- **Waiting:** The workflow checks review progress every 70 seconds and continues once all reviews are complete.\n- **Export:** Each export creates a new Excel file for the selected approved invoices. Pending and rejected invoices are excluded.\n\n## Demo Scope\n\n[Mailpit](http://localhost:8025) is used for local email notifications.\nApproval and export do not submit accounting entries or trigger payment.",
+        "height": 550,
+        "width": 842,
+        "color": 2
+      },
+      "id": "75b89aa9-10d8-4d2a-a0a6-5f120c4669c2",
+      "name": "Start Here",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -944,
+        16
+      ]
+    },
+    {
+      "parameters": {
+        "content": "### Export When Needed\nApproved records are automatically available in the [Export Portal](http://127.0.0.1:8000/exports), including while other invoices wait. Select rows to create Excel. Rejected or pending invoices are excluded. Export is not payment.",
+        "height": 134,
+        "width": 538,
+        "color": 4
+      },
+      "id": "26f3f357-e6bc-4509-8660-e6d19bff29d9",
+      "name": "Excel Actions",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        2928,
+        1344
+      ]
+    },
+    {
+      "parameters": {
+        "url": "={{ 'http://python-api:8000/api/ap/stages/' + $json.run_id }}",
+        "options": {
+          "timeout": 15000
+        }
+      },
+      "id": "57e35b25-a4f2-4a93-9f17-b3ff794315e5",
+      "name": "Read Saved Invoice Decision",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        3696,
+        0
+      ],
+      "notes": "Approval already saved the exportable snapshot. This batch sends one final summary; no per-invoice result email."
+    },
+    {
+      "parameters": {
+        "url": "={{ 'http://python-api:8000/api/ap/stages/' + $json.run_id }}",
+        "options": {
+          "timeout": 15000
+        }
+      },
+      "id": "496f8bc8-22f8-4d01-b28d-9c69bb408f17",
+      "name": "Human Review Pending",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        3696,
+        256
+      ],
+      "notes": "The saved review task awaits a person. Continue processing other attachments before sending the batch reminder and waiting."
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://python-api:8000/api/ap/intake-batches",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ {run_ids: $input.all().map(item => item.json.run_id)} }}",
+        "options": {
+          "timeout": 15000
+        }
+      },
+      "id": "174fea7d-f5d4-4ca8-bc9a-d2b23eb8e710",
+      "name": "Read Batch Status",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        1168,
+        1088
+      ],
+      "executeOnce": true,
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "APReviewEventLocalV1",
+          "name": "AP review event local header"
+        }
+      },
+      "notes": "Freeze this execution’s completed intake runs once and read current review states. No model call or approval."
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "1f6e4792-18b4-4b04-b8a8-fcea517e4597",
+              "leftValue": "={{ $json.pending > 0 || $json.unresolved > 0 }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "b79dcc78-a548-4e4d-9989-ecb715d13872",
+      "name": "Pending Reviews?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        1456,
+        1088
+      ],
+      "notes": "Only this intake batch controls the wait; processing failures and rejected invoices remain separate counts."
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ 'http://python-api:8000/api/ap/intake-batches/' + $json.batch_id + '/notify/pending' }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {
+          "timeout": 15000
+        }
+      },
+      "id": "723d6e4a-61be-4153-b42d-dd46272a8a8a",
+      "name": "Notify Pending Reviews",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        1744,
+        1264
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "APReviewEventLocalV1",
+          "name": "AP review event local header"
+        }
+      },
+      "notes": "Send one local reminder with pending invoice links. A durable claim prevents duplicate or uncertain sends."
+    },
+    {
+      "parameters": {
+        "amount": 30
+      },
+      "id": "e2a65d6a-6a13-46c8-afd2-358a3bdb169e",
+      "name": "Wait for Review",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        2032,
+        1264
+      ],
+      "webhookId": "e9cb482b-7911-43d8-8bd6-dce4a18fdd53",
+      "notes": "Persist this execution while waiting 70 seconds. Human review happens in the existing portal; no automatic approval or repeated reminder."
+    },
+    {
+      "parameters": {
+        "url": "={{ 'http://python-api:8000/api/ap/intake-batches/' + $json.batch_id }}",
+        "options": {
+          "timeout": 15000
+        }
+      },
+      "id": "7b54d780-c8be-4eba-8ff4-84c7089028ba",
+      "name": "Read Latest Review Status",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        2320,
+        1264
+      ],
+      "notes": "Reload current database decisions for the fixed batch, including edits and rejections."
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "1f6e4792-18b4-4b04-b8a8-fcea517e4597",
+              "leftValue": "={{ !$json.complete }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "5279385e-f369-4121-81f2-5af75f618f4c",
+      "name": "Reviews Still Pending?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        2608,
+        1264
+      ],
+      "notes": "Pending or unresolved reviews return to Wait. The summary runs only after all review decisions are final."
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ 'http://python-api:8000/api/ap/intake-batches/' + $json.batch_id + '/notify/summary' }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {
+          "timeout": 15000
+        }
+      },
+      "id": "0b643293-cfa2-45bd-9718-03ca83434bb0",
+      "name": "Send Batch Summary",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        2896,
+        1088
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "APReviewEventLocalV1",
+          "name": "AP review event local header"
+        }
+      },
+      "notes": "Send one local summary: new/reused records, approvals, rejections, failures and skips. Include the export portal link; do not create Excel."
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "approval-limit-eur",
+              "name": "auto_approval_limit_eur",
+              "value": "1700.00",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {
+          "stripBinary": false
+        }
+      },
+      "id": "5607ed6e-9175-43c6-ae2c-aed973172f27",
+      "name": "Approval Settings",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        528,
+        224
+      ],
+      "notes": "Workflow editors: change auto_approval_limit_eur here, then save/publish before the next run. EUR gross totals at or above the limit require human review. Both intake paths use the same setting; each run saves it before analysis. Existing decisions stay final."
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ 'http://python-api:8000/api/ap/stages/' + $json.run_id + '/validate-policy' }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-AP-Review",
+              "value": "1"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 480000
+        }
+      },
+      "id": "cfbaaf08-78c3-4fe1-a1f6-800db39e5a5f",
+      "name": "Check Invoice & Apply Approval Rules",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        3088,
+        272
+      ],
+      "notes": "Validate evidence, amounts and duplicates against the approval ceiling saved at intake from Approval Settings. EUR gross totals at or above that ceiling require human review. Saved decisions remain final."
+    },
+    {
+      "parameters": {
+        "content": "### ❗Important: Auto Approval Limit Setting \n",
+        "height": 80,
+        "width": 150
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        512,
+        128
+      ],
+      "id": "1dfe34c3-0927-4b94-bdaa-048904bc7c17",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "### Email Selection: Demo vs. Production\n\nThis demo uses a fixed subject filter to reliably select one test batch.\n\nFor production, adapt the selection criteria to the business process—for example, a shared subject prefix, a date range such as the last seven days (`newer_than:7d`), and/or a specific sender (`from:supplier@example.com`).\n\nTo fetch multiple batches, remove the batch-specific number from the subject filter. Gmail search does not support regular expressions; if precise pattern matching is required, apply it in a downstream filtering step.",
+        "height": 256,
+        "width": 416
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        80,
+        -160
+      ],
+      "id": "6977289f-58b4-40d7-8b91-ea03ac19b601",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "### Upload the invoice file\nThe current upload entrance only supports one invoice at once. The email entrance supoorts multiple batches and attachments "
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        192,
+        496
+      ],
+      "id": "ff89bf87-ca7d-4c79-88bd-6ad91c869b5e",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "### Approval Rules\n\n- **Automatic approval:** The total is below the configured threshold, amounts reconcile, and all validation checks pass.\n- **Manual review:** Any exceptions are detected, or the total meets or exceeds the threshold.",
+        "height": 192
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        480,
+        368
+      ],
+      "id": "63cef643-452f-426e-a91e-d233187ed8a8",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "## Email & Manual Review\n\n- [Open demo mailbox](http://localhost:8025)\n\nCheck the original document, resolve issues, and approve or reject.\n\nThe workflow continues automatically once all reviews are complete.\n\n## Review Notifications — Production Setup\n\nReplace local Mailpit delivery with the customer's email sending service.\n\nConfigure the finance reviewers or a shared finance mailbox as the recipients.",
+        "height": 240,
+        "width": 592
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1536,
+        1408
+      ],
+      "id": "81459157-142a-4bac-874f-2d2faafc6544",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "content": "## Export Scope & Planned Enhancements\n\n**Current behavior**\nOnly approved invoices are included in the Excel export.\nRejected and pending invoices are excluded. Rejection records and reasons remain stored in the system.\n\n**Planned enhancements**\n- Add a separate export of rejected invoices, including rejection reasons.\n- Make automatic approval rules configurable to match customer policies.\n- Allow authorized reviewers to override selected validation warnings and approve invoices for export.\n\nFinal approval remains with the customer. An override records a human decision; ",
+        "height": 320,
+        "width": 608
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        3152,
+        1600
+      ],
+      "id": "9393dbf7-007a-411c-b8c3-e5bf31e071fa",
+      "name": "Sticky Note5"
+    },
+    {
+      "parameters": {
+        "content": "## Excel Export — Current Behavior & Production Options\n\nThe demo does not update a single existing Excel workbook incrementally.\nEach export creates a new Excel file containing the approved invoices selected for that export.\n\nIn production, configure the export strategy to match customer requirements: generate separate files or append new records to a designated workbook.",
+        "height": 288,
+        "width": 496
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        3568,
+        1280
+      ],
+      "id": "5cc79139-93f2-45d9-a754-390813b37bf1",
+      "name": "Sticky Note6"
+    },
+    {
+      "parameters": {
+        "content": "## Approval Routing\n\n- **Automatic approval:** Invoices below the configured threshold that pass all required checks are approved automatically.\n- **Manual review:** Invoices at or above the threshold, or with validation issues, require a reviewer to approve or reject them.\n\nExisting decisions are reused without repeating approval.",
+        "height": 240,
+        "width": 384
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        3904,
+        -64
+      ],
+      "id": "ba7f1e6d-1264-49b3-bba8-8fd567dd8d65",
+      "name": "Sticky Note7"
+    },
+    {
+      "parameters": {
+        "content": "## AI Agent — Invoice Extraction\n\nThe AI Agent reads invoice documents and extracts structured data.\n\nPlease let the analysis and draft-saving steps finish before stopping execution.\n\nThe backend supports recovery from interrupted runs, but recovery may still encounter errors. If interrupted, restart from **Prepare Invoice Analysis** rather than rerunning the Agent with stale inputs.",
+        "height": 208,
+        "width": 512
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        2288,
+        32
+      ],
+      "id": "4e12e2b0-5b66-48bd-a653-536e4e5e8338",
+      "name": "Sticky Note8"
+    },
+    {
+      "parameters": {
+        "content": "## Agent Tools\n\n- **Read Invoice Page:** Reads page text for invoice data extraction.\n- **Find Field Evidence:** Searches document text to locate supporting evidence for specific fields.\n- **Check Document Quality:** Retrieves OCR quality indicators and document warnings.\n\nThe Agent selects tools as needed. In most straightforward cases, reading the pages provides enough information, so calling only **Read Invoice Page** is normal.\n\nDeterministic validation runs afterwards, regardless of which tools were used.",
+        "height": 240,
+        "width": 640
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1904,
+        704
+      ],
+      "id": "00f29a15-eca0-4575-9008-3da7d08a0925",
+      "name": "Sticky Note9"
+    },
+    {
+      "parameters": {
+        "content": "### OCR & Document Layout Processing\n\nReuses layout segmentation and PDF layout analysis techniques from the Document Retriever project, originally developed for image-based brochures.",
+        "height": 112,
+        "width": 368
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1808,
+        48
+      ],
+      "id": "371b053f-2301-4fb8-8f65-7ea2e7a51aca",
+      "name": "Sticky Note10"
+    }
+  ],
+  "connections": {
+    "Prepare Invoice Files": {
+      "main": [
+        [
+          {
+            "node": "Process One Invoice",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save Invoice & Read Text": {
+      "main": [
+        [
+          {
+            "node": "Prepare Invoice Analysis",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Invoice Analysis": {
+      "main": [
+        [
+          {
+            "node": "New Analysis or Cache?",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Record Analysis Failure",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "New Analysis or Cache?": {
+      "main": [
+        [
+          {
+            "node": "Extract Invoice Details",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Reuse Verified Analysis",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Route Invoice Result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Invoice Details": {
+      "main": [
+        [
+          {
+            "node": "Save Analysis Draft",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Record Analysis Failure",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gemini via Bounded Gateway": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Extract Invoice Details",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read Invoice Page": {
+      "ai_tool": [
+        [
+          {
+            "node": "Extract Invoice Details",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Find Field Evidence": {
+      "ai_tool": [
+        [
+          {
+            "node": "Extract Invoice Details",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Document Quality": {
+      "ai_tool": [
+        [
+          {
+            "node": "Extract Invoice Details",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save Analysis Draft": {
+      "main": [
+        [
+          {
+            "node": "Check Invoice & Apply Approval Rules",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Record Analysis Failure",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Route Invoice Result": {
+      "main": [
+        [
+          {
+            "node": "Read Saved Invoice Decision",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Read Saved Invoice Decision",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Human Review Pending",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Read Skipped or Failed Result",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Read Skipped or Failed Result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Continue Email Batch?": {
+      "main": [
+        [
+          {
+            "node": "Process One Invoice",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Show Upload Result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process One Invoice": {
+      "main": [
+        [
+          {
+            "node": "Email Batch Complete",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Save Invoice & Read Text",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read Skipped or Failed Result": {
+      "main": [
+        [
+          {
+            "node": "Continue Email Batch?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Record Analysis Failure": {
+      "main": [
+        [
+          {
+            "node": "Route Invoice Result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Excel File Ready": {
+      "main": [
+        [
+          {
+            "node": "Check Export File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Export File": {
+      "main": [
+        [
+          {
+            "node": "Send Excel Download Link",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Run Demo Email Batch": {
+      "main": [
+        [
+          {
+            "node": "Fetch Invoice Emails",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read Saved Invoice Decision": {
+      "main": [
+        [
+          {
+            "node": "Continue Email Batch?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Human Review Pending": {
+      "main": [
+        [
+          {
+            "node": "Continue Email Batch?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Email Batch Complete": {
+      "main": [
+        [
+          {
+            "node": "Read Batch Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Show Upload Result": {
+      "main": [
+        [
+          {
+            "node": "Read Batch Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read Batch Status": {
+      "main": [
+        [
+          {
+            "node": "Pending Reviews?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pending Reviews?": {
+      "main": [
+        [
+          {
+            "node": "Notify Pending Reviews",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send Batch Summary",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Notify Pending Reviews": {
+      "main": [
+        [
+          {
+            "node": "Wait for Review",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait for Review": {
+      "main": [
+        [
+          {
+            "node": "Read Latest Review Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read Latest Review Status": {
+      "main": [
+        [
+          {
+            "node": "Reviews Still Pending?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Reviews Still Pending?": {
+      "main": [
+        [
+          {
+            "node": "Wait for Review",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send Batch Summary",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch Invoice Emails": {
+      "main": [
+        [
+          {
+            "node": "Approval Settings",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload Invoice": {
+      "main": [
+        [
+          {
+            "node": "Approval Settings",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Approval Settings": {
+      "main": [
+        [
+          {
+            "node": "Prepare Invoice Files",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Invoice & Apply Approval Rules": {
+      "main": [
+        [
+          {
+            "node": "Route Invoice Result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Reuse Verified Analysis": {
+      "main": [
+        [
+          {
+            "node": "Check Invoice & Apply Approval Rules",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": true,
+    "timezone": "Europe/Berlin",
+    "saveExecutionProgress": false,
+    "saveManualExecutions": false,
+    "saveDataErrorExecution": "none",
+    "saveDataSuccessExecution": "none",
+    "callerPolicy": "workflowsFromSameOwner",
+    "binaryMode": "separate"
+  },
+  "nodeGroups": [
+    {
+      "id": "077fe2de-30bc-42c2-a567-68a4e93b4d89",
+      "name": "💻Json Scripts: Prepare Invoice Files",
+      "nodeIds": [
+        "5d7b8e02-4e16-4528-9253-7fcd1933b709"
+      ],
+      "description": "Preserve each attachment and source association."
+    },
+    {
+      "id": "41469138-33d8-4a70-b807-e66703a31824",
+      "name": "Deliver Excel Download",
+      "nodeIds": [
+        "f106ebb3-a83c-48a3-ab87-3174bb424c99",
+        "88913b3e-ab09-4ef1-a213-f8a1bc1e7ca1"
+      ],
+      "description": "User-selected combined Excel and local notice."
+    },
+    {
+      "id": "fc9fd96e-2cff-4384-9d77-68f6b53eae9e",
+      "name": "💻Python Scripts: Preparing prompts and ocr extraction",
+      "nodeIds": [
+        "49f5b017-60ba-44e6-b60d-8f579ad33428",
+        "78109066-675f-4735-882f-39e87ea4e7c1"
+      ]
+    }
+  ],
+  "active": false
+}

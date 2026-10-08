@@ -15,6 +15,7 @@ from backend.document_text import ProcessingError
 @pytest.fixture
 def env(tmp_path, monkeypatch):
     setup(monkeypatch)
+    monkeypatch.setenv('AP_LLM_MIN_INTERVAL_SECONDS','60')
     monkeypatch.setenv('AP_REVIEW_EVENT_TOKEN','native-offline-test-only')
     monkeypatch.setenv('AP_LLM_MODEL','gemini-3.5-flash-lite')
     monkeypatch.setenv('AP_LLM_BASE_URL','https://generativelanguage.googleapis.com/v1beta/openai')
@@ -84,7 +85,7 @@ def test_provider_budget_and_durable_spacing(env):
     with pytest.raises(Exception):s.generate(r['model'],payload(r,3))
     assert len(starts)==3 and all(b-a>=60 for a,b in zip(starts,starts[1:]))
     gate=ModelGate(s.connect,clock=lambda:now[0],sleep=lambda _:None)
-    assert gate.remaining()>60
+    assert gate.remaining()>=60
     with pytest.raises(ProcessingError):gate.reserve(60)
     assert c.post('/api/ap/stages/'+r['run_id']+'/validate').json()['outcome']=='failed'
 
@@ -150,9 +151,8 @@ def test_restart_preserves_unknown_and_old_attempts(env):
     assert other.abort(r['run_id']).outcome=='failed'
 
 
-def test_expiry_and_in_progress_are_not_restarted(env):
+def test_expiry_still_closes_tools(env):
     c,s,now,root=env;r=start(c)
-    with pytest.raises(Exception):s.begin(r['run_id'])
     now[0]+=1201
     with pytest.raises(Exception):s.tool(r['scope'],'read',{'page_numbers':[1]})
     assert s._row(r['scope'])[0]['status']=='failed'
@@ -269,3 +269,60 @@ with TestClient(app) as client:
         assert db.execute('SELECT count(*) FROM review_events').fetchone()[0]==0
     assert restarted.state.native_analysis.abort(run_id).outcome=='failed'
     with pytest.raises(Exception): restarted.state.native_analysis.tool(scope,'read',{'page_numbers':[1]})
+
+
+def test_begin_recovers_final_draft_without_provider_replay(env):
+    c,s,now,root=env;r=start(c)
+    s.tool(r['scope'],'read',{'page_numbers':[1]})
+    calls=[]
+    s.provider=lambda *_:calls.append(1) or provider_result(output())
+    s.generate(r['model'],payload(r))
+    now[0]+=1201
+    recovered=s.begin(r['run_id'])
+    assert recovered['native_action']=='cache_hit'
+    assert s.begin(r['run_id'])['native_action']=='cache_hit'
+    assert calls==[1]
+    assert s._row(r['scope'])[0]['status']=='analyzed'
+
+
+def test_new_run_supersedes_partial_attempt_and_revokes_old_scope(env):
+    c,s,now,root=env;r=start(c)
+    s.tool(r['scope'],'read',{'page_numbers':[1]})
+    other=archive(c,'manual-reexecution')
+    resumed=s.begin(other['run_id'])
+    assert resumed['native_action']=='analyze'
+    assert resumed['scope']!=r['scope']
+    assert s._row(r['scope'])[0]['status']=='failed'
+    with pytest.raises(Exception):s.tool(r['scope'],'read',{'page_numbers':[1]})
+    s.abort(r['run_id'])
+    assert s._row(resumed['scope'])[0]['status']=='processing'
+
+
+def test_same_run_can_restart_partial_attempt(env):
+    c,s,now,root=env;r=start(c)
+    resumed=s.begin(r['run_id'])
+    assert resumed['scope']!=r['scope']
+    with pytest.raises(Exception):s.commit(r['scope'],output())
+    assert s._row(resumed['scope'])[0]['status']=='processing'
+
+
+def test_saved_final_draft_survives_application_restart(env):
+    c,s,now,root=env;r=start(c)
+    s.tool(r['scope'],'read',{'page_numbers':[1]})
+    s.provider=lambda *_:provider_result(output())
+    s.generate(r['model'],payload(r))
+    other=create_app(root).state.native_analysis
+    assert other.begin(r['run_id'])['native_action']=='cache_hit'
+    assert other._row(r['scope'])[0]['status']=='analyzed'
+
+
+def test_zero_interval_native_rounds_do_not_sleep(env, monkeypatch):
+    c,s,now,root=env
+    monkeypatch.setenv('AP_LLM_MIN_INTERVAL_SECONDS','0')
+    s.documents.model_gate.sleep=lambda _:pytest.fail('Zero interval must not sleep')
+    r=start(c)
+    s.provider=lambda *_:provider_result(output())
+    s.generate(r['model'],payload(r,0))
+    s.generate(r['model'],payload(r,1))
+    calls=s._row(r['scope'])[1]['agent_trace']['model_calls']
+    assert len(calls)==2 and calls[0]['started_at']==calls[1]['started_at']

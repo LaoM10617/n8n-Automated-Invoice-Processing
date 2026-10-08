@@ -17,6 +17,8 @@ services:
       - "127.0.0.1:8000:8000"
     environment:
       AP_DATA_DIR: /data/ap
+      # Gross EUR ceiling: amounts at or above this require human review.
+      AP_AUTO_APPROVAL_LIMIT_EUR: "1500.00"
       AP_REVIEW_EVENT_URL: http://n8n:5678/webhook/ap-native-review-b2-v2
       AP_BATCH_EVENT_URL: http://n8n:5678/webhook/ap-native-excel-b2-v2
       AP_OUTCOME_AUTODISPATCH: "1"
@@ -25,7 +27,7 @@ services:
       AP_LLM_BASE_URL: ${AP_LLM_BASE_URL:-}
       AP_LLM_MODEL: ${AP_LLM_MODEL:-}
       AP_LLM_API_KEY: ${AP_LLM_API_KEY:-}
-      AP_LLM_MIN_INTERVAL_SECONDS: ${AP_LLM_MIN_INTERVAL_SECONDS:-60}
+      AP_LLM_MIN_INTERVAL_SECONDS: ${AP_LLM_MIN_INTERVAL_SECONDS:-0}
     volumes:
       - ./data/ap:/data/ap
     healthcheck:

@@ -1,0 +1,102 @@
+{
+  "cached_upload": {
+    "contract_version": "ap-stage-v1",
+    "run_id": "bad6a026-314c-4225-9b52-56db91a3c201",
+    "source": {
+      "source_type": "upload",
+      "source_namespace": "n8n-ap-upload-v1",
+      "source_id": "native-batch-wait-cached-20261007",
+      "attachment_id": "0",
+      "batch_id": "upload-519",
+      "case_id": "upload",
+      "notification_mode": "batch"
+    },
+    "stage": "validate",
+    "outcome": "decision_ready",
+    "receipt_id": "4a819a8f-32e5-43d9-9647-ff913e61f24e",
+    "invoice_id": "4ff2e34b-6dff-48d8-901c-e64a800fb9f4",
+    "analysis_run_id": 99,
+    "review_id": "095b3af6-9020-4ca4-95bc-a4e69d27cd37",
+    "review_url": "http://127.0.0.1:8000/reviews/4ff2e34b-6dff-48d8-901c-e64a800fb9f4",
+    "issue_codes": [],
+    "error_code": null,
+    "retryable": false,
+    "notification_status": "not_started",
+    "extractor": "n8n_native_agent",
+    "analysis_cached": true,
+    "analysis_source": "native_provider_analysis",
+    "review_status": "approved",
+    "approval_method": "automatic",
+    "event_id": "5d48945b-4c03-460e-9950-0352d55b7b4b",
+    "event_delivery_status": null,
+    "event_delivery_error": null,
+    "new_invoice": false,
+    "formSubmittedText": "Saved decision: approved. Approved records are available at http://127.0.0.1:8000/exports. A batch summary follows in local Mailpit."
+  },
+  "before": {
+    "processing_attempts": 103,
+    "native_analysis": 5,
+    "review_events": 11,
+    "export_batches": 5
+  },
+  "after": {
+    "processing_attempts": 103,
+    "native_analysis": 5,
+    "review_events": 11,
+    "export_batches": 5
+  },
+  "new_model_calls": 0,
+  "scope": "Real published form, existing approved native analysis; not fresh inference or new approval.",
+  "batch_status": {
+    "batch_id": "818da4de-3527-4628-8fd0-d0743d3c0aea",
+    "source_batches": [
+      "upload-519"
+    ],
+    "attachments": 1,
+    "unique_invoices": 1,
+    "new_invoices": 0,
+    "reused_invoices": 1,
+    "approved": 1,
+    "rejected": 0,
+    "pending": 0,
+    "unresolved": 0,
+    "failed_items": 0,
+    "skipped_items": 0,
+    "complete": true,
+    "reviews": [
+      {
+        "invoice_id": "4ff2e34b-6dff-48d8-901c-e64a800fb9f4",
+        "status": "approved",
+        "review_url": "http://127.0.0.1:8000/reviews/4ff2e34b-6dff-48d8-901c-e64a800fb9f4"
+      }
+    ],
+    "event_ids": [
+      "5d48945b-4c03-460e-9950-0352d55b7b4b"
+    ],
+    "notices": {
+      "summary": {
+        "batch_id": "818da4de-3527-4628-8fd0-d0743d3c0aea",
+        "phase": "summary",
+        "status": "sent",
+        "message_id": "<ap-intake-818da4de-3527-4628-8fd0-d0743d3c0aea-summary@example.invalid>",
+        "snapshot_json": "{\"batch_id\": \"818da4de-3527-4628-8fd0-d0743d3c0aea\", \"source_batches\": [\"upload-519\"], \"attachments\": 1, \"unique_invoices\": 1, \"new_invoices\": 0, \"reused_invoices\": 1, \"approved\": 1, \"rejected\": 0, \"pending\": 0, \"unresolved\": 0, \"failed_items\": 0, \"skipped_items\": 0, \"complete\": true, \"reviews\": [{\"invoice_id\": \"4ff2e34b-6dff-48d8-901c-e64a800fb9f4\", \"status\": \"approved\", \"review_url\": \"http://127.0.0.1:8000/reviews/4ff2e34b-6dff-48d8-901c-e64a800fb9f4\"}], \"event_ids\": [\"5d48945b-4c03-460e-9950-0352d55b7b4b\"], \"notices\": {}, \"export_url\": \"http://127.0.0.1:8000/exports\"}",
+        "error_code": null
+      }
+    },
+    "export_url": "http://127.0.0.1:8000/exports"
+  },
+  "mailpit": {
+    "matching_messages": 1,
+    "messages": [
+      {
+        "ID": "NqzJjqont8edtWkKbLEdVZ",
+        "Subject": "[AP Batch] Batch processing complete \u2014 818da4de-3527-4628-8fd0-d0743d3c0aea",
+        "Snippet": "Intake batch: 818da4de-3527-4628-8fd0-d0743d3c0aea New invoice records: 0; reused records: 1. Approved: 1; rejected: 0; pending: 0. Processing failures: 0; skipped attachments: 0. Export register: htt..."
+      }
+    ]
+  },
+  "unchanged_baseline_files": {
+    "originals": 27,
+    "exports": 7
+  }
+}

@@ -1,0 +1,343 @@
+{
+  "workflowId": "J4xPbnTCAgYFVNzJ",
+  "version": "5242a2e1-f0f9-4f45-ba5c-ab5aea42bc31",
+  "backendTests": 73,
+  "tests": [
+    {
+      "execution": {
+        "id": "520",
+        "workflowId": "J4xPbnTCAgYFVNzJ",
+        "mode": "manual",
+        "status": "success",
+        "startedAt": "2026-10-07T19:20:48.377Z",
+        "stoppedAt": "2026-10-07T19:20:48.484Z",
+        "retryOf": null,
+        "retrySuccessId": null,
+        "waitTill": null
+      },
+      "nodeOutputs": {
+        "Approval Settings": [
+          {
+            "startTime": 1791400848391,
+            "executionIndex": 2,
+            "source": [
+              {
+                "previousNode": "Fetch Invoice Emails",
+                "previousNodeOutput": 0,
+                "previousNodeRun": 0
+              }
+            ],
+            "hints": [],
+            "executionTime": 2,
+            "executionStatus": "success",
+            "data": {
+              "main": [
+                [
+                  {
+                    "json": {
+                      "id": "settings-test-email",
+                      "subject": "[AP-DEMO][settings-test][three-files] Demo",
+                      "auto_approval_limit_eur": "1500.00"
+                    },
+                    "pairedItem": {
+                      "item": 0
+                    },
+                    "binary": {
+                      "attachment_0": {
+                        "data": "dGVzdA==",
+                        "mimeType": "application/pdf",
+                        "fileName": "demo0.pdf"
+                      },
+                      "attachment_1": {
+                        "data": "dGVzdA==",
+                        "mimeType": "application/pdf",
+                        "fileName": "demo1.pdf"
+                      },
+                      "attachment_2": {
+                        "data": "dGVzdA==",
+                        "mimeType": "application/pdf",
+                        "fileName": "demo2.pdf"
+                      }
+                    }
+                  }
+                ]
+              ]
+            }
+          }
+        ],
+        "Prepare Invoice Files": [
+          {
+            "startTime": 1791400848393,
+            "executionIndex": 3,
+            "source": [
+              {
+                "previousNode": "Approval Settings",
+                "previousNodeOutput": 0,
+                "previousNodeRun": 0
+              }
+            ],
+            "hints": [],
+            "executionTime": 55,
+            "executionStatus": "success",
+            "data": {
+              "main": [
+                [
+                  {
+                    "json": {
+                      "source_type": "email",
+                      "source_namespace": "gmail:ap-test-inbox",
+                      "source_id": "settings-test-email",
+                      "attachment_id": "attachment_0",
+                      "batch_id": "settings-test",
+                      "case_id": "three-files",
+                      "notification_mode": "batch",
+                      "auto_approval_limit_eur": "1500.00"
+                    },
+                    "binary": {
+                      "data": {
+                        "data": "dGVzdA==",
+                        "mimeType": "application/pdf",
+                        "fileName": "demo0.pdf"
+                      }
+                    },
+                    "pairedItem": {
+                      "item": 0
+                    }
+                  },
+                  {
+                    "json": {
+                      "source_type": "email",
+                      "source_namespace": "gmail:ap-test-inbox",
+                      "source_id": "settings-test-email",
+                      "attachment_id": "attachment_1",
+                      "batch_id": "settings-test",
+                      "case_id": "three-files",
+                      "notification_mode": "batch",
+                      "auto_approval_limit_eur": "1500.00"
+                    },
+                    "binary": {
+                      "data": {
+                        "data": "dGVzdA==",
+                        "mimeType": "application/pdf",
+                        "fileName": "demo1.pdf"
+                      }
+                    },
+                    "pairedItem": {
+                      "item": 0
+                    }
+                  },
+                  {
+                    "json": {
+                      "source_type": "email",
+                      "source_namespace": "gmail:ap-test-inbox",
+                      "source_id": "settings-test-email",
+                      "attachment_id": "attachment_2",
+                      "batch_id": "settings-test",
+                      "case_id": "three-files",
+                      "notification_mode": "batch",
+                      "auto_approval_limit_eur": "1500.00"
+                    },
+                    "binary": {
+                      "data": {
+                        "data": "dGVzdA==",
+                        "mimeType": "application/pdf",
+                        "fileName": "demo2.pdf"
+                      }
+                    },
+                    "pairedItem": {
+                      "item": 0
+                    }
+                  }
+                ]
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "execution": {
+        "id": "521",
+        "workflowId": "J4xPbnTCAgYFVNzJ",
+        "mode": "manual",
+        "status": "success",
+        "startedAt": "2026-10-07T19:21:11.522Z",
+        "stoppedAt": "2026-10-07T19:21:11.563Z",
+        "retryOf": null,
+        "retrySuccessId": null,
+        "waitTill": null
+      },
+      "nodeOutputs": {
+        "Approval Settings": [
+          {
+            "startTime": 1791400871535,
+            "executionIndex": 1,
+            "source": [
+              {
+                "previousNode": "Upload Invoice",
+                "previousNodeOutput": 0,
+                "previousNodeRun": 0
+              }
+            ],
+            "hints": [],
+            "executionTime": 1,
+            "executionStatus": "success",
+            "data": {
+              "main": [
+                [
+                  {
+                    "json": {
+                      "Upload ID": "settings-test-upload",
+                      "auto_approval_limit_eur": "1500.00"
+                    },
+                    "pairedItem": {
+                      "item": 0
+                    },
+                    "binary": {
+                      "data": {
+                        "data": "dGVzdA==",
+                        "mimeType": "application/pdf",
+                        "fileName": "demo.pdf"
+                      }
+                    }
+                  }
+                ]
+              ]
+            }
+          }
+        ],
+        "Prepare Invoice Files": [
+          {
+            "startTime": 1791400871536,
+            "executionIndex": 2,
+            "source": [
+              {
+                "previousNode": "Approval Settings",
+                "previousNodeOutput": 0,
+                "previousNodeRun": 0
+              }
+            ],
+            "hints": [],
+            "executionTime": 11,
+            "executionStatus": "success",
+            "data": {
+              "main": [
+                [
+                  {
+                    "json": {
+                      "source_type": "upload",
+                      "source_namespace": "n8n-ap-upload-v1",
+                      "source_id": "settings-test-upload",
+                      "attachment_id": "0",
+                      "batch_id": "upload-521",
+                      "case_id": "upload",
+                      "notification_mode": "batch",
+                      "auto_approval_limit_eur": "1500.00"
+                    },
+                    "binary": {
+                      "data": {
+                        "data": "dGVzdA==",
+                        "mimeType": "application/pdf",
+                        "fileName": "demo.pdf"
+                      }
+                    },
+                    "pairedItem": {
+                      "item": 0
+                    }
+                  }
+                ]
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "pinning": "Gmail, HTTP, model and notifications were mocked. Settings, preparation and routing executed. No provider calls.",
+  "validation": {
+    "valid": true,
+    "nodeCount": 38,
+    "warnings": [
+      {
+        "code": "INVALID_EXPRESSION_PATH",
+        "message": "'Pending Reviews?' parameter 'conditions.conditions[0].leftValue' uses $json.pending but no predecessor outputs this field.",
+        "nodeName": "Pending Reviews?"
+      },
+      {
+        "code": "INVALID_EXPRESSION_PATH",
+        "message": "'Read Latest Review Status' parameter 'url' uses $json.batch_id but no predecessor outputs this field.",
+        "nodeName": "Read Latest Review Status"
+      },
+      {
+        "code": "INVALID_EXPRESSION_PATH",
+        "message": "'Reviews Still Pending?' parameter 'conditions.conditions[0].leftValue' uses $json.complete but no predecessor outputs this field.",
+        "nodeName": "Reviews Still Pending?"
+      },
+      {
+        "code": "INVALID_EXPRESSION_PATH",
+        "message": "'Prepare Invoice Analysis' parameter 'url' uses $json.run_id but no predecessor outputs this field.",
+        "nodeName": "Prepare Invoice Analysis"
+      },
+      {
+        "code": "INVALID_EXPRESSION_PATH",
+        "message": "'New Analysis or Cache?' parameter 'rules.values[0].conditions.conditions[0].leftValue' uses $json.native_action but no predecessor outputs this field.",
+        "nodeName": "New Analysis or Cache?"
+      },
+      {
+        "code": "INVALID_EXPRESSION_PATH",
+        "message": "'New Analysis or Cache?' parameter 'rules.values[1].conditions.conditions[0].leftValue' uses $json.native_action but no predecessor outputs this field.",
+        "nodeName": "New Analysis or Cache?"
+      },
+      {
+        "code": "INVALID_EXPRESSION_PATH",
+        "message": "'Save Analysis Draft' parameter 'jsonBody' uses $json.output but no predecessor outputs this field.",
+        "nodeName": "Save Analysis Draft"
+      },
+      {
+        "code": "INVALID_EXPRESSION_PATH",
+        "message": "'Check Invoice & Apply Approval Rules' parameter 'url' uses $json.run_id but no predecessor outputs this field.",
+        "nodeName": "Check Invoice & Apply Approval Rules"
+      },
+      {
+        "code": "INVALID_EXPRESSION_PATH",
+        "message": "'Route Invoice Result' parameter 'rules.values[0].conditions.conditions[0].leftValue' uses $json.outcome but no predecessor outputs this field.",
+        "nodeName": "Route Invoice Result"
+      },
+      {
+        "code": "INVALID_EXPRESSION_PATH",
+        "message": "'Route Invoice Result' parameter 'rules.values[1].conditions.conditions[0].leftValue' uses $json.outcome but no predecessor outputs this field.",
+        "nodeName": "Route Invoice Result"
+      },
+      {
+        "code": "INVALID_EXPRESSION_PATH",
+        "message": "'Route Invoice Result' parameter 'rules.values[2].conditions.conditions[0].leftValue' uses $json.outcome but no predecessor outputs this field.",
+        "nodeName": "Route Invoice Result"
+      },
+      {
+        "code": "INVALID_EXPRESSION_PATH",
+        "message": "'Route Invoice Result' parameter 'rules.values[3].conditions.conditions[0].leftValue' uses $json.outcome but no predecessor outputs this field.",
+        "nodeName": "Route Invoice Result"
+      },
+      {
+        "code": "INVALID_EXPRESSION_PATH",
+        "message": "'Continue Email Batch?' parameter 'conditions.conditions[0].leftValue' uses $json.source.source_type but no predecessor outputs this field.",
+        "nodeName": "Continue Email Batch?"
+      },
+      {
+        "code": "INVALID_EXPRESSION_PATH",
+        "message": "'Record Analysis Failure' parameter 'url' uses $('Save Invoice & Read Text').item.json.run_id but 'Save Invoice & Read Text' doesn't output this field.",
+        "nodeName": "Record Analysis Failure"
+      },
+      {
+        "code": "INVALID_EXPRESSION_PATH",
+        "message": "'Check Export File' parameter 'url' uses $json.body.export_id but no predecessor outputs this field.",
+        "nodeName": "Check Export File"
+      },
+      {
+        "code": "INVALID_EXPRESSION_PATH",
+        "message": "'Send Excel Download Link' parameter 'url' uses $json.kind but no predecessor outputs this field.",
+        "nodeName": "Send Excel Download Link"
+      }
+    ]
+  }
+}

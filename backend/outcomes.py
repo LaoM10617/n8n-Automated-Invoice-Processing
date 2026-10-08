@@ -161,6 +161,13 @@ class Outcomes:
         return self.read(kind, identifier)
 
     def dispatch_review(self, event_id):
+        with closing(self.connect()) as db:
+            event, _, _ = self.events.load(db, event_id)
+            run = db.execute("SELECT result_json FROM intake_runs WHERE json_extract(result_json,'$.invoice_id')=? ORDER BY rowid DESC LIMIT 1",
+                             (event['invoice_id'],)).fetchone()
+            if run and json.loads(run['result_json'])['source'].get('notification_mode') == 'batch':
+                # The batch summary records delivery; never fabricate a sent per-invoice notice.
+                return {**self.events.read(event_id), 'notification_mode': 'batch'}
         if not os.environ.get('AP_REVIEW_EVENT_URL'):
             return
         self.ensure('review', event_id)

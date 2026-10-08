@@ -1,0 +1,51 @@
+{
+  "cached_upload": {
+    "contract_version": "ap-stage-v1",
+    "run_id": "19eefa52-b49d-47ae-bacb-937b3d688b99",
+    "source": {
+      "source_type": "upload",
+      "source_namespace": "n8n-ap-upload-v1",
+      "source_id": "native-approval-settings-cached-20261007",
+      "attachment_id": "0",
+      "batch_id": "upload-522",
+      "case_id": "upload",
+      "notification_mode": "batch",
+      "auto_approval_limit_eur": "1500.00"
+    },
+    "stage": "validate",
+    "outcome": "decision_ready",
+    "receipt_id": "a2069f3a-1ca1-4cd9-9e4e-f211544bd3f0",
+    "invoice_id": "4ff2e34b-6dff-48d8-901c-e64a800fb9f4",
+    "analysis_run_id": 99,
+    "review_id": "095b3af6-9020-4ca4-95bc-a4e69d27cd37",
+    "review_url": "http://127.0.0.1:8000/reviews/4ff2e34b-6dff-48d8-901c-e64a800fb9f4",
+    "issue_codes": [],
+    "error_code": null,
+    "retryable": false,
+    "notification_status": "not_started",
+    "extractor": "n8n_native_agent",
+    "analysis_cached": true,
+    "analysis_source": "native_provider_analysis",
+    "review_status": "approved",
+    "approval_method": "automatic",
+    "event_id": "5d48945b-4c03-460e-9950-0352d55b7b4b",
+    "event_delivery_status": null,
+    "event_delivery_error": null,
+    "new_invoice": false,
+    "formSubmittedText": "Saved decision: approved. Approved records are available at http://127.0.0.1:8000/exports. A batch summary follows in local Mailpit."
+  },
+  "before": {
+    "processing_attempts": 103,
+    "native_analysis": 5,
+    "review_events": 11,
+    "export_batches": 5
+  },
+  "after": {
+    "processing_attempts": 103,
+    "native_analysis": 5,
+    "review_events": 11,
+    "export_batches": 5
+  },
+  "new_model_calls": 0,
+  "scope": "Real published form, existing approved native analysis; not fresh inference or new approval."
+}

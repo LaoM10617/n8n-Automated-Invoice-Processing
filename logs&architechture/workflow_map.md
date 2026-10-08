@@ -1,3 +1,5 @@
+> Current update (2026-10-07): native intake now waits for its fixed batch of human reviews and sends one batch summary. Approved records remain available for user-selected Excel export. See [batch-wait delivery and verification](AP_batch_wait_delivery.md). Earlier non-waiting and per-invoice notification descriptions below are historical for the native route.
+
 ## Final delivery and rollback — 2026-10-07
 
 See [final delivery index](AP_unified_refactor_final_delivery.md) for layered acceptance, two English demo paths, recovery commands and remaining limits. Native → Stage A → original 01/02 → native receiver rollback passed with every business row and all 34 original/export files unchanged. Five isolated file-recovery/migration tests passed. Current native entry is restored; no new model calls. The final fresh paid end-to-end validation gap remains explicit. Earlier records below are historical.

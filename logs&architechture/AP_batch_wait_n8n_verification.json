@@ -1,0 +1,52 @@
+{
+  "pinned_wait_15s": {
+    "id": "516",
+    "workflowId": "J4xPbnTCAgYFVNzJ",
+    "mode": "manual",
+    "status": "success",
+    "startedAt": "2026-10-07T17:56:21.384Z",
+    "stoppedAt": "2026-10-07T17:56:36.434Z",
+    "retryOf": null,
+    "retrySuccessId": null,
+    "waitTill": null
+  },
+  "pinned_auto": {
+    "id": "517",
+    "workflowId": "J4xPbnTCAgYFVNzJ",
+    "mode": "manual",
+    "status": "success",
+    "startedAt": "2026-10-07T17:57:00.539Z",
+    "stoppedAt": "2026-10-07T17:57:00.595Z",
+    "retryOf": null,
+    "retrySuccessId": null,
+    "waitTill": null
+  },
+  "durable_wait_before_restart": {
+    "id": "518",
+    "workflowId": "J4xPbnTCAgYFVNzJ",
+    "mode": "manual",
+    "status": "waiting",
+    "startedAt": "2026-10-07T17:58:41.288Z",
+    "stoppedAt": "2026-10-07T17:58:41.430Z",
+    "retryOf": null,
+    "retrySuccessId": null,
+    "waitTill": "2026-10-07T17:59:51.429Z"
+  },
+  "durable_wait_after_restart": {
+    "id": "518",
+    "workflowId": "J4xPbnTCAgYFVNzJ",
+    "mode": "manual",
+    "status": "success",
+    "startedAt": "2026-10-07T17:58:41.288Z",
+    "stoppedAt": "2026-10-07T17:59:51.508Z",
+    "retryOf": null,
+    "retrySuccessId": null,
+    "waitTill": null
+  },
+  "nodes_after_restart": [
+    "Read Latest Review Status",
+    "Send Batch Summary"
+  ],
+  "scope": "HTTP, Gmail, model and notification outputs were pinned. IF, loop and Wait executed in n8n. No real reviewer action, model call or SMTP send in these pinned executions.",
+  "published_version": "215f80d5-6e07-4d55-8d56-43bf6ce7d032"
+}

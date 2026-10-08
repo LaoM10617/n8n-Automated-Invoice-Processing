@@ -9,11 +9,11 @@ import threading
 from typing import Annotated, Literal
 from uuid import uuid4
 from fastapi import File, Form, HTTPException, UploadFile, Request
-from pydantic import BaseModel, ConfigDict, Field, model_validator
+from pydantic import BaseModel, ConfigDict, Field, model_validator, field_validator
 from backend.document_text import ProcessingError
 from backend.email_receipts import EmailOutcome
 from backend.notifications import NotificationResult
-from backend.reviews import protect_write
+from backend.reviews import protect_write, approval_threshold
 from backend.review_events import protect_event
 
 
@@ -25,6 +25,13 @@ class Source(BaseModel):
     attachment_id: str = Field(min_length=1, max_length=200)
     batch_id: str | None = Field(default=None, pattern=r'^[A-Za-z0-9_-]{1,80}$')
     case_id: str | None = Field(default=None, pattern=r'^[A-Za-z0-9_-]{1,80}$')
+    notification_mode: Literal['invoice', 'batch'] = 'invoice'
+    auto_approval_limit_eur: str | None = None
+
+    @field_validator('auto_approval_limit_eur')
+    @classmethod
+    def valid_approval_limit(cls, value):
+        return str(approval_threshold(value)) if value is not None else None
 
     @model_validator(mode='after')
     def email_batch(self):
@@ -58,6 +65,7 @@ class StageResult(BaseModel):
     event_id: str | None = None
     event_delivery_status: str | None = None
     event_delivery_error: str | None = None
+    new_invoice: bool = False
 
 
 def unpack(value):
@@ -117,7 +125,7 @@ def register_intake_stages(app, connect, intake, documents, review, notification
             db.commit()
         if result.source.source_type == 'email' and result.outcome != 'continue':
             status = 'skipped' if result.outcome == 'skipped' else 'decision_ready' if result.outcome == 'decision_ready' else 'review_ready' if result.outcome == 'review_ready' else 'intake_failed' if result.receipt_id is None else 'review_failed' if result.stage == 'validate' else 'processing_failed'
-            save_outcome(EmailOutcome(**{k:v for k,v in result.source.model_dump().items() if k!='source_type'}, status=status,
+            save_outcome(EmailOutcome(**{k:v for k,v in result.source.model_dump().items() if k not in ('source_type', 'notification_mode', 'auto_approval_limit_eur')}, status=status,
                 reason_code=result.error_code or ('DECISION_SAVED' if result.outcome == 'decision_ready' else 'PENDING_REVIEW'), receipt_id=result.receipt_id, invoice_id=result.invoice_id))
         return result
 
@@ -140,11 +148,15 @@ def register_intake_stages(app, connect, intake, documents, review, notification
         return save(result)
 
     @app.post('/api/ap/stages/archive', response_model=StageResult)
-    def archive(metadata: Annotated[str, Form()], file: Annotated[UploadFile | None, File()] = None):
+    def archive(request: Request, metadata: Annotated[str, Form()], file: Annotated[UploadFile | None, File()] = None):
         try:
             source = Source.model_validate_json(metadata)
         except ValueError as exc:
             raise HTTPException(422, 'Invalid source metadata.') from exc
+        if source.auto_approval_limit_eur is not None:
+            protect_event(request)
+        else:
+            source.auto_approval_limit_eur = str(reviews.threshold if reviews else approval_threshold())
         result = StageResult(run_id=str(uuid4()), source=source)
         save(result)
         no_attachment = file is None or (source.attachment_id == 'none' and file.content_type == 'application/x-ap-no-attachment')
@@ -153,8 +165,9 @@ def register_intake_stages(app, connect, intake, documents, review, notification
             result.error_code = 'NO_ATTACHMENTS' if no_attachment else 'UNSUPPORTED_ATTACHMENT'
             return save(result)
         try:
-            saved = unpack(intake(file=file, **{k:v for k,v in source.model_dump().items() if k not in ('batch_id','case_id')}))
+            saved = unpack(intake(file=file, **{k:v for k,v in source.model_dump().items() if k not in ('batch_id','case_id','notification_mode','auto_approval_limit_eur')}))
             result.receipt_id, result.invoice_id = saved['receipt_id'], saved['invoice_id']
+            result.new_invoice = not saved['content_duplicate']
             save(result)
             documents.read(result.invoice_id)
             result.stage = 'read'
@@ -205,7 +218,8 @@ def register_intake_stages(app, connect, intake, documents, review, notification
             try:
                 invoice = documents.finalize(result.invoice_id, result.analysis_run_id)
                 if apply_policy:
-                    task = reviews.automatic(result.invoice_id, new_only=True)
+                    task = reviews.automatic(result.invoice_id, new_only=True,
+                                             approval_limit_eur=result.source.auto_approval_limit_eur)
                     result.review_id = task['review_id']
                     result.review_url = os.environ.get('AP_PUBLIC_BASE_URL', 'http://127.0.0.1:8000').rstrip('/') + '/reviews/' + result.invoice_id
                     result.review_status, result.approval_method = task['status'], task['approval_method']

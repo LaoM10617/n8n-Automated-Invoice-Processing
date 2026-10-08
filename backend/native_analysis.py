@@ -124,22 +124,46 @@ class NativeAnalysis:
             raise HTTPException(409, 'Analysis expired.')
         return row, result
 
+    def _recover_draft(self, row, result):
+        # A completed provider response survives a stopped n8n execution.
+        try:
+            if any(call['status'] != 'completed' for call in result['agent_trace']['model_calls']):
+                return False
+            draft = parse_output(result.get('last_output', ''))
+            if result.get('last_finish_reason') != 'STOP' or result.get('last_has_tool_calls'):
+                return False
+            if set(result['agent_trace']['read_pages']) != {p['page'] for p in result['pages']}:
+                return False
+        except (ValueError, TypeError):
+            return False
+        result['raw_extraction'] = draft
+        result['agent_trace']['status'] = 'completed'
+        self._persist(row, result, 'analyzed')
+        return True
+
     def begin(self, run_id):
         with self.lock, self.documents.lock:
             stage = self.load(run_id)
+            # Re-executing Prepare is an explicit restart, not a provider retry.
+            recoverable = {'NATIVE_PREPARATION_FAILED', 'NATIVE_EXECUTION_ABORTED',
+                           'NATIVE_ATTEMPT_EXPIRED', 'PROCESS_INTERRUPTED',
+                           'NATIVE_EXECUTION_SUPERSEDED'}
+            if stage.outcome == 'failed' and stage.error_code in recoverable:
+                stage.outcome, stage.error_code, stage.stage = 'continue', None, 'read'
+                stage.analysis_run_id = None
             if stage.outcome != 'continue':
                 return {**stage.model_dump(), 'native_action': 'skip'}
             with closing(self.connect()) as db:
-                existing = db.execute('SELECT scope FROM native_analysis WHERE run_id=?', (run_id,)).fetchone()
-            if existing:
-                row, result = self._row(existing['scope'])
-                if row['status'] in ('analyzed', 'processed'):
-                    return self._complete_stage(row, result, True)
-                # Do not resume a partially executed Agent with an empty conversation.
-                if row['status'] == 'processing':
-                    self._active(row['scope'])
-                raise HTTPException(409, 'This run already has an analysis attempt; inspect it before starting another run.')
-            if stage.stage != 'read' or not stage.invoice_id:
+                previous = db.execute('SELECT * FROM processing_attempts WHERE invoice_id=? ORDER BY attempt_id DESC LIMIT 1', (stage.invoice_id,)).fetchone()
+                native = db.execute('SELECT scope FROM native_analysis WHERE attempt_id=?', (previous['attempt_id'],)).fetchone() if previous else None
+            if native and (previous['status'] == 'processing' or previous['error_code'] in recoverable):
+                row, result = self._row(native['scope'])
+                if not self._recover_draft(row, result) and previous['status'] == 'processing':
+                    # The service lock waits for any in-flight provider request.
+                    # Retain the old trace and revoke it before opening a new scope.
+                    self._fail(row, result, 'NATIVE_EXECUTION_SUPERSEDED')
+            self.save(stage)
+            if stage.stage not in ('read', 'analyze') or not stage.invoice_id:
                 raise HTTPException(409, 'Archive and read this document first.')
             pages = self.documents.read(stage.invoice_id)
             if len(json.dumps(pages)) > 100000:
@@ -170,7 +194,7 @@ class NativeAnalysis:
                           'agent_trace': {'agent_version': VERSION, 'status': 'running', 'model_calls': [], 'tools': [], 'read_pages': []}}
                 attempt = db.execute("INSERT INTO processing_attempts(invoice_id,status,result_json) VALUES(?,'processing',?)", (stage.invoice_id,json.dumps(result))).lastrowid
                 scope = secrets.token_hex(24)
-                db.execute('INSERT INTO native_analysis VALUES(?,?,?,?)', (run_id, attempt, scope, self.clock()+1200))
+                db.execute('INSERT INTO native_analysis VALUES(?,?,?,?) ON CONFLICT(run_id) DO UPDATE SET attempt_id=excluded.attempt_id,scope=excluded.scope,expires_at=excluded.expires_at', (run_id, attempt, scope, self.clock()+1200))
                 db.commit()
             return {**stage.model_dump(), 'native_action': 'analyze', 'scope': scope, 'analysis_run_id': attempt,
                     'model': model, 'manifest': [p['page'] for p in pages],
@@ -255,7 +279,7 @@ class NativeAnalysis:
                 if any(c['status'] != 'completed' for c in trace['model_calls']):
                     raise ValueError('REQUEST_UNCERTAIN')
                 self.documents.model_gate.wait()
-                self.documents.model_gate.reserve(float(os.environ.get('AP_LLM_MIN_INTERVAL_SECONDS','60')))
+                self.documents.model_gate.reserve(float(os.environ.get('AP_LLM_MIN_INTERVAL_SECONDS','0')))
                 call = {'index':len(trace['model_calls'])+1,'status':'running','started_at':self.clock(),'request_sha256':digest}
                 trace['model_calls'].append(call)
                 self._persist(row,result)

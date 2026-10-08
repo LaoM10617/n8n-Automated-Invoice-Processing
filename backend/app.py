@@ -314,4 +314,6 @@ def create_app(data_dir: Path | None = None) -> FastAPI:
     notifications = register_notifications(app, connect, get_invoice)
     save_outcome = register_email_receipts(app, connect)
     register_intake_stages(app, connect, intake, stages, create_review_task, notifications, save_outcome, reviews, outcomes.dispatch_review)
+    from backend.intake_batches import register_intake_batches
+    register_intake_batches(app, connect)
     return app

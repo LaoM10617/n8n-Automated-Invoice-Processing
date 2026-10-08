@@ -20,7 +20,7 @@ _next_request_at = 0.0
 def reserve_model_request():
     """Fail fast rather than queue or automatically retry paid model calls."""
     global _next_request_at
-    interval = max(60.1, float(os.environ.get('AP_LLM_MIN_INTERVAL_SECONDS', '60')))
+    interval = max(0.0, float(os.environ.get('AP_LLM_MIN_INTERVAL_SECONDS', '0')))
     if current_gate.get() is not None:
         return current_gate.get().reserve(interval)
     with _request_lock:

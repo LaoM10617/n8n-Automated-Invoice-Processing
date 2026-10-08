@@ -14,8 +14,16 @@ from pydantic import BaseModel, ConfigDict, Field, field_validator, model_valida
 from backend.extraction import RawFields
 from backend.validation import validate, duplicate_candidates
 
-POLICY_VERSION = 'eur-gross-under-10000-v1'
-THRESHOLD = Decimal('10000.00')
+def approval_threshold(raw=None):
+    """Read the operator-configured gross EUR ceiling; reject unsafe configuration."""
+    raw = os.environ.get('AP_AUTO_APPROVAL_LIMIT_EUR', '10000.00') if raw is None else raw
+    try:
+        value = Decimal(raw)
+        if not value.is_finite() or value <= 0 or value != value.quantize(Decimal('0.01')):
+            raise ValueError
+    except (ArithmeticError, ValueError):
+        raise ValueError('AP_AUTO_APPROVAL_LIMIT_EUR must be a positive EUR amount with at most two decimal places.') from None
+    return value.quantize(Decimal('0.01'))
 REVIEWER = 'demo reviewer (local, unauthenticated)'
 RESOLVABLE = {'UNSUPPORTED_EXTRACTION', 'EXTRACTION_UNCERTAINTY', 'OCR_LOW_CONFIDENCE', 'DOCUMENT_QUALITY_WARNING'}
 DETERMINISTIC = {'MISSING_FIELD', 'DATE_AMBIGUOUS_OR_INVALID', 'DUE_BEFORE_INVOICE',
@@ -98,6 +106,8 @@ def protect_write(request: Request):
 class Reviews:
     def __init__(self, connect):
         self.connect = connect
+        self.threshold = approval_threshold()
+        self.policy_version = f'eur-gross-under-{format(self.threshold, "f").rstrip("0").rstrip(".")}-v1'
 
     def load(self, db, invoice_id):
         task = db.execute('SELECT * FROM review_tasks WHERE invoice_id=?', (invoice_id,)).fetchone()
@@ -260,7 +270,7 @@ class Reviews:
         db.execute('''UPDATE review_tasks SET status=?,decided_by=?,decided_at=?,approval_method=?,
             policy_version=?,policy_inputs_json=?,routing_reason=? WHERE review_id=?''',
             (decision, actor, datetime.now(timezone.utc).isoformat(), method,
-             POLICY_VERSION if method == 'automatic' else task['policy_version'],
+             policy['version'] if method == 'automatic' else task['policy_version'],
              encoded(policy) if policy else task['policy_inputs_json'], reason, task['review_id']))
         db.execute('''INSERT INTO review_events(event_id,review_id,invoice_id,review_revision,event_type,request_id,request_hash)
                       VALUES(?,?,?,?,?,?,?)''', (event_id, task['review_id'], task['invoice_id'], revision, decision, request_id, request_hash))
@@ -299,7 +309,9 @@ class Reviews:
             db.commit()
             return state
 
-    def automatic(self, invoice_id, request=None, new_only=False):
+    def automatic(self, invoice_id, request=None, new_only=False, *, approval_limit_eur=None):
+        threshold = self.threshold if approval_limit_eur is None else approval_threshold(approval_limit_eur)
+        policy_version = f'eur-gross-under-{format(threshold, "f").rstrip("0").rstrip(".")}-v1'
         with closing(self.connect()) as db:
             db.execute('BEGIN IMMEDIATE')
             task = db.execute('SELECT * FROM review_tasks WHERE invoice_id=?', (invoice_id,)).fetchone()
@@ -322,15 +334,15 @@ class Reviews:
                 reasons.append('HUMAN_REVIEW_EXISTS')
             if checked['fields'].get('currency') != 'EUR':
                 reasons.append('NON_EUR')
-            if total is None or not Decimal('0') < Decimal(total) < THRESHOLD:
+            if total is None or not Decimal('0') < Decimal(total) < threshold:
                 reasons.append('OUTSIDE_AMOUNT_POLICY')
-            policy = {'version': POLICY_VERSION, 'threshold': str(THRESHOLD), 'currency': 'EUR',
+            policy = {'version': policy_version, 'threshold': str(threshold), 'currency': 'EUR',
                       'amount_basis': 'gross total_amount', 'fields': checked['fields'],
                       'checks': checked, 'reasons': reasons}
             if not reasons:
                 self.commit_decision(db, task, bound, checked, [], [], 'automatic', 'approved', 'All automatic approval gates passed.', policy=policy)
             else:
-                db.execute('UPDATE review_tasks SET policy_version=?,policy_inputs_json=?,routing_reason=? WHERE review_id=?', (POLICY_VERSION, encoded(policy), ', '.join(reasons), task['review_id']))
+                db.execute('UPDATE review_tasks SET policy_version=?,policy_inputs_json=?,routing_reason=? WHERE review_id=?', (policy_version, encoded(policy), ', '.join(reasons), task['review_id']))
             state = self.state(db, invoice_id)
             db.commit()
             return state

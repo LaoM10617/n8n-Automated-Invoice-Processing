@@ -32,5 +32,5 @@ class ModelGate:
             now = self.clock()
             if db.execute('SELECT next_at FROM model_request_gate WHERE id=1').fetchone()[0] > now:
                 raise ProcessingError('MODEL_LOCAL_RATE_LIMIT', 'Provider cooldown is active; no request was sent.')
-            db.execute('UPDATE model_request_gate SET next_at=? WHERE id=1', (now + max(60.1, interval),))
+            db.execute('UPDATE model_request_gate SET next_at=? WHERE id=1', (now + max(0.0, interval),))
             db.commit()

@@ -1,3 +1,5 @@
+> Current policy update (2026-10-07): the gross EUR automatic-approval ceiling is operator-configurable and deployed at 1,500.00. Amounts at or above the ceiling require human review. See [configuration and verification](AP_configurable_approval_limit.md). Historical 10,000 EUR values below describe the earlier policy.
+
 # Phase02：AP 自动／人工批准与 Excel 导出实施指南
 
 > 2026-10-07 后续重构决策：用户已确认将 01、02 合并到同一业务画布，保留独立事件入口、持久化状态与现有清单／Excel规则；先整理画布，再迁移原生 Agent。后续实施以 [统一画布与原生 Agent 迁移指南](AP_unified_canvas_native_agent_implementation_guide_zh.md) 为准，替代本文“不把 02 嵌入 01 的画布”的旧要求。此重构尚未实施，本文其余内容仍记录 Phase02 已验收基线。

@@ -1,13 +1,17 @@
+> Update 2026-10-08: manual Prepare re-execution now recovers complete native drafts or supersedes partial attempts. Batch 1 old attempts were closed/recovered without new model calls. See [recovery decision and verification](AP_native_resume_recovery.md). Earlier blanket no-resume descriptions are superseded at this boundary.
+
 # Native Agent demo operations
 
-Current canvas: [Process AP Invoices — Native Agent, Review & Excel](http://localhost:5678/workflow/J4xPbnTCAgYFVNzJ).
+Current canvas: [Automated Invoices Extraction, Approvement and Recording](http://localhost:5678/workflow/J4xPbnTCAgYFVNzJ).
+
+Before a new run, edit `auto_approval_limit_eur` in the shared **Approval Settings** node if needed, then save/publish. The current ceiling is EUR 1,500.00; equality requires review. See [settings operation and verification](AP_n8n_approval_settings_delivery.md).
 
 1. Open [Upload Invoice](http://127.0.0.1:5678/form/ap-native-intake-b2-v2). Upload one PDF or supported image. Use a clearly marked demo document.
-2. The backend archives and reads the document. A real n8n Agent uses Gemini and tools restricted to that document. The gateway enforces at most three provider requests, six read tools and at least 60 seconds between provider requests. A fresh analysis commonly takes more than a minute.
+2. The backend archives and reads the document. A real n8n Agent uses Gemini and tools restricted to that document. The gateway enforces at most three provider requests, six read tools with a configurable request interval (currently zero for the demo). No fixed one-minute delay is imposed.
 3. `Reuse Verified Analysis` means a saved native result was reused. It does not imply that the model ran again. Re-uploading the B3 fixtures demonstrates this path.
-4. Deterministic validation decides automatic approval or human review. Open the invoice-specific review link in [local Mailpit](http://127.0.0.1:8025/). Compare the original, save edits and approve or reject. Approval is not payment.
+4. Deterministic validation decides automatic approval or human review. All attachments finish processing before the batch waits. If reviews remain, open the invoice links in the single batch reminder in [local Mailpit](http://127.0.0.1:8025/). Compare the original, save edits and approve or reject. The workflow rechecks saved decisions every 70 seconds; waiting never approves an invoice. Approval is not payment.
 5. Open the [Export Portal](http://127.0.0.1:8000/exports). Select approved rows and create/download a combined Excel file. Pending and rejected invoices are excluded. A review decision does not create an Excel file automatically.
-6. Review decisions and completed files enter the two lower canvas branches as separate executions. Their notifications remain local to Mailpit.
+6. Once the batch has no pending or unresolved reviews, a single local Mailpit summary reports new/reused records, approvals, rejections, failures and skips. Native batch review decisions do not send separate per-invoice notices. The lower event branches remain for legacy/recovery and selected Excel export notifications. See [current implementation and verification](AP_batch_wait_delivery.md).
 
 For the manual email demo, inspect the Gmail query and select a new demo batch before running `Run Demo Email Batch`. Run the batch through exactly one workflow. The B3 multi-attachment regression used synthetic email-shaped input; it did not re-fetch Gmail.
 
@@ -30,7 +34,7 @@ AP_BATCH_EVENT_URL: http://n8n:5678/webhook/ap-unified-excel-a2-v1
 
 Run `docker compose up -d python-api`, then use the Stage A upload/canvas. Switch both URLs back to `ap-native-review-b2-v2` and `ap-native-excel-b2-v2` to select the native canvas again. Never configure two receivers for one event. This is an operator-selected version change, never a silent model-error fallback. Existing native and Python histories remain distinct.
 
-Do not import the historical B2 JSON over the live B4 version. The current instance export is `n8n_workflows/AP_unified_canvas_native_agent_v2_B4.json`. Credentials remain in n8n; do not paste keys into workflow parameters, screenshots or logs.
+Do not import the historical B2 JSON over the live B4 version. The current instance export is `n8n_workflows/AP_native_batch_wait_published_20261007.json`. Resolve or explicitly stop batch-wait executions before rollback; existing batch-mode records need batch completion handling. Credentials remain in n8n; do not paste keys into workflow parameters, screenshots or logs.
 
 ## Two honest interview demo paths
 

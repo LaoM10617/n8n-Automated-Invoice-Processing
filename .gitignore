@@ -16,3 +16,6 @@ test_data/FATURA/invoices_dataset_final/
 /gemini_api_key.txt
 /grok.txt
 /local_key.txt
+
+# Local backups of superseded n8n canvases
+n8n_workflows/archive_local_*/

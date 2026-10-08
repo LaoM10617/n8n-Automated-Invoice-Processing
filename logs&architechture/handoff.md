@@ -1,3 +1,15 @@
+> 2026-10-08 repository finalization: only `n8n_workflows/AP_current_workflow.json` is retained as the tracked canvas. It contains the latest saved draft of J4xPbnTCAgYFVNzJ (48 nodes, 13 notes; version 562baabb-f21f-45e2-8b5c-ab7d5b839651), read from a stopped-container database copy. The published version was different (170ab55c-897a-45c9-93a0-bd5f5000f09c). Export is inactive and omits pinned/runtime data. No instance changes or publication occurred. 34 previous JSON files are backed up in ignored `n8n_workflows/archive_local_20261008/`; existing Git history is unchanged. Historical generation scripts and reports may reference those old files. Root README provides the minimal startup guide.
+
+> 2026-10-08: removed fixed model request delay; deployed interval 0. See [interval change](AP_model_interval_update.md). Review UI unchanged.
+
+> Update 2026-10-08: manual Prepare re-execution now recovers complete native drafts or supersedes partial attempts. Batch 1 old attempts were closed/recovered without new model calls. See [recovery decision and verification](AP_native_resume_recovery.md). Earlier blanket no-resume descriptions are superseded at this boundary.
+
+> Current update: edit **Approval Settings** in n8n to set the ceiling for new runs, then save/publish. Compose is only the legacy fallback. See [n8n settings delivery](AP_n8n_approval_settings_delivery.md).
+
+> Current policy update (2026-10-07): the gross EUR automatic-approval ceiling is operator-configurable and deployed at 1,500.00. Amounts at or above the ceiling require human review. See [configuration and verification](AP_configurable_approval_limit.md). Historical 10,000 EUR values below describe the earlier policy.
+
+> Current update (2026-10-07): native intake now waits for its fixed batch of human reviews and sends one batch summary. Approved records remain available for user-selected Excel export. See [batch-wait delivery and verification](AP_batch_wait_delivery.md). Earlier non-waiting and per-invoice notification descriptions below are historical for the native route.
+
 ## Final delivery and rollback — 2026-10-07
 
 See [final delivery index](AP_unified_refactor_final_delivery.md) for layered acceptance, two English demo paths, recovery commands and remaining limits. Native → Stage A → original 01/02 → native receiver rollback passed with every business row and all 34 original/export files unchanged. Five isolated file-recovery/migration tests passed. Current native entry is restored; no new model calls. The final fresh paid end-to-end validation gap remains explicit. Earlier records below are historical.

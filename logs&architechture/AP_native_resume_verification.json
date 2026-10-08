@@ -1,0 +1,31 @@
+{
+  "offline_tests": 30,
+  "real_model_calls_added": 0,
+  "live_recovered_attempt": 106,
+  "closed_attempts": [
+    104,
+    105
+  ],
+  "counts": {
+    "invoices": {
+      "before": 30,
+      "after": 30
+    },
+    "processing_attempts": {
+      "before": 106,
+      "after": 106
+    },
+    "review_tasks": {
+      "before": 15,
+      "after": 15
+    },
+    "review_events": {
+      "before": 11,
+      "after": 11
+    },
+    "export_batches": {
+      "before": 5,
+      "after": 5
+    }
+  }
+}

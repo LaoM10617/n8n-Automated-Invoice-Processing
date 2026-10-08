@@ -161,10 +161,10 @@ def test_model_cooldown_without_network(monkeypatch):
     with pytest.raises(ProcessingError) as error:
         module.reserve_model_request()
     assert error.value.code == 'MODEL_LOCAL_RATE_LIMIT'
-    clock[0] = 160.0
+    clock[0] = 159.9
     with pytest.raises(ProcessingError):
         module.reserve_model_request()
-    clock[0] = 160.1
+    clock[0] = 160.0
     module.reserve_model_request()
 
 
