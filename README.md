@@ -1,7 +1,5 @@
 # Invoice Automation Demo
 
-A local demo built for the Pexon Consulting interview, inspired by its invoice-processing use case.
-
 **Email / single-file upload → OCR & Gemini extraction → deterministic validation → automatic approval or human review → selected Excel export.**
 
 ## Run locally
