@@ -1,6 +1,6 @@
 # Invoice Automation Demo
 
-**Email / single-file upload → OCR & Gemini extraction → deterministic validation → automatic approval or human review → selected Excel export.**
+**Automated Extraction from your Email / single-file upload → OCR & Gemini extraction → deterministic validation → automatic approval or human review → selected Excel export.**
 
 ## Run locally
 
